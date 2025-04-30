@@ -1,0 +1,25 @@
+include $(CONFIG_PATH)
+
+SRCS := $(wildcard *.S)
+OBJS := $(patsubst %.S, $(OBJ_DIR)/%.o, $(SRCS))
+
+stage2: echo link extract
+
+
+echo:
+	@echo "\n --- Stage 2 Bootloader --- \n"
+
+
+$(OBJ_DIR)/%.o: %.S
+	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) $(BOOT_INCLUDES) $< -o $@
+
+
+link: $(OBJS)
+	$(LD) $(LD_FLAGS) -T stage2.ld $(OBJS) -o $(OBJ_DIR)/stage2.elf
+
+
+extract:
+	$(OBJ_CPY) $(OBJ_FLAGS) $(OBJ_DIR)/stage2.elf $(BIN_DIR)/stage2.bin
+
+
+.PHONY: stage2

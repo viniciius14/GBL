@@ -1,3 +1,13 @@
+build/
+/.vscode
+
+*.log
+*.drawio
+*.bin
+*.img
+*.sh
+*.json
+
 # Prerequisites
 *.d
 
@@ -5,7 +15,6 @@
 *.o
 *.ko
 *.obj
-*.elf
 
 # Linker output
 *.ilk
