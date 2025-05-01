@@ -3,10 +3,9 @@ Technical debt:
     - Assuming 50 sector section will be enough/won't cause issues
 
 Features to add:
-    - Add in the makefile the debug target
     - Add in the makefile the option to pass in KERNEL_NAME for the all target
     - Load one sector at a time for the FAT and the Root Directory
-        - keep track of the current sector and if the info we want is not loaded, read the next one
+        - Add a "carousel" loader
     - Define an area where the kernel can read the status information we've obtained while in real mode
         - Memory area
         - Video modes
@@ -26,3 +25,7 @@ Code standards:
     - Align comments between all fats
     - Align the style for the .S file
     - Find the original reason we were using .S files and not .asm/.s files
+
+Compilation:
+    - Review compiler flags
+        - Try to get more performance or smaller code or both out of the GBL

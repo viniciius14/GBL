@@ -24,10 +24,11 @@ BOOT_SUBDIRS = $(shell find $(SRC_DIR) -mindepth 1 -type d)
 export BOOT_INCLUDES = $(foreach dir, $(BOOT_SUBDIRS), -i $(dir))
 
 
-GBL: echo dirs bootloader image
+GBL: echo dirs bootloader stats image
 
 
 all:
+	rm -f $(STATS)
 	@for fs in $(SUPPORTED_FILE_SYSTEMS); do \
 		for arch in $(SUPPORTED_TARGET_BITS); do \
 			echo "\nBuilding GeckOS_$${fs}_$${arch}.img...\n"; \
@@ -38,7 +39,7 @@ all:
 
 
 echo:
-	@echo "\n --- GeckOS Bootloader --- \n"
+	@echo "\n--- GeckOS Bootloader --- \n"
 
 
 dirs:
@@ -52,8 +53,15 @@ bootloader:
 	$(MAKE) -C $(SRC_DIR)/stage2
 
 
+stats:
+	@echo "--- TARGET -> $(TARGET) ---" >> $(STATS)
+	$(call bin_size_stat, $(BIN_DIR)/stage1_$(FS).bin)
+	$(call bin_size_stat, $(BIN_DIR)/stage2.bin)
+	@echo "\n" >> $(STATS)
+
+
 image:
-	@echo "\n --- Image Creation --- \n"
+	@echo "\n--- Image Creation --- \n"
 ifeq ($(FS), FAT12)
 	$(MAKE)  FAT12
 else ifeq ($(FS), FAT16)
@@ -103,7 +111,12 @@ clean:
 	clear
 
 
-run:
+debug: dirs
+	$(MAKE) -C $(SRC_DIR)/stage1 debug
+	$(MAKE) -C $(SRC_DIR)/stage2 debug
+
+
+run: GBL
 ifeq ($(FS), FAT12)
 	$(MAKE) run_floppy
 else ifeq ($(FS), FAT16)
@@ -121,7 +134,9 @@ run_hard_disk:
 	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=ide $(EMUL_FLAGS)
 
 
-debug:
+define bin_size_stat
+	@wc -c $1 | awk '{ if ($$2 != "total") { n=split($$2,a,"/"); printf "%s - %s bytes\n", a[n], $$1 } }' >> $(STATS)
+endef
 
 
 .PHONY: GBL

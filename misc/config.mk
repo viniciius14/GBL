@@ -10,6 +10,8 @@ BIN_DIR=$(BUILD_DIR)/bin
 OBJ_DIR=$(BUILD_DIR)/obj
 DEBUG_DIR=$(BUILD_DIR)/debug
 
+STATS=$(BUILD_DIR)/stats.log
+
 ASM=nasm
 ASM_FORMAT=-f elf32
 

@@ -7,7 +7,7 @@ stage2: echo link extract
 
 
 echo:
-	@echo "\n --- Stage 2 Bootloader --- \n"
+	@echo "\n--- Stage 2 Bootloader ---\n"
 
 
 $(OBJ_DIR)/%.o: %.S
@@ -21,5 +21,7 @@ link: $(OBJS)
 extract:
 	$(OBJ_CPY) $(OBJ_FLAGS) $(OBJ_DIR)/stage2.elf $(BIN_DIR)/stage2.bin
 
-
-.PHONY: stage2
+debug: ASM_FLAGS += -g
+debug: LD_FLAGS += -Map=$(DEBUG_DIR)/stage2.map
+debug: link
+	objdump -D $(OBJ_DIR)/stage2.elf > $(DEBUG_DIR)/stage2_dump.asm
