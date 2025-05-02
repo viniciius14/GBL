@@ -1,5 +1,5 @@
 # Directories
-PROJECT=/root/projects/GBL
+PROJECT=$(CURDIR)
 
 BUILD_DIR=$(PROJECT)/build
 DOCS_DIR=$(PROJECT)/docs

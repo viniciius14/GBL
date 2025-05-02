@@ -24,7 +24,7 @@ BOOT_SUBDIRS = $(shell find $(SRC_DIR) -mindepth 1 -type d)
 export BOOT_INCLUDES = $(foreach dir, $(BOOT_SUBDIRS), -i $(dir))
 
 
-GBL: echo dirs bootloader stats image
+GBL: bootloader stats image
 
 
 all:
@@ -38,17 +38,7 @@ all:
 	done
 
 
-echo:
-	@echo "\n--- GeckOS Bootloader --- \n"
-
-
-dirs:
-	mkdir -p $(BIN_DIR)
-	mkdir -p $(OBJ_DIR)
-	mkdir -p $(DEBUG_DIR)
-
-
-bootloader:
+bootloader: echo dirs
 	$(MAKE) -C $(SRC_DIR)/stage1
 	$(MAKE) -C $(SRC_DIR)/stage2
 
@@ -132,6 +122,16 @@ run_floppy:
 
 run_hard_disk:
 	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=ide $(EMUL_FLAGS)
+
+
+echo:
+	@echo "\n--- GeckOS Bootloader --- \n"
+
+
+dirs:
+	mkdir -p $(BIN_DIR)
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(DEBUG_DIR)
 
 
 define bin_size_stat
