@@ -6,9 +6,7 @@ export CONFIG_PATH := $(PWD)/misc/config.mk
 # Default inputs
 export FS   ?= FAT12
 export BITS ?= BITS32
-KERNEL_NAME ?= KERNEL  BIN
-
-export ASM_FLAGS = -W+all -W+error -W+orphan-labels -W+macro-params -W+error -D$(FS) -D$(BITS) -DKERNEL_NAME="$(KERNEL_NAME)"
+export KERNEL_NAME ?= KERNEL  BIN
 
 OUTPUT_DIR ?= $(BUILD_DIR)
 
@@ -38,7 +36,17 @@ all:
 	done
 
 
-bootloader: echo dirs
+echo:
+	@echo "\n --- GeckOS Bootloader --- \n"
+
+
+dirs:
+	mkdir -p $(BIN_DIR)
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(DEBUG_DIR)
+
+
+bootloader:
 	$(MAKE) -C $(SRC_DIR)/stage1
 	$(MAKE) -C $(SRC_DIR)/stage2
 

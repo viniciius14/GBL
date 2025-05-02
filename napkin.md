@@ -1,6 +1,8 @@
 Technical debt:
     - For some reason having ASM_FLAGS in the config.mk makes it so our flags don't get added to it, moved the var to GBL/Makefile
     - Assuming 50 sector section will be enough/won't cause issues
+    - In the makefile we have to pass in the PROJECT dir as a hardcoded value because makefile will reevaluate it otherwise
+    - In the makefile (stage1) we have to pass in the FS, BITS and KERNEL_NAME defines individually and can't add them to the ASM_FLAGS variable in the main Makefile for some reason
 
 Features to add:
     - Add in the makefile the option to pass in KERNEL_NAME for the all target
