@@ -42,7 +42,7 @@ dirs:
 	mkdir -p $(DEBUG_DIR)
 
 
-bootloader:
+bootloader: dirs
 	@echo "\n--- GeckOS Bootloader --- \n"
 	$(MAKE) -C $(SRC_DIR)/stage1
 	$(MAKE) -C $(SRC_DIR)/stage2
