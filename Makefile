@@ -1,7 +1,7 @@
 include misc/config.mk
 
 # Define the path to config.mk
-export CONFIG_PATH := $(PWD)/misc/config.mk
+export CONFIG_PATH := $(PROJECT)/misc/config.mk
 
 # Default inputs
 export FS   ?= FAT12
@@ -130,16 +130,6 @@ run_floppy:
 
 run_hard_disk:
 	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=ide $(EMUL_FLAGS)
-
-
-echo:
-	@echo "\n--- GeckOS Bootloader --- \n"
-
-
-dirs:
-	mkdir -p $(BIN_DIR)
-	mkdir -p $(OBJ_DIR)
-	mkdir -p $(DEBUG_DIR)
 
 
 define bin_size_stat
