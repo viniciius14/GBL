@@ -1,5 +1,5 @@
 # Directories
-PROJECT=/root/projects/GBL
+PROJECT=/root/GeckOS/GBL
 
 BUILD_DIR=$(PROJECT)/build
 DOCS_DIR=$(PROJECT)/docs
@@ -10,7 +10,10 @@ BIN_DIR=$(BUILD_DIR)/bin
 OBJ_DIR=$(BUILD_DIR)/obj
 DEBUG_DIR=$(BUILD_DIR)/debug
 
+STATS=$(BUILD_DIR)/stats.log
+
 ASM=nasm
+ASM_FLAGS = -W+all -W+error -W+orphan-labels -W+macro-params -W+error
 ASM_FORMAT=-f elf32
 
 CC=i386-elf-gcc

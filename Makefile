@@ -1,14 +1,12 @@
 include misc/config.mk
 
 # Define the path to config.mk
-export CONFIG_PATH := $(PWD)/misc/config.mk
+export CONFIG_PATH := $(PROJECT)/misc/config.mk
 
 # Default inputs
 export FS   ?= FAT12
 export BITS ?= BITS32
-KERNEL_NAME ?= KERNEL  BIN
-
-export ASM_FLAGS = -W+all -W+error -W+orphan-labels -W+macro-params -W+error -D$(FS) -D$(BITS) -DKERNEL_NAME="$(KERNEL_NAME)"
+export KERNEL_NAME ?= KERNEL  BIN
 
 OUTPUT_DIR ?= $(BUILD_DIR)
 
@@ -24,10 +22,11 @@ BOOT_SUBDIRS = $(shell find $(SRC_DIR) -mindepth 1 -type d)
 export BOOT_INCLUDES = $(foreach dir, $(BOOT_SUBDIRS), -i $(dir))
 
 
-GBL: echo dirs bootloader image
+GBL: bootloader stats image
 
 
 all:
+	rm -f $(STATS)
 	@for fs in $(SUPPORTED_FILE_SYSTEMS); do \
 		for arch in $(SUPPORTED_TARGET_BITS); do \
 			echo "\nBuilding GeckOS_$${fs}_$${arch}.img...\n"; \
@@ -37,10 +36,6 @@ all:
 	done
 
 
-echo:
-	@echo "\n --- GeckOS Bootloader --- \n"
-
-
 dirs:
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(OBJ_DIR)
@@ -48,12 +43,20 @@ dirs:
 
 
 bootloader:
+	@echo "\n--- GeckOS Bootloader --- \n"
 	$(MAKE) -C $(SRC_DIR)/stage1
 	$(MAKE) -C $(SRC_DIR)/stage2
 
 
+stats:
+	@echo "--- TARGET -> $(TARGET) ---" >> $(STATS)
+	$(call bin_size_stat, $(BIN_DIR)/stage1_$(FS).bin)
+	$(call bin_size_stat, $(BIN_DIR)/stage2.bin)
+	@echo "\n" >> $(STATS)
+
+
 image:
-	@echo "\n --- Image Creation --- \n"
+	@echo "\n--- Image Creation --- \n"
 ifeq ($(FS), FAT12)
 	$(MAKE)  FAT12
 else ifeq ($(FS), FAT16)
@@ -103,7 +106,12 @@ clean:
 	clear
 
 
-run:
+debug: dirs
+	$(MAKE) -C $(SRC_DIR)/stage1 debug
+	$(MAKE) -C $(SRC_DIR)/stage2 debug
+
+
+run: GBL
 ifeq ($(FS), FAT12)
 	$(MAKE) run_floppy
 else ifeq ($(FS), FAT16)
@@ -121,7 +129,9 @@ run_hard_disk:
 	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=ide $(EMUL_FLAGS)
 
 
-debug:
+define bin_size_stat
+	@wc -c $1 | awk '{ if ($$2 != "total") { n=split($$2,a,"/"); printf "%s - %s bytes\n", a[n], $$1 } }' >> $(STATS)
+endef
 
 
 .PHONY: GBL
