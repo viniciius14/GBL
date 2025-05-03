@@ -36,10 +36,6 @@ all:
 	done
 
 
-echo:
-	@echo "\n --- GeckOS Bootloader --- \n"
-
-
 dirs:
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(OBJ_DIR)
@@ -47,6 +43,7 @@ dirs:
 
 
 bootloader:
+	@echo "\n--- GeckOS Bootloader --- \n"
 	$(MAKE) -C $(SRC_DIR)/stage1
 	$(MAKE) -C $(SRC_DIR)/stage2
 
