@@ -15,7 +15,7 @@ $(OBJ_DIR)/%.o: %.S
 
 
 link: $(OBJS)
-	$(LD) $(LD_FLAGS) -T stage2.ld $(OBJS) -o $(OBJ_DIR)/stage2.elf
+	$(LD) $(LD_FLAGS) -T $(SRC_DIR)/stage2.ld $(OBJS) -o $(OBJ_DIR)/stage2.elf
 
 
 extract:

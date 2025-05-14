@@ -13,7 +13,6 @@ get_stage2:
     mov es, bx
     mov bx, STAGE2_OFFSET
     call FAT_load_chain
-
 %endif
 
     ret

@@ -45,4 +45,7 @@ KERNEL_START            equ 0x100000
 
 KERNEL_STACK_SIZE       equ 0x1000
 
+VIDEO_MEMORY            equ 0xB8000
+WHITE_ON_BLACK          equ 0x0F
+
 %endif

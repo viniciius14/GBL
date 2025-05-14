@@ -1,6 +1,7 @@
 %ifndef __PRINT_STRING_S
 %define __PRINT_STRING_S
 
+[global BIOS_print]
 ; Prints a string to the screen
 ; Inputs:
 ;   - DS:SI = pointer to string

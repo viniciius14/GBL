@@ -1,14 +1,18 @@
 [bits 16]
 
-[global _stage2_16]
+[global stage2_16bit]
 
-[extern _stage2_32]
+[extern A20_line]
+[extern stage2_32bit]
 
 %include "common.S"
 
-section _stage2_16.text
+section .text
+%include "BIOS_utils.S"
 
-_stage2_16:
+section stage2_16bit.text
+
+stage2_16bit:
     cli
 
     xor ax, ax                  ; null segments
@@ -17,6 +21,8 @@ _stage2_16:
 
     mov si, stage2msg1
     call BIOS_print
+    call A20_line
+    jmp $
 
     pusha                       ; save registers
     lgdt [GDT_Descriptor]       ; load GDT
@@ -33,17 +39,13 @@ _stage2_16:
     CODE_SEG equ code_descriptor - GDT_Start
     DATA_SEG equ data_descriptor - GDT_Start
 
-    jmp CODE_SEG:_stage2_32
+    jmp CODE_SEG:stage2_32bit
 
 failure:
     mov si, error_msg
     jmp BIOS_print
     unreachable
 
-section .text
-
-%include "BIOS_utils.S"
-; %include "FAT_utils.S"
 
 section .data
 

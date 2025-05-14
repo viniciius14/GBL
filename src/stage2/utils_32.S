@@ -1,10 +1,12 @@
 [global print_string_32]
 
-section .text
-; Print example, to delete later
-VIDEO_MEMORY equ 0xB8000
-WHITE_ON_BLACK equ 0x0F
+%include "common.S"
 
+section .text
+
+; Inputs:
+;   - DS:SI = pointer to string
+;   - EBX = location on screen where to print the string
 print_string_32:
     mov edi, VIDEO_MEMORY
     add edi, ebx

@@ -1,12 +1,12 @@
-ENTRY(_stage2_16)
+ENTRY(stage2_16bit)
 OUTPUT_FORMAT(elf32-i386)
 
 SECTIONS {
     . = 0x7E00;
 
     .text : {
-        *(_stage2_16.text)
-        *(_stage2_32.text)
+        *(stage2_16bit.text)
+        *(stage2_32bit.text)
         *(.text*)
     } : text
 

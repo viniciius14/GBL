@@ -29,7 +29,7 @@ _load_kernel:
 
     unreachable
 
-section .data
+section .rodata
 stage2msg3: db "Got to load kernel. (32 bits)", 0
 
 section .bss
