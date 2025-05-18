@@ -1,3 +1,5 @@
+# Constants for the build system
+
 # Directories
 PROJECT=/root/projects/GBL
 
@@ -11,6 +13,8 @@ OBJ_DIR=$(BUILD_DIR)/obj
 DEBUG_DIR=$(BUILD_DIR)/debug
 
 STATS=$(BUILD_DIR)/stats.log
+
+SCRIPTS_DIR=$(MISC_DIR)/scripts
 
 ASM=nasm
 ASM_FLAGS=-W+all -W+error -W+orphan-labels -W+macro-params -W+error
@@ -28,4 +32,3 @@ OBJ_FLAGS=-O binary
 
 EMULATOR=qemu-system-i386
 EMUL_FLAGS=-m 128M -serial stdio
-

@@ -19,7 +19,7 @@ TARGET = $(OUTPUT_DIR)/GeckOS_$(FS)_$(BITS).img
 
 # Include all directories while compiling each unit
 BOOT_SUBDIRS = $(shell find $(SRC_DIR) -mindepth 1 -type d)
-export BOOT_INCLUDES = $(foreach dir, $(BOOT_SUBDIRS), -i $(dir))
+export BOOT_INCLUDES = $(foreach dir, $(BOOT_SUBDIRS),-i $(dir))
 
 
 GBL: bootloader stats image
@@ -43,7 +43,7 @@ dirs:
 
 
 bootloader: dirs
-	@echo "\n--- GeckOS Bootloader --- \n"
+	@echo "\n--- GeckOS Bootloader ---\n"
 	$(MAKE) -C $(SRC_DIR)/stage1
 	$(MAKE) -C $(SRC_DIR)/stage2
 
@@ -56,7 +56,7 @@ stats:
 
 
 image:
-	@echo "\n--- Image Creation --- \n"
+	@echo "\n--- Image Creation ---\n"
 ifeq ($(FS), FAT12)
 	$(MAKE)  FAT12
 else ifeq ($(FS), FAT16)
@@ -74,7 +74,7 @@ FAT12:
 	dd if=/dev/zero                         of=$(TARGET)     bs=512        count=2880
 	mkfs.fat $(TARGET) -a -F 12 -S 512 -s 1 -r 224 -R 1
 # Add stage1 bootloader
-	dd if=$(BIN_DIR)/stage1_FAT12.bin		of=$(TARGET)     bs=512	seek=0 conv=notrunc
+	dd if=$(BIN_DIR)/stage1_FAT12.bin       of=$(TARGET)     bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader
 	mcopy -i $(TARGET) $(BIN_DIR)/stage2.bin ::
 
@@ -84,7 +84,7 @@ FAT16:
 	dd if=/dev/zero                         of=$(TARGET)     bs=512        count=273042
 	mkfs.fat $(TARGET) -a -F 16 -S 512 -s 8 -r 512 -R 4
 # Add stage1 bootloader
-	dd if=$(BIN_DIR)/stage1_FAT16.bin		of=$(TARGET)     bs=512	seek=0 conv=notrunc
+	dd if=$(BIN_DIR)/stage1_FAT16.bin       of=$(TARGET)     bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader
 	mcopy -i $(TARGET) $(BIN_DIR)/stage2.bin ::
 
@@ -94,9 +94,9 @@ FAT32:
 	dd if=/dev/zero                         of=$(TARGET)     bs=512        count=273042
 	mkfs.fat $(TARGET) -a -F 32 -S 512 -s 4 -R 32
 # Add stage1 bootloader and File System Information Structure
-	dd if=$(BIN_DIR)/stage1_FAT32.bin      of=$(TARGET)     bs=512	seek=0 conv=notrunc
+	dd if=$(BIN_DIR)/stage1_FAT32.bin      of=$(TARGET)     bs=512  seek=0 conv=notrunc
 # Add copy of stage1 bootloader and File System Information Structure
-	dd if=$(BIN_DIR)/stage1_FAT32.bin      of=$(TARGET)     bs=512 	seek=6 conv=notrunc
+	dd if=$(BIN_DIR)/stage1_FAT32.bin      of=$(TARGET)     bs=512  seek=6 conv=notrunc
 # Add stage2 bootloader
 	mcopy -i $(TARGET) $(BIN_DIR)/stage2.bin ::
 
@@ -106,27 +106,18 @@ clean:
 	clear
 
 
-debug: dirs
+debug: GBL
 	$(MAKE) -C $(SRC_DIR)/stage1 debug
 	$(MAKE) -C $(SRC_DIR)/stage2 debug
+	bash $(SCRIPTS_DIR)/QEMU.sh $(FS) $(BITS)
 
 
 run: GBL
 ifeq ($(FS), FAT12)
-	$(MAKE) run_floppy
-else ifeq ($(FS), FAT16)
-	$(MAKE) run_hard_disk
-else ifeq ($(FS), FAT32)
-	$(MAKE) run_hard_disk
-endif
-
-
-run_floppy:
 	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=floppy $(EMUL_FLAGS)
-
-
-run_hard_disk:
-	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=ide $(EMUL_FLAGS)
+else
+	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=ide    $(EMUL_FLAGS)
+endif
 
 
 define bin_size_stat

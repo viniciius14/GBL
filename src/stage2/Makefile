@@ -3,6 +3,7 @@ include $(CONFIG_PATH)
 SRCS := $(wildcard *.S)
 OBJS := $(patsubst %.S, $(OBJ_DIR)/%.o, $(SRCS))
 
+
 stage2: echo link extract
 
 
@@ -21,7 +22,7 @@ link: $(OBJS)
 extract:
 	$(OBJ_CPY) $(OBJ_FLAGS) $(OBJ_DIR)/stage2.elf $(BIN_DIR)/stage2.bin
 
-debug: ASM_FLAGS += -g
+# debug: ASM_FLAGS += -g
 debug: LD_FLAGS += -Map=$(DEBUG_DIR)/stage2.map
 debug: link
-	objdump -D $(OBJ_DIR)/stage2.elf > $(DEBUG_DIR)/stage2_dump.asm
+	objdump -D --visualize-jumps --start-address=0x7E00 $(OBJ_DIR)/stage2.elf > $(DEBUG_DIR)/stage2.dump
