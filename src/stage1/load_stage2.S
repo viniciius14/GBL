@@ -3,7 +3,7 @@
 ;   SI = pointer to 11-byte filename of stage 2
 ; Outputs:
 ;   Loads file into 0x7E00 if found, else jumps to failure
-get_stage2:
+load_stage2:
 %ifdef FAT_FS
     call FAT_find_file
 

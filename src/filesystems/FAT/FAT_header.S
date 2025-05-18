@@ -1,7 +1,7 @@
 ; BIOS Parameter Block
 
 %ifdef STAGE_1
-    jmp strict short _stage1_start
+    jmp strict short stage1
     nop
 %endif
 

@@ -11,7 +11,7 @@ section .text
     %include "FAT_header.S"
 %endif
 
-_stage1_start:
+stage1:
     ; Clear the screen
     ; Switches to text mode
     mov ah, 0x0
@@ -31,17 +31,18 @@ _stage1_start:
     mov ds, ax
     mov es, ax
     mov ss, ax
+
     mov sp, STAGE2_STACK
     mov [BS_DrvNum], dx     ; Overwrite the drive number with the one the BIOS gives us
     mov si, fileStage2Bin
 
     ; Find stage 2 of the bootloader and then load it into memory
-    call get_stage2
+    call load_stage2
 
     jmp STAGE2_SEGMENT:STAGE2_OFFSET
 
 %include "BIOS_utils.S"
-%include "get_stage2.S"
+%include "load_stage2.S"
 
 ; Common label to jump to when a critical error is found
 failure:
@@ -58,5 +59,5 @@ times (510 - ($ - $$)) db 0
 dw 0xAA55
 
 %ifdef FAT32
-    %include "FSInfo_FAT32.S"
+    %include "FAT32_FSInfo.S"
 %endif
