@@ -25,7 +25,9 @@ debug:
 	stage1.S -l $(DEBUG_DIR)/stage1_$(FS)_$(BITS).lst \
 	-o $(BIN_DIR)/stage1_$(FS).bin
 
-	objdump -m i386 -b binary --adjust-vma=0x7C00 --visualize-jumps \
-	-D $(BIN_DIR)/stage1_$(FS).bin > $(DEBUG_DIR)/stage1.dump
+
+# ndisasm is better than objdump for binaries imo
+	ndisasm -b 16 -o 0x7C00 \
+	$(BIN_DIR)/stage1_$(FS).bin > $(DEBUG_DIR)/stage1.dump
 
 .PHONY: default

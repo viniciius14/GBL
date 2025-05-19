@@ -53,12 +53,6 @@ currentCluster:         dw 0
 data_start_lba:         dw 0
 dataRegionSector:       dw FAT_DATA_START
 
-section .rodata
-
-stage2msg1:         db "Got to stage 2 of the bootloader. (16 bits)", 0
-file_kernel:        db "KERNEL_NAME", 0
-error_msg:          db "CRITICAL ERROR", 0
-
 GDT_Start:
     null_descriptor:
         dd  0
@@ -82,5 +76,11 @@ GDT_End:
 GDT_Descriptor:
     dw GDT_End - GDT_Start - 1  ; size
     dd GDT_Start                ; start
+
+section .rodata
+
+stage2msg1:         db "Got to stage 2 of the bootloader. (16 bits)", 0
+file_kernel:        db "KERNEL_NAME", 0
+error_msg:          db "CRITICAL ERROR", 0
 
 %include "FAT_header.S"

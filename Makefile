@@ -36,15 +36,15 @@ all:
 	done
 
 
+debug: clean GBL
+	$(MAKE) -C $(SRC_DIR)/stage1 debug
+	$(MAKE) -C $(SRC_DIR)/stage2 debug
+	bash $(SCRIPTS_DIR)/QEMU_GDB.sh $(FS) $(BITS)
+
+
 clean:
 	rm -rf $(BUILD_DIR)
 	clear
-
-
-debug: GBL
-	$(MAKE) -C $(SRC_DIR)/stage1 debug
-	$(MAKE) -C $(SRC_DIR)/stage2 debug
-	bash $(SCRIPTS_DIR)/QEMU.sh $(FS) $(BITS)
 
 
 run: GBL

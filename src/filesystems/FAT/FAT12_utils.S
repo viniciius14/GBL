@@ -3,17 +3,17 @@
 
 ; Find a file in a FAT filesystem
 ; Inputs:
-;   SI = pointer to 11-byte filename
+;   DS:SI = pointer to 11-byte filename
 ; Outputs:
-;   AX = starting cluster
+;   AX = starting cluster in the data section
 ; Assumptions:
 ;   Direction flag is cleared
 ;   DL = Drive Number
 FAT_find_file:
 ; Load the File Allocation Table into memory
     mov ax, [BPB_RsvdSecCnt]    ; ax = File Allocation Table region start sector
-    mov cl, [BPB_FATSz16]       ; cl = count of sectors occupied by one FAT
-    mov bx, FAT_BUFFER          ; es:bx points to destination
+    mov cl, [BPB_FATSz16]       ; cl = Sectors per FAT
+    mov bx, FAT_BUFFER          ; es:bx = Write destination
     call BIOS_read
 
 ; Find the Root Directory on the disk - only for FAT12 and FAT16
@@ -53,7 +53,7 @@ FAT_find_file:
     cmp ax, [BPB_RootEntCnt]    ; keep looping until all entries checked
     jl .search_file
 
-    jmp failure                 ; in case all entries are exausted and the file isn't found
+    jmp failure                 ; in case all entries are exhausted and the file isn't found
 
 .get_start_cluster:
     mov ax, [di + CLUSTER_LOW_OFFSET]
@@ -63,10 +63,14 @@ FAT_find_file:
 ; Inputs:
 ;   AX = starting cluster number
 ;   ES:BX = memory address to load file
-; Assumptions
+; Assumptions:
 ;   FAT has been loaded into RAM at FAT_BUFFER
-;   ES = 0
 FAT_load_chain:
+;
+; sub ax, 2
+; mov [currentCluster], ax
+;
+;loop:
 ; Read cluster into memory
     xor cx, cx                  ; clear out cx
     mov cl, [BPB_SecPerClus]
@@ -80,6 +84,7 @@ FAT_load_chain:
 ; FAT12 entries are 12-bit values packed together so every 2 clusters take up 3 bytes, meaning:
 ;   - If cluster number is even: use low 12 bits
 ;   - If odd: use high 12 bits (shifted right 4)
+    push bx                     ; store the pointer for later
     mov ax, [currentCluster]
     add ax, 2                   ; add 2 to take into account the reserved entries
     mov bx, 3
@@ -105,6 +110,7 @@ FAT_load_chain:
     jae .chain_end              ; if greater than or equal
 
 ; Move to next cluster in the chain
+    sub ax, 2                 ; subtract the reserved entries again
     mov [currentCluster], ax
 
 ; Update mem address pointed to by ES:BX
@@ -112,12 +118,14 @@ FAT_load_chain:
     xor cx, cx
     mov cl, [BPB_SecPerClus]
     mul cx                      ; ax = bytes per cluster
+    pop bx                      ; restore the pointer
     add bx, ax                  ; offset the memory pointer by bytes per cluster (since we read an entire cluster)
     mov ax, [currentCluster]    ; Set starting cluster number for next call
 
     jmp FAT_load_chain
 
 .chain_end:
+    pop bx                      ; level the stack
     ret
 
 %endif
