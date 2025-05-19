@@ -99,6 +99,7 @@ FAT_load_chain:
 
 ; Move to next cluster in the chain
     mov ax, [di]
+    sub ax, 2                   ; subtract the reserved entries again
     mov [currentCluster], ax
 
 ; Update mem address pointed to by ES:BX

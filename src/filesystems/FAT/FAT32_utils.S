@@ -86,6 +86,7 @@ FAT_load_chain:
 .next_cluster:
 ; Move to next cluster in the chain
     mov ax, [di]
+    sub ax, 2
     mov [currentCluster], ax
 
 ; Update mem address pointed to by ES:BX

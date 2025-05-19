@@ -84,13 +84,12 @@ FAT_load_chain:
 ; FAT12 entries are 12-bit values packed together so every 2 clusters take up 3 bytes, meaning:
 ;   - If cluster number is even: use low 12 bits
 ;   - If odd: use high 12 bits (shifted right 4)
-    push bx                     ; store the pointer for later
     mov ax, [currentCluster]
     add ax, 2                   ; add 2 to take into account the reserved entries
-    mov bx, 3
-    mul bx                      ; ax = currentCluster * 3
-    mov bx, 2
-    div bx                      ; ax = (currentCluster * 3) / 2 => File Allocation Table offset
+    mov cx, 3
+    mul cx                      ; ax = currentCluster * 3
+    mov cx, 2
+    div cx                      ; ax = (currentCluster * 3) / 2 => File Allocation Table offset
     add ax, FAT_BUFFER          ; ax = 0x500 + Cluster Offset in bytes
     mov di, ax
     mov ax, [di]                ; read 2 bytes from File Allocation Table offset
@@ -118,14 +117,12 @@ FAT_load_chain:
     xor cx, cx
     mov cl, [BPB_SecPerClus]
     mul cx                      ; ax = bytes per cluster
-    pop bx                      ; restore the pointer
     add bx, ax                  ; offset the memory pointer by bytes per cluster (since we read an entire cluster)
     mov ax, [currentCluster]    ; Set starting cluster number for next call
 
     jmp FAT_load_chain
 
 .chain_end:
-    pop bx                      ; level the stack
     ret
 
 %endif
