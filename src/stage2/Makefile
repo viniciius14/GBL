@@ -12,7 +12,7 @@ echo:
 
 
 $(OBJ_DIR)/%.o: %.S
-	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) $(BOOT_INCLUDES) -D$(FS) -D$(BITS) -DKERNEL_NAME="$(KERNEL_NAME)" $< -o $@
+	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) $(BOOT_INCLUDES) -D$(FS) -D$(BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $< -o $@
 
 
 link: $(OBJS)
