@@ -12,5 +12,6 @@
 
 %include "BIOS_disk_reset.S"
 %include "BIOS_relocate.S"
+%include "BIOS_cursor_pos.S"
 
 %endif

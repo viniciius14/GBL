@@ -22,6 +22,9 @@ stage2_16bit:
     mov si, stage2msg1
     call BIOS_print
 
+    mov dx, 0x100
+    call BIOS_cursor_pos
+
 ; Enable A20 line
     call A20_line
     jmp $

@@ -1,5 +1,5 @@
-%ifndef __PRINT_STRING_S
-%define __PRINT_STRING_S
+%ifndef __BIOS_PRINT_S
+%define __BIOS_PRINT_S
 
 [global BIOS_print]
 ; Prints a string to the screen
@@ -7,12 +7,7 @@
 ;   - DS:SI = pointer to string
 ;
 BIOS_print:
-    ; save registers we will modify
     pusha
-    ; push si
-    ; push ax
-    ; push bx
-    ; push ds
 
 .loop:
     lodsb               ; loads next character in al
@@ -26,10 +21,6 @@ BIOS_print:
 
 .done:
     popa
-    ; pop ds
-    ; pop bx
-    ; pop ax
-    ; pop si
     ret
 
 %endif
