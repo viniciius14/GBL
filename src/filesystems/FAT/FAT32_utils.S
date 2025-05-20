@@ -12,7 +12,7 @@
 FAT_find_file:
 ; Load the File Allocation Table into memory
     mov ax, [BPB_RsvdSecCnt]    ; ax = File Allocation Table region start sector
-    ; Since each File Allocation Table is too big to be loaded in it's entirety we'll load it only partially
+    ; Since the File Allocation Table is too big to be loaded in it's entirety we'll load it only partially
     ; 0x7C00 - STACK_SIZE (+/- 500 bytes) - FAT_BUFFER(0x500) => 0x6C00 / BPB_BytsPerSec => +/- 54 sectors that we can read
     mov cl, 50                  ; load 50 sectors into memory
     mov bx, FAT_BUFFER          ; es:bx points to destination
@@ -20,7 +20,6 @@ FAT_find_file:
 
 ; Load the Root Directory into memory
     mov ax, [BPB_RootClus]      ; cluster number of the first cluster of the root directory
-    sub ax, 2                   ; cluster count starts at 2
     mov [currentCluster], ax
     mov bx, ROOT_DIR_BUFFER
     call FAT_load_chain         ; Go to the File Allocation Table and load the root dir into memory
@@ -55,7 +54,10 @@ FAT_find_file:
 ;   FAT has been loaded into RAM at FAT_BUFFER
 ;   ES = 0
 FAT_load_chain:
-    ; mov [currentCluster], ax
+    sub ax, 2                   ; clusters are numbered starting from 2, not from 0
+    mov [currentCluster], ax
+
+.loop:
 ; Read cluster into memory
     xor cx, cx                  ; clear out cx
     mov cl, [BPB_SecPerClus]
@@ -77,13 +79,6 @@ FAT_load_chain:
     cmp word [di], FAT_EOF_LOW  ; Check the current cluster for EOF
     jae .chain_end              ; if greater than or equal
 
-    ; cmp word [di], FAT_EOF_HIGH     ; Check the current top part of our cluster for EOF
-    ; jl .next_cluster                ; if less then
-
-    ; cmp word [di + 2], FAT_EOF_LOW  ; Check the current bottom part of our cluster for EOF
-    ; jae .chain_end                  ; if greater than or equal
-
-.next_cluster:
 ; Move to next cluster in the chain
     mov ax, [di]
     sub ax, 2
@@ -99,7 +94,7 @@ FAT_load_chain:
 ; Set starting cluster number for next call
     mov ax, [currentCluster]
 
-    jmp FAT_load_chain
+    jmp .loop
 
 .chain_end:
     ret

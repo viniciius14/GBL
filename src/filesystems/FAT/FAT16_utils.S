@@ -73,6 +73,10 @@ FAT_find_file:
 ;   FAT has been loaded into RAM at FAT_BUFFER
 ;   ES = 0
 FAT_load_chain:
+    sub ax, 2                   ; clusters are numbered starting from 2, not from 0
+    mov [currentCluster], ax
+
+.loop:
 ; Read cluster into memory
     xor cx, cx                  ; clear out cx
     mov cl, [BPB_SecPerClus]
@@ -112,7 +116,7 @@ FAT_load_chain:
 ; Set starting cluster number for next call
     mov ax, [currentCluster]
 
-    jmp FAT_load_chain
+    jmp .loop
 
 .chain_end:
     ret

@@ -7,8 +7,6 @@ load_stage2:
 %ifdef FAT_FS
     call FAT_find_file
 
-    sub ax, 2                   ; clusters are numbered starting from 2, not from 0
-    mov [currentCluster], ax
     xor bx, bx
     mov es, bx
     mov bx, STAGE2_OFFSET
