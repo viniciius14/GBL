@@ -21,6 +21,8 @@ stage2_16bit:
 
     mov si, stage2msg1
     call BIOS_print
+
+; Enable A20 line
     call A20_line
     jmp $
 
@@ -28,13 +30,14 @@ stage2_16bit:
     lgdt [GDT_Descriptor]       ; load GDT
     popa                        ; restore registers
 
-    mov eax, cr0                ; set bit 0 in cr0
+ ; set bit 0 in cr0
+    mov eax, cr0
     or  eax, 1
     mov cr0, eax
 
-    in al, 0x92                 ; Enable A20 gate
-    or al, 0x02
-    out 0x92, al
+    ; in al, 0x92                 ; Enable A20 gate
+    ; or al, 0x02
+    ; out 0x92, al
 
     CODE_SEG equ code_descriptor - GDT_Start
     DATA_SEG equ data_descriptor - GDT_Start

@@ -8,9 +8,11 @@
 ;
 BIOS_print:
     ; save registers we will modify
-    push si
-    push ax
-    push bx
+    pusha
+    ; push si
+    ; push ax
+    ; push bx
+    ; push ds
 
 .loop:
     lodsb               ; loads next character in al
@@ -23,9 +25,11 @@ BIOS_print:
     jmp .loop
 
 .done:
-    pop bx
-    pop ax
-    pop si
+    popa
+    ; pop ds
+    ; pop bx
+    ; pop ax
+    ; pop si
     ret
 
 %endif

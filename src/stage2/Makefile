@@ -25,4 +25,5 @@ extract:
 
 debug: LD_FLAGS += -Map=$(DEBUG_DIR)/stage2.map
 debug: link
-	objdump -D --visualize-jumps --start-address=0x7E00 $(OBJ_DIR)/stage2.elf > $(DEBUG_DIR)/stage2.dump
+	objdump -D --visualize-jumps --start-address=0x7E00 $(OBJ_DIR)/stage2.elf > $(DEBUG_DIR)/stage2_elf.dump
+	ndisasm -b 16 -o 0x7E00 $(BIN_DIR)/stage2.bin > $(DEBUG_DIR)/stage2_bin.dump

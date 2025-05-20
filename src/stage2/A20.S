@@ -7,29 +7,42 @@
 
 section .text
 
+; Inputs:
+;   - NONE
+; Outputs:
+;   - Enables the A20 line.
+;     If it isn't possible to do so the bootloader will throw a "Critical Error"
+;
 A20_line:
-    call check_A20
-    ; The BIOS might've already set the A20 line
-    cmp ax, 1
-    jne .done
+; The BIOS might've already set the A20 line
+    call A20_status
 
+    cmp ax, 1
+    jne .A20_disabled
+
+.A20_enabled:
     mov si, A20_STATUS_ON
     call BIOS_print
 
     ret
-.done:
+.A20_disabled:
     mov si, A20_STATUS_OFF
     call BIOS_print
 
     ret
 
-; Inputs
+
+; Inputs:
 ;   - NONE
 ; Outputs:
 ;   - ax = 0 if the a20 line is disabled
 ;   - ax = 1 if the a20 line is enabled
 ;
-check_A20:
+A20_status:
+    pushf
+    push ds
+    push es
+
     xor ax, ax
     mov es, ax
     not ax                  ; ax = 0xFFFF
@@ -37,19 +50,19 @@ check_A20:
     mov di, 0x0500
     mov si, 0x0510
 
-    ; Save the values at our memory locations
+; Save the values at our memory locations
     mov al, byte [es:di]    ; al = [0:0x500]
     push ax
 
     mov al, byte [ds:si]    ; al = [0xFFFF:0x510]
     push ax
 
-    ; Check if wrap around is happening
+; Check if wrap around is happening
     mov byte [es:di], 0x00  ; [0:0x500] = 0
     mov byte [ds:si], 0xFF  ; [0xFFFF:0x510] = 0xFF
     cmp byte [es:di], 0xFF
 
-    ; Restore original values
+; Restore original values
     pop ax
     mov byte [ds:si], al
     pop ax
@@ -59,11 +72,15 @@ check_A20:
     je .check_A20_exit
 
     mov ax, 1
+
+    pop es
+    pop ds
+    popf
 .check_A20_exit:
     ret
 
 
 section .rodata
+
 A20_STATUS_ON:  db "A20 line is enabled", 0
 A20_STATUS_OFF: db "A20 line is disabled", 0
-MSG_TEMP: db "THIS IS MY MEGA LONG STRING TO CHECK STAGE 1 FUNCTIONALITY FOR FAT 12 BECAUSE NOTHING WANTS TO WORK ON THIS DAMN PROJECT!!!!!!!!!!!!", 0
