@@ -18,15 +18,16 @@ A20_line:
     call A20_status
 
     cmp ax, 1
-    jne .A20_disabled
+    je .A20_enabled
+
+.A20_disabled:
+; fast A20 gate (only supported from the IBM PS/2 onwards)
+    in al, 0x92
+    or al, 2
+    out 0x92, al
 
 .A20_enabled:
-    mov si, A20_STATUS_ON
-    call BIOS_print
-
-    ret
-.A20_disabled:
-    mov si, A20_STATUS_OFF
+    mov si, MSG_A20
     call BIOS_print
 
     ret
@@ -39,7 +40,6 @@ A20_line:
 ;   - ax = 1 if the a20 line is enabled
 ;
 A20_status:
-    pushf
     push ds
     push es
 
@@ -68,19 +68,17 @@ A20_status:
     pop ax
     mov byte [es:di], al
 
+    pop es
+    pop ds
+
     mov ax, 0
     je .check_A20_exit
 
     mov ax, 1
 
-    pop es
-    pop ds
-    popf
 .check_A20_exit:
     ret
 
 
 section .rodata
-
-A20_STATUS_ON:  db "A20 line is enabled", 0
-A20_STATUS_OFF: db "A20 line is disabled", 0
+MSG_A20:  db "A20 line enabled", 0
