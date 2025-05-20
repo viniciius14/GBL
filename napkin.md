@@ -5,19 +5,14 @@ Technical debt:
     - In the makefile (stage1) we have to pass in the FS, BITS and KERNEL_NAME defines individually and can't add them to the ASM_FLAGS variable in the main Makefile for some reason
 
 Features to add:
-    - Add in the makefile the option to pass in KERNEL_NAME for the all target
     - Load one sector at a time for the FAT and the Root Directory
         - Add a "carousel" loader
     - Define an area where the kernel can read the status information we've obtained while in real mode
         - Memory area
         - Video modes
     - Check that the kernel is smaller than the total RAM area we have/the RAM is atleast N megabytes in size
-    - Extended read vs "normal" read
-        - decide if we'll do it by defines or dynamically
     - Add the cpu 8086 tag at the start of the code
     - Add support for calculation dataRegionSector for all FATs
-    - Add checks for the A20 line and it's support
-        - What to do if it is not supported?
     - What else to do in case of critical failure?
         - Just hang
         - Display an error code?
