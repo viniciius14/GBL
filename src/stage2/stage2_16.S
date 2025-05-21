@@ -1,14 +1,15 @@
 [bits 16]
 
 [global stage2_16bit]
+[global failure]
 
 [extern A20_line]
 [extern stage2_32bit]
 
 %include "common.S"
+%include "BIOS_utils.S"
 
 section .text
-%include "BIOS_utils.S"
 
 section stage2_16bit.text
 
@@ -19,14 +20,24 @@ stage2_16bit:
     mov ds, ax
     mov es, ax
 
-    mov si, stage2msg1
+    mov si, MSG1_stage2
     call BIOS_print
 
-    mov dx, 0x100
+    mov dx, 0x0100
     call BIOS_cursor_pos
 
 ; Enable A20 line
     call A20_line
+
+    mov dx, 0x0200
+    call BIOS_cursor_pos
+
+; Fill in the GeckOS Bootloader Information Structure®
+
+
+
+
+
     jmp $
 
     pusha                       ; save registers
@@ -55,9 +66,18 @@ failure:
 
 section .data
 
-currentCluster:         dw 0
-data_start_lba:         dw 0
-dataRegionSector:       dw FAT_DATA_START
+; TODO: Later on relocate this into a well know address
+; GeckOS Bootloader Information Structure
+GBL_InfoStruct:
+structureSize:      dw 0x0
+memMapSize:         dw 0x0
+memEntry1:          dw 0x0
+; ...
+memEntryN:          dw 0x0
+videoMode:          dw 0x0
+dateTime:
+
+section .data
 
 GDT_Start:
     null_descriptor:
@@ -83,10 +103,10 @@ GDT_Descriptor:
     dw GDT_End - GDT_Start - 1  ; size
     dd GDT_Start                ; start
 
+
 section .rodata
 
-stage2msg1:         db "Got to stage 2 of the bootloader. (16 bits)", 0
-file_kernel:        db "KERNEL_NAME", 0
+MSG1_stage2:        db "Got to stage 2 of the bootloader. (16 bits)", 0
 error_msg:          db "CRITICAL ERROR", 0
 
 %include "FAT_header.S"

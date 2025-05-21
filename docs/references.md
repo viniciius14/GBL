@@ -24,5 +24,7 @@
 
 
 # Other
-### BIOS:
+### BIOS Interrupts:
     https://stanislavs.org/helppc/idx_interrupt.html
+### INT 0x15, AX = 0xE820
+    http://www.uruk.org/orig-grub/mem64mb.html

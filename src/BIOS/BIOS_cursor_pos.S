@@ -1,11 +1,19 @@
 %ifndef __BIOS_CURSOR_POS_S
 %define __BIOS_CURSOR_POS_S
 
+[bits 16]
+
+section .text
+
+[global BIOS_cursor_pos]
+
+; Sets the cursor at the specified position
 ; Inputs:
 ;   - DH = row
 ;   - DL = column
 ; Outputs:
-;   - Sets the cursor at the specified position
+;   - None
+;
 BIOS_cursor_pos:
     push ax
     push bx

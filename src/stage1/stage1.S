@@ -41,7 +41,18 @@ stage1:
 
     jmp STAGE2_SEGMENT:STAGE2_OFFSET
 
-%include "BIOS_utils.S"
+%include "BIOS_print.S"
+%include "BIOS_disk_reset.S"
+
+; Use the extended INT13h utilities for HDDs
+%ifdef FAT12
+    %include "BIOS_read.S"
+%else
+    %include "BIOS_read_ext.S"
+%endif
+
+
+
 %include "load_stage2.S"
 
 ; Common label to jump to when a critical error is found

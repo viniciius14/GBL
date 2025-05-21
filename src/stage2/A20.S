@@ -3,6 +3,8 @@
 [global A20_line]
 
 [extern BIOS_print]
+[extern failure]
+
 %include "macros.S"
 
 section .text
@@ -25,6 +27,15 @@ A20_line:
     in al, 0x92
     or al, 2
     out 0x92, al
+
+; check if it was successfull
+    call A20_status
+
+    cmp ax, 1
+    je .A20_enabled
+
+; in case we couldn't enable the A20 gate
+    jmp failure
 
 .A20_enabled:
     mov si, MSG_A20
@@ -81,4 +92,4 @@ A20_status:
 
 
 section .rodata
-MSG_A20:  db "A20 line enabled", 0
+MSG_A20:  db "A20 line enabled.", 0

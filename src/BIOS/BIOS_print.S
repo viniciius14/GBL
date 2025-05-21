@@ -1,10 +1,17 @@
 %ifndef __BIOS_PRINT_S
 %define __BIOS_PRINT_S
 
+[bits 16]
+
+section .text
+
 [global BIOS_print]
+
 ; Prints a string to the screen
 ; Inputs:
 ;   - DS:SI = pointer to string
+; Outputs:
+;   - None
 ;
 BIOS_print:
     pusha

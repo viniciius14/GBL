@@ -1,9 +1,17 @@
 %ifndef __BIOS_DISK_RESET_S
 %define __BIOS_DISK_RESET_S
 
+[bits 16]
+
+section .text
+
+[global BIOS_disk_reset]
+
 ; Resets disk controller
 ; Inputs:
-;   DL = drive number
+;   - DL = drive number
+; Outputs:
+;   - None
 ;
 BIOS_disk_reset:
     pusha
