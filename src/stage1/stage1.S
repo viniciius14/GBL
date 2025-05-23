@@ -51,8 +51,6 @@ stage1:
     %include "BIOS_read_ext.S"
 %endif
 
-
-
 %include "load_stage2.S"
 
 ; Common label to jump to when a critical error is found

@@ -18,34 +18,43 @@ section .text
 ;   - None
 ;
 BIOS_detect_mem:
-    push ecx                ; store the buffer size
-    xor ebx, ebx
-    jmp .call               ; since this is the first call skipp the loop setup
+    push ecx                    ; store the total buffer size
+    xor ebx, ebx                ; since it's the first call, set ebx to 0
 
-.loop_setup:
-; update available buffer size
-    mov edx, ecx        ; number of bytes written to the buffer
-    pop ecx
-    sub ecx, edx        ; subtract from buffer size the number of bytes written in the last call
-    push ecx
-; update buffer pointer
-    add edi, edx
-
-.call:
+.loop:
     mov eax, 0xE820
-    mov edx, BIOS_MMAP_SMAP
-    ; ebx will be set from the previous or be 0
+    mov ecx, MMAP_ENTRY_SIZE
+    mov edx, MMAP_SMAP
+    ; ebx will be set from the previous call or be 0
+
     int 0x15
 
-; if carry flag is set it means there was an error
+; if carry flag is set, return
     jc .end
 
-; or if eax is different from "SMAP"
-    cmp eax, BIOS_MMAP_SMAP
+; if eax is different from "SMAP", return
+    cmp eax, MMAP_SMAP
     jne .end
 
-; else continue looping
-    jmp .loop_setup
+; if less than 20 bytes were written, return
+    cmp ecx, 20
+    jl .end
+
+; if continuation value is 0, return
+    cmp ebx, 0
+    je .end
+
+; update available buffer size
+    mov eax, ecx                ; number of bytes written to the buffer
+    pop ecx                     ; get the buffer size
+    sub ecx, eax                ; buffer size -= number of bytes written
+    cmp ecx, MMAP_ENTRY_SIZE    ; check if there's space for more entries
+    jl .end
+
+    push ecx                    ; store buffer size
+    add edi, eax                ; buffer pointer += read bytes
+
+    jmp .loop
 
 .end:
     pop ecx
@@ -56,6 +65,6 @@ BIOS_detect_mem:
     ret
 
 section .rodata
-MSG_BIOS_MemMap:    db "Memory map read from int 0x15.", 0
+MSG_BIOS_MemMap:    db "Memory map read from BIOS.", 0
 
 %endif

@@ -2,6 +2,7 @@
 
 [global stage2_16bit]
 [global failure]
+[global GBL_InfoStruct]
 
 [extern A20_line]
 [extern stage2_32bit]
@@ -20,20 +21,22 @@ stage2_16bit:
     mov ds, ax
     mov es, ax
 
-    mov si, MSG1_stage2
+    mov si, MSG_stage2_16
     call BIOS_print
 
-    mov dx, 0x0100
+    mov dx, 0x0100              ; set cursor to line 1
     call BIOS_cursor_pos
 
 ; Enable A20 line
     call A20_line
 
-    mov dx, 0x0200
+    mov dx, 0x0200              ; set cursor to line 2
     call BIOS_cursor_pos
 
-; Fill in the GeckOS Bootloader Information Structure®
-
+; Fill in the memory map section of the GBL InfoStruct
+    mov di, GBL_InfoStruct.memMapEntries
+    mov ecx, [GBL_InfoStruct.memMapSize]
+    call BIOS_detect_mem
 
 
 
@@ -59,25 +62,24 @@ stage2_16bit:
     jmp CODE_SEG:stage2_32bit
 
 failure:
-    mov si, error_msg
+    mov si, MSG_ERROR
     jmp BIOS_print
     unreachable
 
 
-section .data
 
+section .data
 ; TODO: Later on relocate this into a well know address
-; GeckOS Bootloader Information Structure
+; GeckOS Bootloader Information Structure®
+BEFORE:         dd "DEAD"
 GBL_InfoStruct:
-structureSize:      dw 0x0
-memMapSize:         dw 0x0
-memEntry1:          dw 0x0
-; ...
-memEntryN:          dw 0x0
-videoMode:          dw 0x0
-dateTime:
-
-section .data
+.structureSize:      dw GBL_InfoStruct - GBL_InfoStruct.end
+.memMapSize:         dW MMAP_ENTRIES_SIZE
+.memMapEntries:      times (MMAP_ENTRIES_SIZE) db 0
+.videoMode:          dw 0x0
+.dateTime:           dd 0x0
+.end:
+AFTER:        dd "DEAD"
 
 GDT_Start:
     null_descriptor:
@@ -106,7 +108,7 @@ GDT_Descriptor:
 
 section .rodata
 
-MSG1_stage2:        db "Got to stage 2 of the bootloader. (16 bits)", 0
-error_msg:          db "CRITICAL ERROR", 0
+MSG_stage2_16:      db "Got to stage 2 of the bootloader. (16 bits)", 0
+MSG_ERROR:          db "CRITICAL ERROR", 0
 
 %include "FAT_header.S"
