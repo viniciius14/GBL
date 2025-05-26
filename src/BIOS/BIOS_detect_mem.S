@@ -29,6 +29,9 @@ BIOS_detect_mem:
 
     int 0x15
 
+; set the last 4 byte block to 1 (little endian) to make the map ACPI compatible
+    mov byte [edi + 20], 1
+
 ; if carry flag is set, return
     jc .end
 
@@ -52,7 +55,7 @@ BIOS_detect_mem:
     jl .end
 
     push ecx                    ; store buffer size
-    add edi, eax                ; buffer pointer += read bytes
+    add edi, MMAP_ENTRY_SIZE    ; buffer pointer += (max) entry size
 
     jmp .loop
 

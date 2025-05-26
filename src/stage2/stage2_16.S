@@ -38,9 +38,6 @@ stage2_16bit:
     mov ecx, [GBL_InfoStruct.memMapSize]
     call BIOS_detect_mem
 
-
-
-
     jmp $
 
     pusha                       ; save registers
@@ -67,20 +64,21 @@ failure:
     unreachable
 
 
-
+; TODO section .bss
 section .data
 ; TODO: Later on relocate this into a well know address
 ; GeckOS Bootloader Information Structure®
-BEFORE:         dd "DEAD"
+BEFORE:             dd "DEAD"
 GBL_InfoStruct:
-.structureSize:      dw GBL_InfoStruct - GBL_InfoStruct.end
-.memMapSize:         dW MMAP_ENTRIES_SIZE
-.memMapEntries:      times (MMAP_ENTRIES_SIZE) db 0
-.videoMode:          dw 0x0
-.dateTime:           dd 0x0
+.structureSize:     dw GBL_InfoStruct - GBL_InfoStruct.end
+.memMapSize:        dw MMAP_ENTRIES_SIZE
+.memMapEntries:     times (MMAP_ENTRIES_SIZE) db 0
+.videoMode:         dw 0x0
+.dateTime:          dd 0x0
 .end:
-AFTER:        dd "DEAD"
+AFTER:              dd "DEAD"
 
+; TODO section .data
 GDT_Start:
     null_descriptor:
         dd  0
@@ -100,6 +98,8 @@ GDT_Start:
         db 0b11001111
         db 0
 GDT_End:
+
+; TODO: Can this be section .rodata ?
 
 GDT_Descriptor:
     dw GDT_End - GDT_Start - 1  ; size
