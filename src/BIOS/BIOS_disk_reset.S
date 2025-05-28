@@ -7,6 +7,10 @@ section .text
 
 [global BIOS_disk_reset]
 
+%ifndef STAGE_1
+[extern failure]
+%endif
+
 ; Resets disk controller
 ; Inputs:
 ;   - DL = drive number

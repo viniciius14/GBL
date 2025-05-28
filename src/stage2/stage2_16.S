@@ -74,7 +74,6 @@ GBL_InfoStruct:
 .memMapSize:        dw MMAP_ENTRIES_SIZE
 .memMapEntries:     times (MMAP_ENTRIES_SIZE) db 0
 .videoMode:         dw 0x0
-.dateTime:          dd 0x0
 .end:
 AFTER:              dd "DEAD"
 
