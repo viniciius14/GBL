@@ -38,6 +38,24 @@ stage2_16bit:
     mov ecx, [GBL_InfoStruct.memMapSize]
     call BIOS_detect_mem
 
+; Switches to graphics mode 0x13
+    mov al, 0x13
+    call BIOS_set_video_mode
+
+; ! TEMP
+; Point ES to video memory segment 0xA000
+    mov ax, 0xA000
+    mov es, ax
+    xor di, di          ; Start at offset 0
+
+; Fill half the screen with color 3 (red)
+    mov al, 4
+    mov cx, 320*100
+
+rep_stosb:
+    rep stosb           ; Fill ES:DI with AL (blue)
+; ! TEMP
+
     jmp $
 
     pusha                       ; save registers
@@ -48,10 +66,6 @@ stage2_16bit:
     mov eax, cr0
     or  eax, 1
     mov cr0, eax
-
-    ; in al, 0x92                 ; Enable A20 gate
-    ; or al, 0x02
-    ; out 0x92, al
 
     CODE_SEG equ code_descriptor - GDT_Start
     DATA_SEG equ data_descriptor - GDT_Start
@@ -109,5 +123,6 @@ section .rodata
 
 MSG_stage2_16:      db "Got to stage 2 of the bootloader. (16 bits)", 0
 MSG_ERROR:          db "CRITICAL ERROR", 0
+MSG_welcome:        db "Welcome to GBL, the GeckOS Bootloader!", 0
 
 %include "FAT_header.S"

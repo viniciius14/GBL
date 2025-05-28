@@ -18,11 +18,6 @@ stage1:
     mov al, 0x3
     int 0x10
 
-    ; Switches to graphics mode 0x13 -> Resolution: 320 x 200 | Adapter: EGA | Colors: 16 bit
-    ; mov ah, 0x0
-    ; mov al, 0x13
-    ; int 0x10
-
     cli                     ; Clear interrupt flag
     cld                     ; Clear direction flag
     xor ax, ax              ; Clear main registers

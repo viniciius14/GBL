@@ -16,5 +16,6 @@
 %include "BIOS_relocate.S"
 %include "BIOS_cursor_pos.S"
 %include "BIOS_detect_mem.S"
+%include "BIOS_set_video_mode.S"
 
 %endif
