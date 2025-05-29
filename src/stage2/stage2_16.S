@@ -5,10 +5,12 @@
 [global GBL_InfoStruct]
 
 [extern A20_line]
+; [extern set_GDT]
 [extern stage2_32bit]
 
 %include "common.S"
 %include "BIOS_utils.S"
+%include "GDT.S"
 
 section .text
 
@@ -42,34 +44,15 @@ stage2_16bit:
     mov al, 0x13
     call BIOS_set_video_mode
 
-; ! TEMP
-; Point ES to video memory segment 0xA000
-    mov ax, 0xA000
-    mov es, ax
-    xor di, di          ; Start at offset 0
+; Set the Global Descriptor Table
+    call set_GDT
 
-; Fill half the screen with color 3 (red)
-    mov al, 4
-    mov cx, 320*100
-
-rep_stosb:
-    rep stosb           ; Fill ES:DI with AL (blue)
-; ! TEMP
-
-    jmp $
-
-    pusha                       ; save registers
-    lgdt [GDT_Descriptor]       ; load GDT
-    popa                        ; restore registers
-
- ; set bit 0 in cr0
+ ; Set bit 0 in cr0
     mov eax, cr0
     or  eax, 1
     mov cr0, eax
 
-    CODE_SEG equ code_descriptor - GDT_Start
-    DATA_SEG equ data_descriptor - GDT_Start
-
+; Far jump to 32 bit protected mode
     jmp CODE_SEG:stage2_32bit
 
 failure:
@@ -90,33 +73,6 @@ GBL_InfoStruct:
 .videoMode:         dw 0x0
 .end:
 AFTER:              dd "DEAD"
-
-; TODO section .data
-GDT_Start:
-    null_descriptor:
-        dd  0
-        dd  0
-    code_descriptor:
-        dw 0xFFFF
-        dw 0                    ; 16 bits +
-        db 0                    ; 8 bits = 24
-        db 0b10011010           ; type flags
-        db 0b11001111           ; other flags
-        db 0                    ; last 8 bits of base
-    data_descriptor:
-        dw 0xFFFF
-        dw 0
-        db 0
-        db 0b10010010
-        db 0b11001111
-        db 0
-GDT_End:
-
-; TODO: Can this be section .rodata ?
-
-GDT_Descriptor:
-    dw GDT_End - GDT_Start - 1  ; size
-    dd GDT_Start                ; start
 
 
 section .rodata

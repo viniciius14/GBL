@@ -6,7 +6,7 @@
 
 [global _load_kernel]
 
-[extern print_string_32]
+; [extern print_string_32]
 
 %include "macros.S"
 %include "constants.S"
@@ -17,7 +17,7 @@ _load_kernel:
     mov esi, stage2msg3     ; Point ESI to the string
     mov ebx, 320            ; Start at the top-left corner of the screen
     ; to delete later
-    call print_string_32
+    ; call print_string_32
 
 ; load root dir to fat buffer
 ; find our file
