@@ -10,7 +10,7 @@ echo:
 
 
 assemble:
-	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) $(BOOT_INCLUDES) -D$(FS) -D$(BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' stage1.S -o $(BIN_DIR)/stage1_$(FS).bin
+	$(ASM) stage1.S -o $(BIN_DIR)/stage1_$(FS).bin $(ASM_FORMAT) $(ASM_FLAGS) $(BOOT_INCLUDES) -D$(FS) -D$(BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"'
 
 
 debug:

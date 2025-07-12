@@ -1,0 +1,26 @@
+# Ignore version control
+**/.git
+**/.gitignore
+
+# Ignore build artifacts
+**/*.o
+**/*.elf
+**/*.bin
+**/*.img
+**/*.a
+**/*.so
+
+# Ignore local config
+**/.vscode/
+
+# Ignore the following directories
+**/docs/
+**/build/
+
+# Ignore documentation and media files
+**/*.log
+**/*.md
+**/*.png
+
+# Additional files to be ignored
+**/LICENSE

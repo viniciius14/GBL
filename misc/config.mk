@@ -1,7 +1,7 @@
 # Constants for the build system
 
 # Directories
-PROJECT=/root/projects/GBL
+PROJECT=/home
 
 BUILD_DIR=$(PROJECT)/build
 DOCS_DIR=$(PROJECT)/docs

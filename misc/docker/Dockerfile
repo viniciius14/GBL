@@ -1,0 +1,62 @@
+FROM ubuntu:22.04
+
+# Set environment variables
+ENV PREFIX="/usr/local/i386elfgcc"
+ENV TARGET="i386-elf"
+ENV PATH="${PREFIX}/bin:${PATH}"
+
+# 1. Install base dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    # Emulator
+    qemu qemu-system-x86 qemu-kvm \
+    # Build tools
+    build-essential nasm dosfstools mtools \
+    # UI/X11 libs
+    x11-apps libgtk-3-0 \
+    # Download/Source tools
+    curl sudo bison flex \
+    # GCC build dependencies
+    libgmp3-dev libmpc-dev libmpfr-dev texinfo && \
+    # Clean up apt cache
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tmp/src
+
+# Alternatively we could install brew and get the packages from there
+
+# 2. Build and install Binutils
+RUN curl -O http://ftp.gnu.org/gnu/binutils/binutils-2.39.tar.gz && \
+    tar xf binutils-2.39.tar.gz && \
+    mkdir binutils-build && cd binutils-build && \
+    ../binutils-2.39/configure \
+        --target=${TARGET} \
+        --prefix=${PREFIX} \
+        --disable-nls \
+        --disable-werror && \
+    make && make install && \
+    # Clean up this stage
+    cd /tmp && rm -rf /tmp/src/binutils*
+
+# 3. Build and install GCC
+RUN cd /tmp/src && \
+    curl -O https://ftp.gnu.org/gnu/gcc/gcc-12.2.0/gcc-12.2.0.tar.gz && \
+    tar xf gcc-12.2.0.tar.gz && \
+    mkdir gcc-build && cd gcc-build && \
+    ../gcc-12.2.0/configure \
+        --target=${TARGET} \
+        --prefix="${PREFIX}" \
+        --disable-nls \
+        --enable-languages=c,c++ \
+        --without-headers && \
+    make all-gcc && \
+    make all-target-libgcc && \
+    make install-gcc && \
+    make install-target-libgcc && \
+    # Clean up this stage
+    cd / && rm -rf /tmp/src
+
+# Set the final working directory
+WORKDIR /home
+
+CMD ["bash"]
