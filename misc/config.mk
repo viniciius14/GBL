@@ -1,34 +1,39 @@
 # Constants for the build system
-
 # Directories
-PROJECT=/home
+export BUILD_DIR   := $(PROJECT)/build
+export DOCS_DIR    := $(PROJECT)/docs
+export MISC_DIR    := $(PROJECT)/misc
+export SRC_DIR     := $(PROJECT)/src
 
-BUILD_DIR=$(PROJECT)/build
-DOCS_DIR=$(PROJECT)/docs
-MISC_DIR=$(PROJECT)/misc
-SRC_DIR=$(PROJECT)/src
+export BIN_DIR     := $(BUILD_DIR)/bin
+export OBJ_DIR     := $(BUILD_DIR)/obj
+export DEBUG_DIR   := $(BUILD_DIR)/debug
+export STATS_FILE  := $(BUILD_DIR)/stats.log
 
-BIN_DIR=$(BUILD_DIR)/bin
-OBJ_DIR=$(BUILD_DIR)/obj
-DEBUG_DIR=$(BUILD_DIR)/debug
+export SCRIPTS_DIR := $(MISC_DIR)/scripts
 
-STATS=$(BUILD_DIR)/stats.log
+export BIOS_DIR    := $(SRC_DIR)/BIOS
+export COMMON_DIR  := $(SRC_DIR)/common
+export FS_DIR      := $(SRC_DIR)/filesystems
+export STAGE1_DIR  := $(SRC_DIR)/stage1
+export STAGE2_DIR  := $(SRC_DIR)/stage2
 
-SCRIPTS_DIR=$(MISC_DIR)/scripts
+# Tools
+export ASM=nasm
+export CC=i386-elf-gcc
+export LD=ld
+export OBJ_CPY=i386-elf-objcopy
+export EMULATOR=qemu-system-i386
 
-ASM=nasm
-ASM_FLAGS=-W+all -W+error -W+orphan-labels -W+macro-params
-ASM_FORMAT=-f elf32
+# Flags
+export ASM_FLAGS=-W+all -W+error -W+orphan-labels -W+macro-params
+export ASM_FORMAT=-f elf32
 
-CC=i386-elf-gcc
-CC_FLAGS=-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -std=c11
+export CC_FLAGS=-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -std=c11
 
-LD=ld
-LD_FLAGS=--gc-sections -m elf_i386
-LD_FORMAT=-m elf_i386
+export LD_FLAGS=--gc-sections -m elf_i386
+export LD_FORMAT=-m elf_i386
 
-OBJ_CPY=i386-elf-objcopy
-OBJ_FLAGS=-O binary
+export OBJ_CPY_FLAGS=-O binary
 
-EMULATOR=qemu-system-i386
-EMUL_FLAGS=-m 128M -serial stdio -machine pc
+export EMUL_FLAGS=-m 128M -serial stdio -machine pc

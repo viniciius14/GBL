@@ -1,21 +1,21 @@
-include misc/config.mk
+PROJECT := $(shell pwd)
+
+include $(PROJECT)/misc/config.mk
 
 # Define the path to config.mk
-export CONFIG_PATH := $(PROJECT)/misc/config.mk
+export CONFIG_PATH := $(MISC_DIR)/config.mk
 
 # User inputs
-export FS   ?= FAT12
-export BITS ?= BITS32
+export FILE_SYSTEM ?= FAT12
+export ARCH_BITS        ?= BITS32
 export KERNEL_NAME ?= KERNEL  BIN
 
-OUTPUT_DIR ?= $(BUILD_DIR)
-
-# Input options
+# User Input Options
 SUPPORTED_FILE_SYSTEMS := FAT12 FAT16 FAT32
 SUPPORTED_TARGET_BITS  := BITS32 BITS64
 
 # Current target
-TARGET = $(OUTPUT_DIR)/GeckOS_$(FS)_$(BITS).img
+TARGET = $(BUILD_DIR)/GeckOS_$(FILE_SYSTEM)_$(ARCH_BITS).img
 
 # Include all directories while compiling each unit
 BOOT_SUBDIRS = $(shell find $(SRC_DIR) -mindepth 1 -type d)
@@ -26,20 +26,20 @@ GBL: bootloader stats image
 
 
 all:
-	rm -f $(STATS)
+	rm -f $(STATS_FILE)
 	@for fs in $(SUPPORTED_FILE_SYSTEMS); do \
 		for arch in $(SUPPORTED_TARGET_BITS); do \
 			echo "\nBuilding GeckOS_$${fs}_$${arch}.img...\n"; \
 			rm -rf $(BUILD_DIR)/*/; \
-			$(MAKE) FS=$$fs BITS=$$arch GBL; \
+			$(MAKE) FILE_SYSTEM=$$fs ARCH_BITS=$$arch GBL; \
 		done \
 	done
 
 
 debug: clean GBL
-	$(MAKE) -C $(SRC_DIR)/stage1 debug
-	$(MAKE) -C $(SRC_DIR)/stage2 debug
-	bash $(SCRIPTS_DIR)/QEMU_GDB.sh $(FS) $(BITS)
+	$(MAKE) -C stage1 debug
+	$(MAKE) -C stage2 debug
+	bash $(SCRIPTS_DIR)/QEMU_GDB.sh $(FILE_SYSTEM) $(ARCH_BITS)
 
 
 clean:
@@ -48,13 +48,13 @@ clean:
 
 
 run: GBL
-ifeq ($(FS), FAT12)
+ifeq ($(FILE_SYSTEM), FAT12)
 	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=floppy $(EMUL_FLAGS)
 else
 	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=ide $(EMUL_FLAGS)
 endif
 
-### "Backend" of the Makefile
+# "Backend" of the Makefile
 
 dirs:
 	mkdir -p $(BIN_DIR)
@@ -69,23 +69,23 @@ bootloader: dirs
 
 
 stats:
-	@echo "--- TARGET -> $(TARGET) ---" >> $(STATS)
-	$(call bin_size_stat, $(BIN_DIR)/stage1_$(FS).bin)
+	@echo "--- TARGET -> $(TARGET) ---" >> $(STATS_FILE)
+	$(call bin_size_stat, $(BIN_DIR)/stage1_$(FILE_SYSTEM).bin)
 	$(call bin_size_stat, $(BIN_DIR)/stage2.bin)
-	@echo "\n" >> $(STATS)
+	@echo "\n" >> $(STATS_FILE)
 
 
 image:
 	@echo "\n--- Image Creation ---\n"
-ifeq ($(FS), FAT12)
+ifeq ($(FILE_SYSTEM), FAT12)
 	$(MAKE)  FAT12
-else ifeq ($(FS), FAT16)
+else ifeq ($(FILE_SYSTEM), FAT16)
 	$(MAKE)  FAT16
-else ifeq ($(FS), FAT32)
+else ifeq ($(FILE_SYSTEM), FAT32)
 	$(MAKE)  FAT32
 endif
 # Add stage1 bootloader
-	dd if=$(BIN_DIR)/stage1_$(FS).bin       of=$(TARGET)     bs=512 seek=0 conv=notrunc
+	dd if=$(BIN_DIR)/stage1_$(FILE_SYSTEM).bin       of=$(TARGET)     bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader
 	mcopy -i $(TARGET) $(BIN_DIR)/stage2.bin ::
 
@@ -107,11 +107,11 @@ FAT32:
 	dd if=/dev/zero                         of=$(TARGET)     bs=512        count=273042
 	mkfs.fat $(TARGET) -a -F 32 -S 512 -s 4 -R 32
 # Add copy of stage1 bootloader and File System Information Structure
-	dd if=$(BIN_DIR)/stage1_FAT32.bin      of=$(TARGET)     bs=512  seek=6 conv=notrunc
+	dd if=$(BIN_DIR)/stage1_FAT32.bin      of=$(TARGET)      bs=512 seek=6 conv=notrunc
 
 
 define bin_size_stat
-	@wc -c $1 | awk '{ if ($$2 != "total") { n=split($$2,a,"/"); printf "%s - %s bytes\n", a[n], $$1 } }' >> $(STATS)
+	@wc -c $1 | awk '{ if ($$2 != "total") { n=split($$2,a,"/"); printf "%s - %s bytes\n", a[n], $$1 } }' >> $(STATS_FILE)
 endef
 
 

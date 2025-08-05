@@ -22,12 +22,10 @@ stage2_32bit:
     mov gs, ax
     mov ss, ax
 
-    ; === Write color to VGA memory ===
     mov edi, 0xA0000
     mov eax, 0x01010101         ; 4 pixels with color index 1 (blue-ish)
     mov ecx, 320*200/4
     rep stosd
-
 
     unreachable
 

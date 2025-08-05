@@ -58,7 +58,7 @@
  - [ ] Setup GDT and TSS
 
 ### Objectives 2:
- - [ ] Setup "the" GBL welcome messagem in video mode
+ - [ ] Setup "the" GBL welcome message in video mode
  - [ ] Add UEFI support
  - [ ] Add support for more filesystems
  - [ ] Add BOCHS emulation support

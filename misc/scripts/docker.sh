@@ -1,4 +1,5 @@
 #!/bin/bash
+
 IMAGE_NAME="gecko_image"
 CONTAINER_NAME="gecko_container"
 
@@ -30,12 +31,14 @@ echo "IMAGE TIME           ======>  $(date -d "@$IMAGE_TIME" "+%Y-%m-%d %H:%M:%S
 echo "FILE TIME            ======>  $(date -d "@$FILE_TIME" "+%Y-%m-%d %H:%M:%S")"
 echo "DOCKER PROJECT DIR   ======>  $DOCKER_ROOT"
 echo "=================================================================="
+echo ""
 
 # Docker instalation stuff
 if ! command -v docker &> /dev/null; then
-    echo "Docker is not installed!"
-    echo "Please install Docker: https://docs.docker.com/get-docker/"
-    exit 1
+    echo "Docker is not installed."
+    echo "Please install Docker before proceeding."
+    echo "https://docs.docker.com/get-docker/"
+    return
 fi
 
 # Allow X11 access for Docker

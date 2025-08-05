@@ -5,7 +5,7 @@ if [ -z "$1" ] || [ -z "$2" ] || [ $# -eq 0 ] || [ $# -gt 2 ]
 then
     echo "Usage \"bash /qemu_gdb.sh <FILESYSTEM> <BITS>\""
     echo "Options are: FAT12 FAT16 FAT32 for FILESYSTEM"
-    echo "Options are: BITS32 BITS64 for BITS"
+    echo "Options are: BITS32 BITS64 for ARCHITECTURE BITS"
     exit
 fi
 

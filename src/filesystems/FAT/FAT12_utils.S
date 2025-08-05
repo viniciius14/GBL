@@ -68,7 +68,7 @@ FAT_find_file:
 FAT_load_chain:
     sub ax, 2                   ; clusters are numbered starting from 2, not from 0
     mov [currentCluster], ax
-;
+
 .loop:
 ; Read cluster into memory
     xor cx, cx                  ; clear out cx
