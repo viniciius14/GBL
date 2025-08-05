@@ -18,6 +18,9 @@ export FS_DIR      := $(SRC_DIR)/filesystems
 export STAGE1_DIR  := $(SRC_DIR)/stage1
 export STAGE2_DIR  := $(SRC_DIR)/stage2
 
+# This file itself
+export CONFIG_FILE := $(MISC_DIR)/config.mk
+
 # Tools
 export ASM=nasm
 export CC=i386-elf-gcc
@@ -37,3 +40,11 @@ export LD_FORMAT=-m elf_i386
 export OBJ_CPY_FLAGS=-O binary
 
 export EMUL_FLAGS=-m 128M -serial stdio -machine pc
+
+export FS_FAT12_ARGS = -a -F 12 -S 512 -s 1 -r 224 -R 1
+export FS_FAT16_ARGS = -a -F 16 -S 512 -s 8 -r 512 -R 4
+export FS_FAT32_ARGS = -a -F 32 -S 512 -s 4        -R 32
+
+define bin_size_stat
+	@wc -c $1 | awk '{ if ($$2 != "total") { n=split($$2,a,"/"); printf "%s - %s bytes\n", a[n], $$1 } }' >> $(BUILD_DIR)/stats.log
+endef

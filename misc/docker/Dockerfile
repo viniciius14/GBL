@@ -27,4 +27,6 @@ RUN echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /etc/profil
 # Install i386-elf-gcc & i386-elf-binutils
 RUN brew install x86_64-elf-gcc x86_64-elf-binutils
 
+WORKDIR /GBL
+
 CMD [ "bash" ]

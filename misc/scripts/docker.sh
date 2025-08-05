@@ -31,9 +31,7 @@ echo "IMAGE TIME           ======>  $(date -d "@$IMAGE_TIME" "+%Y-%m-%d %H:%M:%S
 echo "FILE TIME            ======>  $(date -d "@$FILE_TIME" "+%Y-%m-%d %H:%M:%S")"
 echo "DOCKER PROJECT DIR   ======>  $DOCKER_ROOT"
 echo "=================================================================="
-echo ""
 
-# Docker instalation stuff
 if ! command -v docker &> /dev/null; then
     echo "Docker is not installed."
     echo "Please install Docker before proceeding."

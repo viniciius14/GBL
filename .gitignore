@@ -2,7 +2,6 @@ build/
 /.vscode
 
 *.log
-*.drawio
 *.bin
 *.img
 *.json
