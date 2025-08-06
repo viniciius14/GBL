@@ -12,7 +12,7 @@ IMAGE_EXISTS=$(docker image inspect "$IMAGE_NAME" >/dev/null 2>&1 && echo yes ||
 IMAGE_TIME=$(docker image inspect "$IMAGE_NAME" -f '{{.Created}}' 2>/dev/null | xargs -I{} date -d {} +%s || echo 0)
 FILE_TIME=$(date -r "$DOCKERFILE" +%s)
 
-DOCKER_ROOT="/home"
+DOCKER_ROOT="/GBL"
 
 # X11 socket sharing
 XSOCK="/tmp/.X11-unix"
@@ -21,7 +21,7 @@ XAUTH="$HOME/.Xauthority"
 # Print info
 echo ""
 echo "=================================================================="
-echo "   SETTING UP DOCKER ENVIROMENT AND TOOLS TO BUILD THE BOOTLOADER   "
+echo "  SETTING UP DOCKER ENVIROMENT AND TOOLS TO BUILD THE BOOTLOADER  "
 echo "=================================================================="
 echo "IMAGE NAME           ======>  $IMAGE_NAME"
 echo "CONTAINER NAME       ======>  $CONTAINER_NAME"
@@ -49,12 +49,14 @@ if [[ "$IMAGE_EXISTS" == "no" || "$FILE_TIME" -gt "$IMAGE_TIME" ]]; then
     printf "%$(((SPACER_SZ-${#change})/2))s%s\n" "" "$change"
     echo "=================================================================="
     echo ""
-    echo "If it's the first time you're running this it'll take a bit!"
-    echo ""
-    docker build -t $IMAGE_NAME "$DOCKERFILE_DIR"
+    # docker build -t $IMAGE_NAME "$DOCKERFILE_DIR"
+    docker build -f "$DOCKERFILE" -t $IMAGE_NAME "$PROJECT_ROOT"
+
 
 else
-    echo "IMAGE '$IMAGE_NAME' IS UP TO DATE."
+    SPACER_SZ=68
+    change='IMAGE '$IMAGE_NAME' IS UP TO DATE.'
+    printf "%$(((SPACER_SZ-${#change})/2))s%s\n" "" "$change"
     echo "=================================================================="
 fi
 
@@ -64,7 +66,6 @@ docker run -it --rm \
     -v $XSOCK:$XSOCK \
     -v $XAUTH:$XAUTH \
     -e XAUTHORITY=$XAUTH \
-    -v "$PROJECT_ROOT":$DOCKER_ROOT \
     --device /dev/kvm \
     --cap-add=NET_ADMIN \
     --security-opt seccomp=unconfined \

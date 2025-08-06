@@ -1,9 +1,7 @@
 ### Technical debt
-- For some reason having ASM_FLAGS in the config.mk makes it so our flags don't get added to it, moved the var to GBL/Makefile
-- Assuming 50 sector section will be enough/won't cause issues
-- In the makefile we have to pass in the PROJECT dir as a hardcoded value because makefile will reevaluate it otherwise
-- In the makefile (stage1) we have to pass in the FS, BITS and KERNEL_NAME defines individually and can't add them to the ASM_FLAGS variable in the main Makefile for some reason
+- Assuming 50 sector section will be enough/won't cause issues (stage2 fat implementations for FAT16 nd FAT32)
 - Failure label jumping to BIOS_print instead of calling it (to call it we'd need to level the stack, so: mov sp, 0x7c00 and then we should be able to call stuff?)
+- .dockeringore is not working
 
 ### Features to add:
 - Load one sector at a time for the FAT and the Root Directory

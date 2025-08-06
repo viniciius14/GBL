@@ -26,6 +26,8 @@ export ASM=nasm
 export CC=i386-elf-gcc
 export LD=ld
 export OBJ_CPY=i386-elf-objcopy
+export OBJ_DMP=objdump
+export DISASM=ndisasm
 export EMULATOR=qemu-system-i386
 
 # Flags
@@ -38,6 +40,8 @@ export LD_FLAGS=--gc-sections -m elf_i386
 export LD_FORMAT=-m elf_i386
 
 export OBJ_CPY_FLAGS=-O binary
+
+export OBJ_DMP_FLAGS=-D --visualize-jumps --start-address=0x7E00
 
 export EMUL_FLAGS=-m 128M -serial stdio -machine pc
 

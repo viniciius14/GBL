@@ -17,7 +17,7 @@ STAGE1_DEBUG_DUMP = $(DEBUG_DIR)/stage1_$(FILE_SYSTEM)_$(ARCH_BITS).dump
 build: $(STAGE1_BIN)
 
 
-debug: $(STAGE1_BIN) | $(DEBUG_DIR)
+debug: $(STAGE1_BIN)
 	@echo "Generating debug artifacts for stage1..."
 # Generate preprocessed output (.i file)
 	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) \
@@ -44,7 +44,5 @@ stats: $(STAGE1_BIN)
 
 
 # Build rules
-$(STAGE1_BIN): $(STAGE1_SRC) | $(BIN_DIR)
-	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) $(GBL_INCLUDES) \
-	-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' \
-	$< -o $@
+$(STAGE1_BIN): $(STAGE1_SRC)
+	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) $(GBL_INCLUDES) -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $< -o $@

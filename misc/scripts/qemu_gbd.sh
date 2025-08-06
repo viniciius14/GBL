@@ -21,6 +21,6 @@ else
 fi
 
 # Start GDB and connect to the same port as QEMU
-i386-elf-gdb --nh --nx --command=misc/.gdbinit
+i386-elf-gdb --nh --nx --command=misc/gdb/.gdbinit
 
 kill %1

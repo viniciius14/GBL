@@ -15,6 +15,7 @@ RUN apt-get update && \
 # Set environment variables for non-interactive installs
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NONINTERACTIVE=1
+
 ENV HOMEBREW_MAKE_JOBS=4
 
 # Install Homebrew
@@ -28,5 +29,6 @@ RUN echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /etc/profil
 RUN brew install x86_64-elf-gcc x86_64-elf-binutils
 
 WORKDIR /GBL
+COPY . .
 
 CMD [ "bash" ]
