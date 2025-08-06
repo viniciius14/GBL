@@ -42,23 +42,8 @@ fi
 # Allow X11 access for Docker
 xhost +local:docker > /dev/null
 
-# Build image
-if [[ "$IMAGE_EXISTS" == "no" || "$FILE_TIME" -gt "$IMAGE_TIME" ]]; then
-    SPACER_SZ=68
-    change='CHANGE DETECTED! REBUILDING '$IMAGE_NAME'...'
-    printf "%$(((SPACER_SZ-${#change})/2))s%s\n" "" "$change"
-    echo "=================================================================="
-    echo ""
-    # docker build -t $IMAGE_NAME "$DOCKERFILE_DIR"
-    docker build -f "$DOCKERFILE" -t $IMAGE_NAME "$PROJECT_ROOT"
-
-
-else
-    SPACER_SZ=68
-    change='IMAGE '$IMAGE_NAME' IS UP TO DATE.'
-    printf "%$(((SPACER_SZ-${#change})/2))s%s\n" "" "$change"
-    echo "=================================================================="
-fi
+# Build and run the image
+docker build -f "$DOCKERFILE" -t $IMAGE_NAME "$PROJECT_ROOT"
 
 docker run -it --rm \
     --name $CONTAINER_NAME \

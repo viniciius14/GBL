@@ -16,8 +16,8 @@ SUBDIR_C_OBJS   := $(foreach dir,$(ARCH_DIRS),\
 
 ALL_OBJS   := $(SUBDIR_ASM_OBJS) $(SUBDIR_C_OBJS) $(MAIN_ASM_OBJ)
 
-STAGE2_ELF := $(OBJ_DIR)/stage2_$(ARCH_BITS).elf
-STAGE2_BIN := $(BIN_DIR)/stage2_$(ARCH_BITS).bin
+STAGE2_ELF := $(OBJ_DIR)/stage2.elf
+STAGE2_BIN := $(BIN_DIR)/stage2.bin
 
 .PHONY: build debug stats
 
@@ -27,8 +27,8 @@ build: $(STAGE2_BIN)
 debug: $(STAGE2_BIN)
 	$(foreach dir,$(ARCH_DIRS),$(MAKE) -C $(dir) debug FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS) KERNEL_NAME='"$(KERNEL_NAME)"' PROJECT=$(PROJECT))
 
-	$(OBJ_DMP) $(OBJ_DMP__FLAGS) $(STAGE2_ELF) > $(DEBUG_DIR)/stage2_$(ARCH_BITS)_elf.dump
-	$(DISASM) -b 32 -o 0x0 $(STAGE2_BIN) > $(DEBUG_DIR)/stage2_$(ARCH_BITS)_bin.dump
+	$(OBJ_DMP) $(OBJ_DMP__FLAGS) $(STAGE2_ELF) > $(DEBUG_DIR)/stage2_elf.dump
+	$(DISASM) -b 32 -o 0x0 $(STAGE2_BIN) > $(DEBUG_DIR)/stage2_bin.dump
 
 
 stats: $(STAGE2_BIN)
