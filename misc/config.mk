@@ -38,8 +38,9 @@ export EMULATOR :=qemu-system-i386
 # Flags
 export ASM_FLAGS     :=-W+all -W+error -W+orphan-labels -W+macro-params
 export ASM_FORMAT    :=-f elf32
-export CC_FLAGS      :=-m32 -Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -std=c11
-export LD_FLAGS      :=--gc-sections -m elf_i386
+export CC_FLAGS      :=-Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -std=c11
+export CC_FORMAT     :=-m32
+export LD_FLAGS      :=--gc-sections
 export LD_FORMAT     :=-m elf_i386
 export OBJ_CPY_FLAGS :=-O binary
 export OBJ_DMP_FLAGS :=-D --visualize-jumps --start-address=0x7E00

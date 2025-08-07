@@ -14,7 +14,7 @@ build: $(ASM_OBJS) $(C_OBJS)
 
 debug:
 	$(foreach c_src,$(C_SRCS),\
-		@$(CC) $(CC_FLAGS) -save-temps -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $(GBL_INCLUDES) \
+		@$(CC) $(CC_FORMAT) $(CC_FLAGS) -save-temps -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $(GBL_INCLUDES) \
 		-c $(c_src) -o $(patsubst %.c,$(OBJ_DIR)/$(ARCH_BITS)_%.o,$(c_src));\
 		mv $(patsubst %.c,%.i,$(c_src)) $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.c,%.i,$(c_src)));\
 		mv $(patsubst %.c,%.s,$(c_src)) $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.c,%.s,$(c_src)));\
@@ -30,10 +30,13 @@ debug:
 # Build Rules
 
 $(OBJ_DIR)/%.o: %.c
-	$(CC) $(CC_FLAGS) $(if $(filter debug,$(MAKECMDGOALS)),-save-temps,) -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $(GBL_INCLUDES) -c $< -o $@
+	$(CC) $(CC_FORMAT) $(CC_FLAGS) $(if $(filter debug,$(MAKECMDGOALS)),-save-temps,) \
+	-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' \
+	$(GBL_INCLUDES) \
+	-c $< -o $@
 
 $(OBJ_DIR)/%.o: %.S
 	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) \
-	-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='$(KERNEL_NAME)' \
+	-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' \
 	$(GBL_INCLUDES) \
 	$< -o $@

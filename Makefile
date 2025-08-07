@@ -5,7 +5,6 @@ include $(PROJECT)/misc/config.mk
 # User inputs
 FILE_SYSTEM ?=FAT12
 ARCH_BITS   ?=BITS32
-# Todo: consider adding " here so we don't have to add them everywhere else
 KERNEL_NAME ?=KERNEL  BIN
 
 # User input options
@@ -15,13 +14,11 @@ SUPPORTED_TARGET_BITS  :=BITS32 BITS64
 ALL_TARGET_IMAGES :=$(foreach fs,$(SUPPORTED_FILE_SYSTEMS),$(foreach bits,$(SUPPORTED_TARGET_BITS),$(BUILD_DIR)/GeckOS_$(fs)_$(bits).img))
 TARGET_IMG        :=$(BUILD_DIR)/GeckOS_$(FILE_SYSTEM)_$(ARCH_BITS).img
 
-GBL_INCLUDES :=$(patsubst %,-i %,$(shell find $(SRC_DIR) -mindepth 1 -type d))
+GBL_INCLUDES      :=$(patsubst %,-i %,$(shell find $(SRC_DIR) -mindepth 1 -type d))
 
 export PROJECT FILE_SYSTEM ARCH_BITS KERNEL_NAME GBL_INCLUDES
 
 .PHONY: all GBL debug clean run stats build
-
-# User targets
 
 # Builds the default GBL image
 GBL: dirs $(TARGET_IMG)
@@ -67,9 +64,9 @@ $(TARGET_IMG): $(STAGE1_BIN) $(STAGE2_BIN)
 	@echo "\n--- Image Creation for GeckOS_$(FILE_SYSTEM)_$(ARCH_BITS).img ---\n"
 # Create the base filesystem image
 ifeq ($(FILE_SYSTEM), FAT12)
-	echo "\nCreating a FAT 12 image -> $(TARGET_IMG) with 1.44MB\n"
-	dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=2880
-	mkfs.fat $(TARGET_IMG) $(FS_FAT12_ARGS)
+	@echo "\nCreating a FAT 12 image -> $(TARGET_IMG) with 1.44MB\n"
+	@dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=2880
+	@mkfs.fat $(TARGET_IMG) $(FS_FAT12_ARGS)
 else ifeq ($(FILE_SYSTEM), FAT16)
 	@echo "\nCreating a FAT 16 image -> $(TARGET_IMG) with 128MB\n"
 	@dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=273042
@@ -78,13 +75,13 @@ else ifeq ($(FILE_SYSTEM), FAT32)
 	@echo "\nCreating a FAT 32 image -> $(TARGET_IMG) with 128MB\n"
 	@dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=273042
 	@mkfs.fat $(TARGET_IMG) $(FS_FAT32_ARGS)
-# Add copy of stage1 bootloader and File System Information Structure at sector 6
+# Write a copy of stage1 bootloader and File System Information Structure to sector 6
 	@dd if=$(STAGE1_BIN) of=$(TARGET_IMG) bs=512 seek=6 conv=notrunc
 endif
-# Add stage1 bootloader at sector 0
-	dd if=$(STAGE1_BIN) of=$@ bs=512 seek=0 conv=notrunc
-# Add stage2 bootloader "normally"
-	mcopy -i $@ $(STAGE2_BIN) ::stage2.bin
+# Write stage1 bootloader to sector 0
+	@dd if=$(STAGE1_BIN) of=$@ bs=512 seek=0 conv=notrunc
+# Add stage2 bootloader to the image "normally"
+	@mcopy -i $@ $(STAGE2_BIN) ::stage2.bin
 
 
 # Build the stages of the bootloader
