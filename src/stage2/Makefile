@@ -16,9 +16,6 @@ SUBDIR_C_OBJS   := $(foreach dir,$(ARCH_DIRS),\
 
 ALL_OBJS   := $(SUBDIR_ASM_OBJS) $(SUBDIR_C_OBJS) $(MAIN_ASM_OBJ)
 
-STAGE2_ELF := $(OBJ_DIR)/stage2.elf
-STAGE2_BIN := $(BIN_DIR)/stage2.bin
-
 .PHONY: build debug stats
 
 build: $(STAGE2_BIN)
@@ -34,22 +31,18 @@ debug: $(STAGE2_BIN)
 stats: $(STAGE2_BIN)
 	$(call bin_size_stat, $(STAGE2_BIN))
 
+subdirs:
+# Build all object files from the subdirectories
+	$(foreach dir,$(ARCH_DIRS),$(MAKE) -C $(dir) build FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS) KERNEL_NAME='"$(KERNEL_NAME)"' PROJECT=$(PROJECT);)
 
 # Build Rules
 
-# Build all object files from the subdirectories
-subdirs:
-	$(foreach dir,$(ARCH_DIRS),$(MAKE) -C $(dir) build FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS) KERNEL_NAME='"$(KERNEL_NAME)"' PROJECT=$(PROJECT);)
-# 	@echo "\n\nALL_OBJS        : $(ALL_OBJS)"
-# 	@echo "\nSUBDIR_ASM_SRCS : $(SUBDIR_ASM_SRCS)"
-# 	@echo "\nSUBDIR_C_SRCS   : $(SUBDIR_C_SRCS)"
-# 	@echo "\nSUBDIR_ASM_OBJS : $(SUBDIR_ASM_OBJS)"
-# 	@echo "\nSUBDIR_C_OBJS   : $(SUBDIR_C_OBJS)\n\n"
-
-
 # Build the object file(s) from the current directory
 $(MAIN_ASM_OBJ): $(MAIN_ASM_SRC)
-	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $(GBL_INCLUDES) $< -o $@
+	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) \
+	-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' \
+	$(GBL_INCLUDES) \
+	$< -o $@
 
 # Link all object files into the final ELF executable
 $(STAGE2_ELF): subdirs $(ALL_OBJS) $(LINKER_SCRIPT)

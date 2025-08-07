@@ -1,11 +1,8 @@
 include $(CONFIG_FILE)
 
-# Define the output binary path for stage1
-STAGE1_BIN = $(BIN_DIR)/stage1_$(FILE_SYSTEM)_$(ARCH_BITS).bin
-
 # Define the source file for stage1
-STAGE1_SRC = stage1.S
-ASM_FORMAT = -f bin
+STAGE1_SRC =stage1.S
+ASM_FORMAT =-f bin
 
 # Define debug output paths
 STAGE1_DEBUG_I    = $(DEBUG_DIR)/stage1_$(FILE_SYSTEM)_$(ARCH_BITS).i
@@ -45,4 +42,7 @@ stats: $(STAGE1_BIN)
 
 # Build rules
 $(STAGE1_BIN): $(STAGE1_SRC)
-	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) $(GBL_INCLUDES) -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $< -o $@
+	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) \
+	-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' \
+	$(GBL_INCLUDES) \
+	$< -o $@
