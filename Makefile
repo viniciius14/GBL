@@ -11,12 +11,20 @@ KERNEL_NAME ?=KERNEL  BIN
 SUPPORTED_FILE_SYSTEMS :=FAT12 FAT16 FAT32
 SUPPORTED_TARGET_BITS  :=BITS32 BITS64
 
-ALL_TARGET_IMAGES :=$(foreach fs,$(SUPPORTED_FILE_SYSTEMS),$(foreach bits,$(SUPPORTED_TARGET_BITS),$(BUILD_DIR)/GeckOS_$(fs)_$(bits).img))
-TARGET_IMG        :=$(BUILD_DIR)/GeckOS_$(FILE_SYSTEM)_$(ARCH_BITS).img
+GBL_INCLUDES :=$(patsubst %,-i %,$(shell find $(SRC_DIR) -mindepth 1 -type d))
+ARCH_DIRS    :=$(STAGE2_DIR)/16bit $(STAGE2_DIR)/32bit
 
-GBL_INCLUDES      :=$(patsubst %,-i %,$(shell find $(SRC_DIR) -mindepth 1 -type d))
+TARGET_IMG   :=$(BUILD_DIR)/GBL_$(FILE_SYSTEM)_$(ARCH_BITS).img
 
-export PROJECT FILE_SYSTEM ARCH_BITS KERNEL_NAME GBL_INCLUDES
+ifeq ($(ARCH_BITS),BITS64)
+    ARCH_DIRS  +=$(STAGE2_DIR)/64bit
+    ASM_FORMAT :=-f elf64
+    CC_FORMAT  :=-m64
+    LD_FORMAT  :=-m elf_x86_64
+    EMULATOR   :=qemu-system-x86_64
+endif
+
+export PROJECT FILE_SYSTEM ARCH_BITS KERNEL_NAME GBL_INCLUDES ARCH_DIRS ASM_FORMAT CC_FORMAT LD_FORMAT
 
 .PHONY: all GBL debug clean run stats build
 
@@ -25,6 +33,7 @@ GBL: dirs $(TARGET_IMG)
 
 # Builds all possible GBL Images
 all: dirs $(ALL_TARGET_IMAGES)
+	$(foreach fs,$(SUPPORTED_FILE_SYSTEMS), $(foreach bits,$(SUPPORTED_TARGET_BITS), rm -rf $(BIN_DIR); rm -rf $(OBJ_DIR); $(MAKE) GBL ARCH_BITS=$(bits) FILE_SYSTEM=$(fs);))
 
 # Runs the created image in QEMU
 run: GBL $(TARGET_IMG)
@@ -61,7 +70,7 @@ dirs:
 # Inner workings of the Makefile
 
 $(TARGET_IMG): $(STAGE1_BIN) $(STAGE2_BIN)
-	@echo "\n--- Image Creation for GeckOS_$(FILE_SYSTEM)_$(ARCH_BITS).img ---\n"
+	@echo "\n--- Image Creation for GBL_$(FILE_SYSTEM)_$(ARCH_BITS).img ---\n"
 # Create the base filesystem image
 ifeq ($(FILE_SYSTEM), FAT12)
 	@echo "\nCreating a FAT 12 image -> $(TARGET_IMG) with 1.44MB\n"
@@ -92,8 +101,3 @@ $(STAGE1_BIN):
 $(STAGE2_BIN):
 	@echo "\n--- Building Stage 2 for $(FILE_SYSTEM) $(ARCH_BITS) ---\n"
 	@$(MAKE) -C $(STAGE2_DIR) FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS)
-
-
-# Rule to handle building all images
-$(BUILD_DIR)/GeckOS_%.img:
-	$(MAKE) TARGET_IMG=$@ FILE_SYSTEM=$(patsubst GeckOS_%_%.img,%,$(notdir $@)) ARCH_BITS=$(patsubst GeckOS_%.img,%,$(basename $(notdir $@)))

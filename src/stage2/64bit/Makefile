@@ -1,12 +1,8 @@
-include $(CONFIG_FILE)
-
 ASM_SRCS := $(wildcard *.S)
 C_SRCS   := $(wildcard *.c)
 
 ASM_OBJS := $(patsubst %.S,$(OBJ_DIR)/%.o,$(ASM_SRCS))
 C_OBJS   := $(patsubst %.c,$(OBJ_DIR)/%.o,$(C_SRCS))
-
-ASM_FORMAT =-f elf64
 
 .PHONY: build debug clean
 

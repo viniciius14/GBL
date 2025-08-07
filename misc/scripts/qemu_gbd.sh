@@ -10,7 +10,7 @@ then
 fi
 
 # Find the image
-IMG="$(find build/ -type f -name "GeckOS_*.img")"
+IMG="$(find build/ -type f -name "GBL_*.img")"
 
 # Start QEMU as a background process
 if [[ "$1" == "FAT12" ]]

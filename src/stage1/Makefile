@@ -1,5 +1,3 @@
-include $(CONFIG_FILE)
-
 # Define the source file for stage1
 STAGE1_SRC =stage1.S
 ASM_FORMAT =-f bin

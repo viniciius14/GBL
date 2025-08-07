@@ -25,8 +25,8 @@ RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/instal
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
 RUN echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /etc/profile
 
-# Install i386-elf-gcc & i386-elf-binutils
-RUN brew install x86_64-elf-gcc x86_64-elf-binutils
+# Install i386-elf-gcc
+RUN brew install x86_64-elf-gcc
 
 WORKDIR /GBL
 COPY . .

@@ -1,24 +1,12 @@
-include $(CONFIG_FILE)
-
 LINKER_SCRIPT := $(STAGE2_DIR)/stage2.ld
 MAIN_ASM_SRC  := $(STAGE2_DIR)/load_kernel.S
 MAIN_ASM_OBJ  := $(OBJ_DIR)/load_kernel_$(ARCH_BITS).o
 
-ifeq ($(ARCH_BITS), BITS32)
-	ARCH_DIRS      := $(STAGE2_DIR)/16bit $(STAGE2_DIR)/32bit
-else
-	ARCH_DIRS      := $(STAGE2_DIR)/16bit $(STAGE2_DIR)/32bit $(STAGE2_DIR)/64bit
-	ASM_FORMAT      =-f elf64
-	LD_FORMAT       =-m elf_x86_64
-endif
-
 SUBDIR_ASM_SRCS := $(foreach dir,$(ARCH_DIRS),$(wildcard $(dir)/*.S))
 SUBDIR_C_SRCS   := $(foreach dir,$(ARCH_DIRS),$(wildcard $(dir)/*.c))
 
-SUBDIR_ASM_OBJS := $(foreach dir,$(ARCH_DIRS),\
-                   $(patsubst $(dir)/%.S,$(OBJ_DIR)/%.o,$(wildcard $(dir)/*.S)))
-SUBDIR_C_OBJS   := $(foreach dir,$(ARCH_DIRS),\
-                   $(patsubst $(dir)/%.c,$(OBJ_DIR)/%.o,$(wildcard $(dir)/*.c)))
+SUBDIR_ASM_OBJS := $(foreach dir,$(ARCH_DIRS),$(patsubst $(dir)/%.S,$(OBJ_DIR)/%.o,$(wildcard $(dir)/*.S)))
+SUBDIR_C_OBJS   := $(foreach dir,$(ARCH_DIRS),$(patsubst $(dir)/%.c,$(OBJ_DIR)/%.o,$(wildcard $(dir)/*.c)))
 
 ALL_OBJS   := $(SUBDIR_ASM_OBJS) $(SUBDIR_C_OBJS) $(MAIN_ASM_OBJ)
 

@@ -1,5 +1,3 @@
-include $(CONFIG_FILE)
-
 ASM_SRCS := $(wildcard *.S)
 C_SRCS   := $(wildcard *.c)
 
