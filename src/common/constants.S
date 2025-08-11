@@ -53,4 +53,6 @@ KERNEL_STACK_SIZE       equ 0x1000
 VIDEO_MEMORY            equ 0xB8000
 WHITE_ON_BLACK          equ 0x0F
 
+PAGE_TABLE_SIZE         equ 4096
+
 %endif
