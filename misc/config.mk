@@ -38,7 +38,7 @@ export EMULATOR :=qemu-system-i386
 # Flags
 export ASM_FLAGS     :=-W+all -W+error -W+orphan-labels -W+macro-params
 export ASM_FORMAT    :=-f elf32
-export CC_FLAGS      :=-Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -std=c11
+export CC_FLAGS      :=-Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -pedantic -std=c11
 export CC_FORMAT     :=-m32
 export LD_FLAGS      :=--gc-sections
 export LD_FORMAT     :=-m elf_i386

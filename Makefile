@@ -26,7 +26,7 @@ endif
 
 export PROJECT FILE_SYSTEM ARCH_BITS KERNEL_NAME GBL_INCLUDES ARCH_DIRS ASM_FORMAT CC_FORMAT LD_FORMAT
 
-.PHONY: all GBL debug clean run stats build
+.PHONY: GBL all run debug stats clean
 
 # Builds the default GBL image
 GBL: dirs $(TARGET_IMG)
