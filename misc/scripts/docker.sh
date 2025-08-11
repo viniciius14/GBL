@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 IMAGE_NAME="gecko_image"
 CONTAINER_NAME="gecko_container"

@@ -27,6 +27,7 @@ RUN echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /etc/profil
 
 # Install i386-elf-gcc
 RUN brew install x86_64-elf-gcc
+RUN brew install i386-elf-gdb
 
 WORKDIR /GBL
 COPY . .

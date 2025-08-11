@@ -1,12 +1,12 @@
 #!/bin/bash
-
+set -e
 # Find all files starting with GBL*
 shopt -s nullglob
 FILES=(build/GBL*)
 
 if [[ ${#FILES[@]} -eq 0 ]]; then
     echo "No files starting with 'GBL' found in build."
-    exit 0
+    return
 fi
 
 # Loop over the files
