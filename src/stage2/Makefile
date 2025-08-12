@@ -1,6 +1,4 @@
 LINKER_SCRIPT := $(STAGE2_DIR)/stage2.ld
-MAIN_ASM_SRC  := $(STAGE2_DIR)/load_kernel.S
-MAIN_ASM_OBJ  := $(OBJ_DIR)/load_kernel_$(ARCH_BITS).o
 
 SUBDIR_ASM_SRCS := $(foreach dir,$(ARCH_DIRS),$(wildcard $(dir)/*.S))
 SUBDIR_C_SRCS   := $(foreach dir,$(ARCH_DIRS),$(wildcard $(dir)/*.c))
@@ -8,7 +6,7 @@ SUBDIR_C_SRCS   := $(foreach dir,$(ARCH_DIRS),$(wildcard $(dir)/*.c))
 SUBDIR_ASM_OBJS := $(foreach dir,$(ARCH_DIRS),$(patsubst $(dir)/%.S,$(OBJ_DIR)/%.o,$(wildcard $(dir)/*.S)))
 SUBDIR_C_OBJS   := $(foreach dir,$(ARCH_DIRS),$(patsubst $(dir)/%.c,$(OBJ_DIR)/%.o,$(wildcard $(dir)/*.c)))
 
-ALL_OBJS   := $(SUBDIR_ASM_OBJS) $(SUBDIR_C_OBJS) $(MAIN_ASM_OBJ)
+ALL_OBJS   := $(SUBDIR_ASM_OBJS) $(SUBDIR_C_OBJS)
 
 .PHONY: build debug stats
 
@@ -30,13 +28,6 @@ subdirs:
 	$(foreach dir,$(ARCH_DIRS),$(MAKE) -C $(dir) build FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS) KERNEL_NAME="$(KERNEL_NAME)" PROJECT=$(PROJECT);)
 
 # Build Rules
-
-# Build the object file(s) from the current directory
-$(MAIN_ASM_OBJ): $(MAIN_ASM_SRC)
-	$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) \
-	-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' \
-	$(GBL_INCLUDES) \
-	$< -o $@
 
 # Link all object files into the final ELF executable
 $(STAGE2_ELF): subdirs $(ALL_OBJS) $(LINKER_SCRIPT)

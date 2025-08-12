@@ -3,7 +3,7 @@
 [global stage2_32bit]
 
 [extern _load_kernel]
-; [extern print_string_32]
+[extern __kernel_entry]
 
 %ifdef BITS64
 [extern stage2_64bit]
@@ -29,11 +29,13 @@ stage2_32bit:
 
     unreachable
 
+    jmp _load_kernel
+
 %ifdef BITS64
 ;     call stage2_64bit        ; switch to long mode
 %endif
 
-    jmp _load_kernel
+    jmp __kernel_entry
 
     unreachable
 

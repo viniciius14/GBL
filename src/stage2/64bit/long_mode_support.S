@@ -1,22 +1,30 @@
 %ifndef __LONG_MODE_SUPPORT_S
 %define __LONG_MODE_SUPPORT_S
 
-CPUID_EXTENSIONS   equ 0x80000000 ; returns the maximum extended requests for cpuid
-CPUID_EXT_FEATURES equ 0x80000001 ; returns flags containing long mode support among other things
+[bits 32]
 
+[global isLongModeSupported]
 
-.queryLongMode:
-    mov eax, CPUID_EXTENSIONS
-    cpuid
-    cmp eax, CPUID_FEATURES
-    jb .NoLongMode              ; if the CPU can't report long mode support, then it likely
-                                ; doesn't have it
+%include "common.S"
 
-CPUID_EDX_EXT_FEAT_LM equ 1 << 29   ; if this is set, the CPU supports long mode
+section .text
 
+; Check if the current CPU supports long mode
+; Inputs:
+;   - NONE
+; Outputs:
+;   - eax = 1 on success
+;   - eax = 0 on failure
+;
+isLongModeSupported:
     mov eax, CPUID_EXT_FEATURES
     cpuid
-    test edx, CPUID_EDX_EXT_FEAT_LM
-    jz .NoLongMode
+    test edx, CPUID_EDX_EXT_FEAT_LM     ; if this is set, the CPU supports long mode
+    jz .noLongMode
+    mov eax, 1
+
+.noLongMode:
+    mov eax, 0
+    ret
 
 %endif

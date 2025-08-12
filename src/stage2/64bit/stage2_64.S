@@ -2,16 +2,35 @@
 
 [global stage2_64bit]
 
-[extern _load_kernel]
+[extern checkCPUID]
+[extern extendedFunctionsSupport]
+[extern compatibility_mode]
+[extern setup_paging]
+[extern submode64]
 
-section .text
+section stage2_64bit.text
+
+%include "common.S"
 
 %ifdef BITS64
 
 stage2_64bit:
+    call checkCPUID
+    cmp eax, 1
+    jne fatal_error
 
-    ; check for 64 bit support
-    ; change to 64 bit mode
-    jmp $
+    call extendedFunctionsSupport
+    cmp eax, 1
+    jne fatal_error
+
+    call compatibility_mode
+
+    call setup_paging
+
+    jmp submode64
+
+fatal_error:
+; Do stuff
+    unreachable
 
 %endif

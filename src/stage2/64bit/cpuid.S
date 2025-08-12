@@ -3,10 +3,13 @@
 
 [bits 32]
 
-%include "common.S"
-
 [global checkCPUID]
 
+%include "common.S"
+
+section .text
+
+; Check if the current CPU supports the CPUID instruction
 ; Inputs:
 ;   - NONE
 ; Outputs:
@@ -14,33 +17,16 @@
 ;   - eax = 0 on failure
 ;
 checkCPUID:
-    pushfd
-    pop eax
-
-    mov ecx, eax            ; Save the original value for later
-    xor eax, EFLAGS_ID
-
-    ; storing the eflags and then retrieving it again will show whether or not
-    ; the bit could successfully be flipped
-    push eax                    ; save to eflags
-    popfd
-    pushfd                      ; restore from eflags
-    pop eax
-
-    ; Restore EFLAGS to its original value
-    push ecx
-    popfd
-
-    ; if the bit in eax was successfully flipped (eax != ecx), CPUID is supported.
-    xor eax, ecx
-    jnz .supported
-
-.notSupported:
-    mov ax, 0
+    pushfd                      ; Save EFLAGS
+    pushfd                      ; Store EFLAGS
+    xor dword [esp], EFLAGS_ID  ; Invert the ID bit in stored EFLAGS
+    popfd                       ; Load stored EFLAGS (with ID bit inverted)
+    pushfd                      ; Store EFLAGS again (ID bit may or may not be inverted)
+    pop eax                     ; eax = modified EFLAGS (ID bit may or may not be inverted)
+    xor eax,[esp]               ; eax = whichever bits were changed
+    popfd                       ; Restore original EFLAGS
+    and eax, EFLAGS_ID          ; eax = zero if ID bit can't be changed, else non-zero
     ret
 
-.supported:
-    mov ax, 1
-    ret
 
 %endif
