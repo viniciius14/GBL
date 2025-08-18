@@ -1,6 +1,8 @@
 %ifndef __SUBMODE64_S
 %define __SUBMODE64_S
 
+[bits 32]
+
 [global submode64]
 
 [extern long_mode]
