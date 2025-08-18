@@ -3,8 +3,12 @@ ENTRY(stage2_16bit)
 __STAGE2_GBL_ADDR = 0x7E00;
 __PAGING_TABLES_PHYS_ADDR = 0x1000;
 
+__kernel_entry = 0x10000;
+
 SECTIONS {
-    .text : AT(__STAGE2_GBL_ADDR) {
+    . = __STAGE2_GBL_ADDR;
+
+    .text : {
         __text_start__ = .;
 
         *(stage2_16bit.text)
@@ -37,14 +41,8 @@ SECTIONS {
 
         *(.bss*)
 
-        . = ALIGN(4096);
-        . = __PAGING_TABLES_PHYS_ADDR;
-        *(.pages.bss)
-
         __bss_end__ = .;
     } : bss
-
-    __kernel_entry = 0x100000;
 }
 
 PHDRS {
