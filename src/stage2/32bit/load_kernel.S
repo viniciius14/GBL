@@ -8,8 +8,8 @@
 
 ; [extern print_string_32]
 ; load the kernel into address 0x________
-%include "macros.S"
-%include "constants.S"
+%include "common.S"
+%include "S2_constants.S"
 
 section .text
 

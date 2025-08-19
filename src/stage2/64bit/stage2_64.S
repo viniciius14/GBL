@@ -11,6 +11,7 @@
 section stage2_64bit.text
 
 %include "common.S"
+%include "S2_constants.S"
 
 %ifdef BITS64
 

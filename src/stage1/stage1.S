@@ -6,14 +6,15 @@ section .text
 %define STAGE_1
 
 %include "common.S"
+%include "S1_constants.S"
 
 %ifdef FAT_FS
     %include "FAT_header.S"
 %endif
 
 stage1:
-    ; Clear the screen
-    ; Switches to text mode
+; Clear the screen
+; Switches to text mode
     mov ah, 0x0
     mov al, 0x3
     int 0x10
@@ -31,30 +32,20 @@ stage1:
     mov [BS_DrvNum], dx     ; Overwrite the drive number with the one the BIOS gives us
     mov si, fileStage2Bin
 
-    ; Find stage 2 of the bootloader and then load it into memory
+; Find stage 2 of the bootloader and then load it into memory
     call load_stage2
 
     jmp STAGE2_SEGMENT:STAGE2_OFFSET
 
-%include "BIOS_print.S"
-%include "BIOS_disk_reset.S"
-
-; Use the extended INT13h utilities for HDDs
-%ifdef FAT12
-    %include "BIOS_read.S"
-%else
-    %include "BIOS_read_ext.S"
-%endif
-
 %include "load_stage2.S"
 
-; Common label to jump to when a critical error is found
+; Common stage1 label to jump to when a critical error is found
 failure:
     mov si, errorMsg
     call BIOS_print
     unreachable
 
-fileStage2Bin:          db "STAGE2  BIN"
+fileStage2Bin:          db "GBL_S2  BIN"
 errorMsg:               db "CRITICAL ERROR", 0
 currentCluster:         dw 0
 dataRegionSector:       dw FAT_DATA_START

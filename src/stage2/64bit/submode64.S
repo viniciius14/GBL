@@ -7,7 +7,7 @@
 
 [extern long_mode]
 
-%include "common.S"
+%include "S2_constants.S"
 
 section .text
 

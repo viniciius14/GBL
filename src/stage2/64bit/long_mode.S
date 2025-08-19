@@ -9,6 +9,7 @@
 [extern __kernel_entry]
 
 %include "common.S"
+%include "S2_constants.S"
 
 section .text
 

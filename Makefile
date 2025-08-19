@@ -90,7 +90,7 @@ endif
 # Write stage1 bootloader to sector 0
 	@dd if=$(STAGE1_BIN) of=$@ bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader to the image "normally"
-	@mcopy -i $@ $(STAGE2_BIN) ::stage2.bin
+	@mcopy -i $@ $(STAGE2_BIN) ::GBL_S2.bin
 
 
 # Build the stages of the bootloader

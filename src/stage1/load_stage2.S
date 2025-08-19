@@ -15,6 +15,16 @@ load_stage2:
 
     ret
 
+%include "BIOS_print.S"
+%include "BIOS_disk_reset.S"
+
+; Use the extended INT13h utilities for HDDs
+%ifdef FAT12
+    %include "BIOS_read.S"
+%else
+    %include "BIOS_read_ext.S"
+%endif
+
 %ifdef FAT12
     %include "FAT12_utils.S"
 %elifdef FAT16

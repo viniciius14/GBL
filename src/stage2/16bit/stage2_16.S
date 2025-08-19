@@ -9,6 +9,7 @@
 [extern stage2_32bit]
 
 %include "common.S"
+%include "S2_constants.S"
 %include "BIOS_utils.S"
 %include "GDT.S"
 

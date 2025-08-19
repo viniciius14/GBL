@@ -5,7 +5,7 @@
 
 [global setup_paging]
 
-%include "common.S"
+%include "S2_constants.S"
 
 section .text
 
