@@ -3,7 +3,7 @@
 
 [bits 32]
 
-[global isLongModeSupported]
+[global extendedFunctionsSupport]
 
 %include "S2_constants.S"
 

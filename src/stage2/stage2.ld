@@ -1,47 +1,37 @@
 ENTRY(stage2_16bit)
 
-__STAGE2_GBL_ADDR = 0x7E00;
-__PAGING_TABLES_PHYS_ADDR = 0x1000;
+/* Not used as stage1 does not support externs since it's compiled directly into a binary file */
+__GBL_STACK_START_ADDR = 0x7C00;
 
-__kernel_entry = 0x10000;
+__STAGE2_START_ADDR = 0x7E00;
+
+__PAGING_TABLES_START_ADDR = 0x1000;
+__PAGING_TABLES_START_ADDR = 0x1000;
+
+__KERNEL_ENTRY_ADDR = 0x10000;
+__KERNEL_STACK_START_ADDR = 0x7FFF0;
 
 SECTIONS {
-    . = __STAGE2_GBL_ADDR;
+    . = __STAGE2_START_ADDR;
 
     .text : {
-        __text_start__ = .;
-
         *(stage2_16bit.text)
         *(stage2_32bit.text)
         *(stage2_64bit.text)
 
         *(.text*)
-
-        __text_end__ = .;
     } : text
 
     .data : {
-        __data_start__ = .;
-
         *(.data*)
-
-        __data_end__ = .;
     } : data
 
     .rodata : {
-        __rodata_start__ = .;
-
         *(.rodata*)
-
-        __rodata_end__ = .;
     } : rodata
 
     .bss : {
-        __bss_start__ = .;
-
         *(.bss*)
-
-        __bss_end__ = .;
     } : bss
 }
 

@@ -1,4 +1,4 @@
-; Find and load the stage 2 file in the current filesystem
+; Find and load the stage 2 file for the GBL
 ; Inputs:
 ;   SI = pointer to 11-byte filename of stage 2
 ; Outputs:

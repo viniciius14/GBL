@@ -20,6 +20,7 @@
     %endif
 
     %ifdef FAT12
+    ; FAT12 entry size is of 1.5 bytes and therefore not defined here
         FAT_EOF             equ 0xFF8
     %elifdef FAT16
         FAT_ENTRY_SIZE      equ 0x2

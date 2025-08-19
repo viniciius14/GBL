@@ -1,7 +1,7 @@
 ### Technical debt
 - Assuming 50 sector section will be enough/won't cause issues (stage2 fat implementations for FAT16 nd FAT32)
 - Failure label jumping to BIOS_print instead of calling it (to call it we'd need to level the stack, so: mov sp, 0x7c00 and then we should be able to call stuff?)
-- .dockeringore is not working
+
 
 ### Features to add:
 - Load one sector at a time for the FAT and the Root Directory
@@ -65,3 +65,9 @@
 ### Future Objectives (big maybes):
  - [ ] Add support for other architectures
  - [ ] Add a submodule with a custom BIOS
+
+
+### TODO:
+ - [ ] Edit scripts/qemu_gdb to work with both GDB versions dynamically
+    - [ ] Check docker for this program (and personal pc aswell)
+ - [ ] Refactor to 64 bit code as it's complete spaghetti rn

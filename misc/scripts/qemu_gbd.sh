@@ -10,7 +10,7 @@ then
     return
 fi
 
-if [ ! -d "../../build/" ]; then
+if [ ! -d "/build/" ]; then
   echo "Build directory doesn't exist yet."
   echo "Please run the make command and build an image."
   return

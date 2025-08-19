@@ -3,7 +3,7 @@
 [global stage2_32bit]
 
 [extern _load_kernel]
-[extern __kernel_entry]
+[extern __KERNEL_ENTRY_ADDR]
 
 %ifdef BITS64
 [extern stage2_64bit]
@@ -27,15 +27,13 @@ stage2_32bit:
     mov ecx, 320*200/4
     rep stosd
 
-    unreachable
-
-    jmp _load_kernel
+    call _load_kernel
 
 %ifdef BITS64
-;     call stage2_64bit        ; switch to long mode
+    call stage2_64bit        ; switch to long mode
 %endif
 
-    jmp __kernel_entry
+    ; jmp __KERNEL_ENTRY_ADDR
 
     unreachable
 

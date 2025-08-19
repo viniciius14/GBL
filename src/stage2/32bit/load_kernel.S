@@ -1,38 +1,29 @@
-%ifdef BITS64
-[bits 64]
-%else
 [bits 32]
-%endif
 
 [global _load_kernel]
 
-; [extern print_string_32]
-; load the kernel into address 0x________
+[extern print_string_32]
+
 %include "common.S"
 %include "S2_constants.S"
 
 section .text
 
+; Find and load the kernel
+; Inputs:
+;   - NONE
+; Outputs:
+;   - eax = 1 on success
+;   - eax = 0 on failure
+;
 _load_kernel:
-    mov esi, stage2msg3     ; Point ESI to the string
-    mov ebx, 320            ; Start at the top-left corner of the screen
-    ; to delete later
-    ; call print_string_32
-
 ; load root dir to fat buffer
 ; find our file
-;
+; load kernel to intermediary location
+; relocate it over the 1MB boundary
+; print success message
 
-    mov esp, kernel_stack + KERNEL_STACK_SIZE
-
-    jmp $
-
-    unreachable
+    ret
 
 section .rodata
-stage2msg3: db "Got to load kernel. (32 bits)", 0
-
-section .bss
-align 16
-kernel_stack:
-    resb KERNEL_STACK_SIZE
+checkpointKernel: db "Successfully loaded the kernel.", 0
