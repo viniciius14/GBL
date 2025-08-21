@@ -1,6 +1,7 @@
 ### Technical debt
 - Assuming 50 sector section will be enough/won't cause issues (stage2 fat implementations for FAT16 nd FAT32)
 - Failure label jumping to BIOS_print instead of calling it (to call it we'd need to level the stack, so: mov sp, 0x7c00 and then we should be able to call stuff?)
+- In the makefile for stage2 the loop to call the sub makefiles uses ";" making it so the compilation continues even in case of an error, && cannot be used as that leaves a trailing && (make && make &&)
 
 
 ### Features to add:

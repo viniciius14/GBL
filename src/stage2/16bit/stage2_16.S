@@ -9,7 +9,6 @@
 [extern stage2_32bit]
 
 %include "common.S"
-%include "S2_constants.S"
 %include "BIOS_utils.S"
 %include "GDT.S"
 
@@ -69,8 +68,8 @@ section .data
 BEFORE:             dd "DEAD"
 GBL_InfoStruct:
 .structureSize:     dw GBL_InfoStruct - GBL_InfoStruct.end
-.memMapSize:        dw MMAP_ENTRIES_SIZE
-.memMapEntries:     times (MMAP_ENTRIES_SIZE) db 0
+.memMapSize:        dw MEM_MAP_MAX_SIZE
+.memMapEntries:     times (MEM_MAP_MAX_SIZE) db 0
 .videoMode:         dw 0x0
 .end:
 AFTER:              dd "DEAD"

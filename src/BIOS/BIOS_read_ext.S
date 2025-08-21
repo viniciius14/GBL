@@ -22,9 +22,9 @@ section .text
 ;
 BIOS_read:
     push si
-    mov [DAPACK.sectorLow],     ax
-    mov [DAPACK.sectorCount],   cx
-    mov [DAPACK.bufferOffset],  bx
+    mov [DAPACK.sectorLow], ax
+    mov [DAPACK.sectorCount], cx
+    mov [DAPACK.bufferOffset], bx
     mov [DAPACK.bufferSegment], es
 
     mov si, DAPACK          ; Address of "disk address packet"

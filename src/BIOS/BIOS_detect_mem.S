@@ -24,8 +24,8 @@ BIOS_detect_mem:
 
 .loop:
     mov eax, 0xE820
-    mov ecx, MMAP_ENTRY_SIZE
-    mov edx, MMAP_SMAP
+    mov ecx, MEM_MAP_ENTRY_SIZE
+    mov edx, MEM_MAP_SMAP
     ; ebx will be set from the previous call or be 0
 
     int 0x15
@@ -37,7 +37,7 @@ BIOS_detect_mem:
     jc .end
 
 ; if eax is different from "SMAP", return
-    cmp eax, MMAP_SMAP
+    cmp eax, MEM_MAP_SMAP
     jne .end
 
 ; if less than 20 bytes were written, return
@@ -52,11 +52,11 @@ BIOS_detect_mem:
     mov eax, ecx                ; number of bytes written to the buffer
     pop ecx                     ; get the buffer size
     sub ecx, eax                ; buffer size -= number of bytes written
-    cmp ecx, MMAP_ENTRY_SIZE    ; check if there's space for more entries
+    cmp ecx, MEM_MAP_ENTRY_SIZE ; check if there's space for more entries
     jl .end
 
     push ecx                    ; store buffer size
-    add edi, MMAP_ENTRY_SIZE    ; buffer pointer += (max) entry size
+    add edi, MEM_MAP_ENTRY_SIZE ; buffer pointer += (max) entry size
 
     jmp .loop
 
@@ -69,6 +69,6 @@ BIOS_detect_mem:
     ret
 
 section .rodata
-MSG_BIOS_MemMap:    db "Memory map read from BIOS.", 0
+MSG_BIOS_MemMap: db "Memory map read from BIOS.", 0
 
 %endif

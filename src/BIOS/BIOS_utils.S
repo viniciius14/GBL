@@ -3,6 +3,8 @@
 
 ; This file includes all the BIOS utilities into a single %include call for simplicity
 
+%include "BIOS_constants.S"
+
 %include "BIOS_print.S"
 
 ; Use the extended INT13h utilities for non FAT12 systems (HDDs, DVDs, etc)

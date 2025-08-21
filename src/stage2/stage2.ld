@@ -1,12 +1,6 @@
 ENTRY(stage2_16bit)
 
-/* Not used as stage1 does not support externs since it's compiled directly into a binary file */
-__GBL_STACK_START_ADDR = 0x7C00;
-
 __STAGE2_START_ADDR = 0x7E00;
-
-__PAGING_TABLES_START_ADDR = 0x1000;
-__PAGING_TABLES_START_ADDR = 0x1000;
 
 __KERNEL_ENTRY_ADDR = 0x10000;
 __KERNEL_STACK_START_ADDR = 0x7FFF0;

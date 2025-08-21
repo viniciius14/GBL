@@ -5,7 +5,7 @@
 
 [global setup_paging]
 
-%include "S2_constants.S"
+%include "paging_constants.S"
 
 section .text
 
@@ -16,7 +16,7 @@ section .text
 ;   - NONE
 ;
 setup_paging:
-    mov edi, PGD
+    mov edi, PGD_ADDRESS
     mov cr3, edi
 
 ; Clear the page tables
@@ -26,24 +26,24 @@ setup_paging:
     mov edi, cr3
 
 ; set the first entry of PGD to PUDs address and add to it it's properties
-    mov DWORD [edi], PUD_ADDRESS & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov DWORD [edi], PUD_ADDRESS & PT_ADDR_MASK | PT_ENTRY_PRESENT | PT_ENTRY_READ_WRITE
 
 ; set the first entry of PUD to PMDs address and add to it it's properties
     mov edi, PUD_ADDRESS
-    mov DWORD [edi], PMD_ADDRESS & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov DWORD [edi], PMD_ADDRESS & PT_ADDR_MASK | PT_ENTRY_PRESENT | PT_ENTRY_READ_WRITE
 
 ; set the first entry of PMD to PTs address and add to it it's properties
     mov edi, PMD_ADDRESS
-    mov DWORD [edi], PT_ADDRESS  & PT_ADDR_MASK | PT_PRESENT | PT_READABLE
+    mov DWORD [edi], PT_ADDRESS  & PT_ADDR_MASK | PT_ENTRY_PRESENT | PT_ENTRY_READ_WRITE
 
     mov edi, PT_ADDRESS
-    mov ebx, PT_PRESENT | PT_READABLE
-    mov ecx, ENTRIES_PER_PT
+    mov ebx, PT_ENTRY_PRESENT | PT_ENTRY_READ_WRITE
+    mov ecx, PT_ENTRY_COUNT
 
 .setEntry:
     mov DWORD [edi], ebx
     add ebx, PAGE_TABLE_SIZE
-    add edi, SIZEOF_PT_ENTRY
+    add edi, PT_ENTRY_SIZE
     loop .setEntry
 
 .enable_pae:
@@ -52,20 +52,5 @@ setup_paging:
     mov cr4, eax
 
     ret
-
-section .pages.bss nobits
-align 4096
-
-PGD:
-    resb PAGE_TABLE_SIZE
-
-PUD:
-    resb PAGE_TABLE_SIZE
-
-PMD:
-    resb PAGE_TABLE_SIZE
-
-PT:
-    resb PAGE_TABLE_SIZE
 
 %endif
