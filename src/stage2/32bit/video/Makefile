@@ -5,13 +5,10 @@ ASM_OBJS := $(patsubst %.S,$(OBJ_DIR)/%.o,$(ASM_SRCS))
 C_OBJS   := $(patsubst %.c,$(OBJ_DIR)/%.o,$(C_SRCS))
 
 
-.PHONY: build debug
+.PHONY: build debug clean
 
-build: subdirs $(ASM_OBJS) $(C_OBJS)
+build: $(ASM_OBJS) $(C_OBJS)
 
-
-subdirs:
-	$(MAKE) -C video/
 
 debug:
 	$(foreach c_src,$(C_SRCS),\

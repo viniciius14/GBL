@@ -4,6 +4,8 @@
 
 [extern _load_kernel]
 [extern __KERNEL_ENTRY_ADDR]
+[extern vga_init]
+[extern draw_logo]
 
 %ifdef BITS64
 [extern stage2_64bit]
@@ -23,9 +25,12 @@ stage2_32bit:
     mov ss, ax
 
     mov edi, 0xA0000
-    mov eax, 0x01010101         ; 4 pixels with color index 1 (blue-ish)
+    mov eax, 0         ; 4 pixels with color index 1 (blue-ish)
     mov ecx, 320*200/4
     rep stosd
+
+    call vga_init
+    call draw_logo
 
     call _load_kernel
 
