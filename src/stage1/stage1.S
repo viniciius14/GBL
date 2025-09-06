@@ -28,9 +28,9 @@ stage1:
     mov es, ax
     mov ss, ax
 
-    mov sp, STAGE2_STACK
+    mov sp, STAGE2_STACK    ; Set the stack pointer
     mov [BS_DrvNum], dx     ; Overwrite the drive number with the one the BIOS gives us
-    mov si, fileStage2Bin
+    mov si, fileStage2Bin   ; Prepare for the load_stage2 call
 
 ; Find stage 2 of the bootloader and then load it into memory
     call load_stage2

@@ -19,20 +19,19 @@ TARGET_IMG   :=$(BUILD_DIR)/GBL_$(FILE_SYSTEM)_$(ARCH_BITS).img
 ifeq ($(ARCH_BITS),BITS64)
     ARCH_DIRS  +=$(STAGE2_DIR)/64bit
     ASM_FORMAT :=-f elf64
-    CC_FORMAT  :=-m64
     LD_FORMAT  :=-m elf_x86_64
     EMULATOR   :=qemu-system-x86_64
 endif
 
 export PROJECT FILE_SYSTEM ARCH_BITS KERNEL_NAME GBL_INCLUDES ARCH_DIRS ASM_FORMAT CC_FORMAT LD_FORMAT
 
-.PHONY: GBL all run debug stats clean
+.PHONY: GBL all run debug clean
 
 # Builds the default GBL image
-GBL: dirs $(TARGET_IMG)
+GBL: build_dir $(TARGET_IMG)
 
 # Builds all possible GBL Images
-all: dirs $(ALL_TARGET_IMAGES)
+all: build_dir $(ALL_TARGET_IMAGES)
 	$(foreach fs,$(SUPPORTED_FILE_SYSTEMS), $(foreach bits,$(SUPPORTED_TARGET_BITS), rm -rf $(BIN_DIR); rm -rf $(OBJ_DIR); $(MAKE) GBL ARCH_BITS=$(bits) FILE_SYSTEM=$(fs);))
 
 # Runs the created image in QEMU
@@ -47,25 +46,17 @@ endif
 debug: clean $(TARGET_IMG)
 	@echo "\n--- Running Debug Build ---\n"
 # TODO check if the extra parameters can be removed
-	@$(MAKE) -C $(STAGE1_DIR) debug ARCH_BITS=$(ARCH_BITS) FILE_SYSTEM=$(FILE_SYSTEM)
-	@$(MAKE) -C $(STAGE2_DIR) debug ARCH_BITS=$(ARCH_BITS) FILE_SYSTEM=$(FILE_SYSTEM)
-
-# Generates a size report for the current bootloader binaries
-stats: GBL
-	@echo "--- Target: $(TARGET_IMG) ---" > $(STATS_FILE)
-	$(call bin_size_stat, $(STAGE1_BIN))
-	$(call bin_size_stat, $(STAGE2_BIN))
-	@echo "\n" >> $(STATS_FILE)
-	@cat $(STATS_FILE)
+	$(MAKE) -C $(STAGE1_DIR) debug ARCH_BITS=$(ARCH_BITS) FILE_SYSTEM=$(FILE_SYSTEM)
+	$(MAKE) -C $(STAGE2_DIR) debug ARCH_BITS=$(ARCH_BITS) FILE_SYSTEM=$(FILE_SYSTEM)
 
 clean:
-	@rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
 
-dirs:
-	@mkdir -p $(OBJ_DIR)
-	@mkdir -p $(BIN_DIR)
-	@mkdir -p $(DEBUG_DIR)
-
+build_dir:
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(BIN_DIR)
+	mkdir -p $(DEBUG_DIR)
+	touch $(STATS_FILE) && echo -n "" > $(STATS_FILE)
 
 # Inner workings of the Makefile
 
@@ -74,30 +65,30 @@ $(TARGET_IMG): $(STAGE1_BIN) $(STAGE2_BIN)
 # Create the base filesystem image
 ifeq ($(FILE_SYSTEM), FAT12)
 	@echo "\nCreating a FAT 12 image -> $(TARGET_IMG) with 1.44MB\n"
-	@dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=2880
-	@mkfs.fat $(TARGET_IMG) $(FS_FAT12_ARGS)
+	dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=2880
+	mkfs.fat $(TARGET_IMG) $(FS_FAT12_ARGS)
 else ifeq ($(FILE_SYSTEM), FAT16)
 	@echo "\nCreating a FAT 16 image -> $(TARGET_IMG) with 128MB\n"
-	@dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=273042
-	@mkfs.fat $(TARGET_IMG) $(FS_FAT16_ARGS)
+	dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=273042
+	mkfs.fat $(TARGET_IMG) $(FS_FAT16_ARGS)
 else ifeq ($(FILE_SYSTEM), FAT32)
 	@echo "\nCreating a FAT 32 image -> $(TARGET_IMG) with 128MB\n"
-	@dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=273042
-	@mkfs.fat $(TARGET_IMG) $(FS_FAT32_ARGS)
+	dd if=/dev/zero of=$(TARGET_IMG) bs=512 count=273042
+	mkfs.fat $(TARGET_IMG) $(FS_FAT32_ARGS)
 # Write a copy of stage1 bootloader and File System Information Structure to sector 6
-	@dd if=$(STAGE1_BIN) of=$(TARGET_IMG) bs=512 seek=6 conv=notrunc
+	dd if=$(STAGE1_BIN) of=$(TARGET_IMG) bs=512 seek=6 conv=notrunc
 endif
 # Write stage1 bootloader to sector 0
-	@dd if=$(STAGE1_BIN) of=$@ bs=512 seek=0 conv=notrunc
+	dd if=$(STAGE1_BIN) of=$@ bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader to the image "normally"
-	@mcopy -i $@ $(STAGE2_BIN) ::GBL_S2.bin
+	mcopy -i $@ $(STAGE2_BIN) ::GBL_S2.bin
 
 
 # Build the stages of the bootloader
 $(STAGE1_BIN):
 	@echo "\n--- Building Stage 1 for $(FILE_SYSTEM) $(ARCH_BITS) ---\n"
-	@$(MAKE) -C $(STAGE1_DIR) FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS)
+	$(MAKE) -C $(STAGE1_DIR) FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS)
 
 $(STAGE2_BIN):
 	@echo "\n--- Building Stage 2 for $(FILE_SYSTEM) $(ARCH_BITS) ---\n"
-	@$(MAKE) -C $(STAGE2_DIR) FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS)
+	$(MAKE) -C $(STAGE2_DIR) FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS)

@@ -13,8 +13,8 @@ ALL_OBJS   := $(SUBDIR_ASM_OBJS) $(SUBDIR_C_OBJS)
 
 .PHONY: build debug stats
 
-build: $(STAGE2_BIN)
-
+stage2: $(STAGE2_BIN)
+	$(call bin_size_stat, $(STAGE2_BIN))
 
 debug: $(STAGE2_BIN)
 	$(foreach dir,$(ARCH_DIRS),$(MAKE) -C $(dir) debug FILE_SYSTEM=$(FILE_SYSTEM) ARCH_BITS=$(ARCH_BITS) KERNEL_NAME="$(KERNEL_NAME)" PROJECT=$(PROJECT))

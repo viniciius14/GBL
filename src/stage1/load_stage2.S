@@ -1,8 +1,9 @@
-; Find and load the stage 2 file for the GBL
+; Find and load the stage 2 binary for the GeckOS Bootloader
 ; Inputs:
 ;   SI = pointer to 11-byte filename of stage 2
 ; Outputs:
-;   Loads file into 0x7E00 if found, else jumps to failure
+;   Loads the file into 0x7E00 if found, else jumps to failure
+;
 load_stage2:
 %ifdef FAT_FS
     call FAT_find_file
@@ -18,7 +19,7 @@ load_stage2:
 %include "BIOS_print.S"
 %include "BIOS_disk_reset.S"
 
-; Use the extended INT13h utilities for HDDs
+; Use the extended INT13h utilities for non floppy disks
 %ifdef FAT12
     %include "BIOS_read.S"
 %else

@@ -4,6 +4,10 @@ C_SRCS   := $(wildcard *.c)
 ASM_OBJS := $(patsubst %.S,$(OBJ_DIR)/%.o,$(ASM_SRCS))
 C_OBJS   := $(patsubst %.c,$(OBJ_DIR)/%.o,$(C_SRCS))
 
+CC_FORMAT  :=-m64
+CC :=gcc
+
+
 .PHONY: build debug clean
 
 build: $(ASM_OBJS) $(C_OBJS)
