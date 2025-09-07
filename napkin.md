@@ -72,3 +72,5 @@
  - [ ] Edit scripts/qemu_gdb to work with both GDB versions dynamically
     - [ ] Check docker for this program (and personal pc aswell)
  - [ ] Refactor to 64 bit code as it's complete spaghetti rn
+ - [ ] Update docker script to sync with edits in env outside of docker (mount ?)
+ - [ ] Update docker script to not exit the terminal on container exit

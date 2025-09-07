@@ -11,17 +11,15 @@ build: $(ASM_OBJS) $(C_OBJS)
 
 
 debug:
-	$(foreach c_src,$(C_SRCS),\
-		@$(CC) $(CC_FORMAT) $(CC_FLAGS) -save-temps -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $(GBL_INCLUDES) \
-		-c $(c_src) -o $(patsubst %.c,$(OBJ_DIR)/$(ARCH_BITS)_%.o,$(c_src));\
-		mv $(patsubst %.c,%.i,$(c_src)) $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.c,%.i,$(c_src)));\
-		mv $(patsubst %.c,%.s,$(c_src)) $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.c,%.s,$(c_src)));\
-	)
-# Generate listing files (.lst) for Assembly sources.
-	$(foreach asm_src,$(ASM_SRCS),\
-		@$(ASM) $(ASM_FORMAT) $(ASM_FLAGS) -D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"' $(GBL_INCLUDES) \
-		$(asm_src) -l $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.S,%.lst,$(asm_src))) -o $(patsubst %.S,$(OBJ_DIR)/$(ARCH_BITS)_%.o,$(asm_src));\
-	)
+# 	$(foreach c_src,$(C_SRCS),\
+# 		-c $(c_src) -o $(patsubst %.c,$(OBJ_DIR)/$(ARCH_BITS)_%.o,$(c_src));\
+# 		mv $(patsubst %.c,%.i,$(c_src)) $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.c,%.i,$(c_src)));\
+# 		mv $(patsubst %.c,%.s,$(c_src)) $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.c,%.s,$(c_src)));\
+# 	)
+# # Generate listing files (.lst) for Assembly sources.
+# 	$(foreach asm_src,$(ASM_SRCS),\
+# 		$(asm_src) -l $(DEBUG_DIR)/$(ARCH_BITS)_$(notdir $(patsubst %.S,%.lst,$(asm_src))) -o $(patsubst %.S,$(OBJ_DIR)/$(ARCH_BITS)_%.o,$(asm_src));\
+# 	)
 
 
 

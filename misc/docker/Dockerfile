@@ -25,9 +25,9 @@ RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/instal
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
 RUN echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /etc/profile
 
-# Install i386-elf-gcc
+# Install the cross compiler through brew
 RUN brew install x86_64-elf-gcc
-RUN brew install i386-elf-gdb
+# RUN brew install i386-elf-gdb - REVIEW ME, get a 64 bit version of GDB, check if it can work well with 32 bit code
 
 WORKDIR /GBL
 COPY . .
