@@ -39,6 +39,7 @@ void draw_logo(void) {
 
     // Calculate the horizontal offset to center the logo
     unsigned int x_offset = (SCREEN_WIDTH - LOGO_RESOLUTION_W) / 2;
+    const unsigned int y_offset = 10;
 
     for (int i = 0 ; i < IMAGE_SIZE ; i++) {
         // The value at image_data[i] is the number of pixels to draw
@@ -48,12 +49,10 @@ void draw_logo(void) {
         for (unsigned int j = 0 ; j < run_length ; j++) {
             // Calculate x and y coordinates relative to the logo's resolution
             x = x_offset + (pixel_index % LOGO_RESOLUTION_W);
-            y = pixel_index / LOGO_RESOLUTION_W;
+            y = y_offset + pixel_index / LOGO_RESOLUTION_W;
 
             // Check to prevent drawing outside the logo's boundaries
-            if (y < LOGO_RESOLUTION_H) {
                 vga_draw_pixel(x, y, color);
-            }
 
             pixel_index++; // Increment the pixel counter
         }
@@ -66,6 +65,8 @@ void draw_logo(void) {
 
     // Draw the centered text
     draw_string(0, text_y, VC_WHITE, "GeckOs Bootloader");
+    volatile int i = 1;
+    while(i){}
 }
 
 void draw_char(unsigned short x, unsigned short y, unsigned char color, char c) {

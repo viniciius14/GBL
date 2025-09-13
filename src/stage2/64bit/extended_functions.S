@@ -9,7 +9,7 @@
 
 section .text
 
-; Check if the current CPU supports extended fucntions
+; Check if the current CPU supports extended functions
 ; Inputs:
 ;   - NONE
 ; Outputs:

@@ -1,3 +1,6 @@
+# TODO: having this include here is a patch for ASM_FORMAT not updating to -f elf64
+include $(PROJECT)/misc/config.mk
+
 # Sources
 ifeq ($(ARCH_BITS),BITS64)
     ARCH_DIRS+=$(STAGE2_DIR)/64bit
@@ -30,7 +33,7 @@ STAGE2_INCLUDES_C   :=$(foreach dir,$(STAGE2_INCLUDE_DIRS),-I $(dir))
 # Tools
 ifeq ($(ARCH_BITS),BITS64)
     ASM_FORMAT =-f elf64
-    CC_FORMAT  =-m64
+    CC_FORMAT  =-m32
     LD_FORMAT  =-m elf_x86_64
 endif
 

@@ -30,6 +30,5 @@ RUN brew install x86_64-elf-gcc
 # RUN brew install i386-elf-gdb - REVIEW ME, get a 64 bit version of GDB, check if it can work well with 32 bit code
 
 WORKDIR /GBL
-COPY . .
 
 CMD [ "bash" ]

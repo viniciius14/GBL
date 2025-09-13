@@ -20,6 +20,7 @@ DEBUG_DUMP =$(DEBUG_DIR)/stage1.dump
 .PHONY: stage1 debug
 
 stage1: $(STAGE1_BIN)
+	@echo -n "Stage 1 size in bytes: " >> $(STATS_FILE)
 	wc -c < $(STAGE1_BIN) >> $(STATS_FILE)
 
 

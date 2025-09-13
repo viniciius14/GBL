@@ -24,11 +24,6 @@ stage2_32bit:
     mov gs, ax
     mov ss, ax
 
-    mov edi, 0xA0000
-    mov eax, 0         ; 4 pixels with color index 1 (blue-ish)
-    mov ecx, 320*200/4
-    rep stosd
-
     call vga_init
     call draw_logo
 

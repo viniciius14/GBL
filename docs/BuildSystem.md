@@ -67,6 +67,8 @@ It then calls the [Stage1/Makefile](../src/stage1/Makefile) and [Stage2/Makefile
 [Stage2/Makefile](../src/stage2/Makefile) is an orchestrator which itself only compiles one file. It's main job is to call the Makefiles in the correct subdirectories and extract a binary from the generated .o files.\
 Here comes into play the diffrences between BITS32 and BITS64 used in the initial Makefile call. If the bit architecture selected was BITS32 then only [16bit/Makefile](../src/stage2/16bit/Makefile) and [32bit/Makefile](../src/stage2/32bit/Makefile) will be used, however if BITS64 was selected then [64bit/Makefile](../src/stage2/64bit/Makefile) is also used.\
 
+Note: The files in the 64bit folder aren't all actually 64 bit, they're a mix of 32 bit and 64 bit files that we'll need a 64 bit compiler even if with the -m32 flag or equivalent.
+
 
 ## Flags
 This section is an explination of what flags are used and why. This serves as a way to explain them, make sure I understand them and to spot any inconsistencies/missing flags.\
