@@ -6,7 +6,8 @@ if [ -z "$1" ] || [ -z "$2" ] || [ $# -eq 0 ] || [ $# -gt 2 ]
 then
     echo "Usage \"bash /qemu_gdb.sh <FILESYSTEM> <BITS>\""
     echo "Options are: FAT12 FAT16 FAT32 for FILESYSTEM"
-    echo "Options are: BITS32 BITS64 for ARCHITECTURE BITS"
+    # echo "Options are: BITS32 BITS64 for ARCHITECTURE BITS"
+    echo "Options are: BITS32 for ARCHITECTURE BITS"
     return
 fi
 
@@ -27,11 +28,11 @@ else
 fi
 
 # Determine architecture
-if [[ "$2" == "BITS64" ]]; then
-    QEMU_BIN="qemu-system-x86_64"
-else
-    QEMU_BIN="qemu-system-i386"
-fi
+# if [[ "$2" == "BITS64" ]]; then
+#     QEMU_BIN="qemu-system-x86_64"
+# else
+#     QEMU_BIN="qemu-system-i386"
+# fi
 
 echo "Launching: $QEMU_BIN with $INTERFACE for $filename"
 

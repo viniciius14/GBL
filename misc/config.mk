@@ -50,7 +50,8 @@ export FS_FAT16_ARGS =-a -F 16 -S 512 -s 8 -r 512 -R 4
 export FS_FAT32_ARGS =-a -F 32 -S 512 -s 4        -R 32
 
 # Extra stuff for the build process
-export DEFINES   		    =-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"'
+# export DEFINES   		    =-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"'
+export DEFINES   		    =-D$(FILE_SYSTEM) -DBITS32 -DKERNEL_NAME='"$(KERNEL_NAME)"'
 # The superfluous wildcards are only here for future proofing sake
 export DEFAULT_INCLUDE_DIRS :=$(SRC_DIR)/BIOS $(wildcard $(SRC_DIR)/BIOS/*/)
 export DEFAULT_INCLUDE_DIRS +=$(SRC_DIR)/common $(wildcard $(SRC_DIR)/common/*/)

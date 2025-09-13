@@ -2,9 +2,9 @@
 include $(PROJECT)/misc/config.mk
 
 # Sources
-ifeq ($(ARCH_BITS),BITS64)
-    ARCH_DIRS+=$(STAGE2_DIR)/64bit
-endif
+# ifeq ($(ARCH_BITS),BITS64)
+#     ARCH_DIRS+=$(STAGE2_DIR)/64bit
+# endif
 
 # Use a foreach to filter out files in the 64bit directory for 32bit builds
 ASM_SRCS :=$(foreach dir,$(ARCH_DIRS),$(shell find $(dir) -type f -name "*.S"))
@@ -21,9 +21,9 @@ STAGE2_INCLUDE_DIRS :=$(DEFAULT_INCLUDE_DIRS)
 STAGE2_INCLUDE_DIRS +=$(STAGE2_DIR)/16bit $(wildcard $(STAGE2_DIR)/16bit/*/)
 STAGE2_INCLUDE_DIRS +=$(STAGE2_DIR)/32bit $(wildcard $(STAGE2_DIR)/32bit/*/)
 
-ifeq ($(ARCH_BITS),BITS64)
-    STAGE2_INCLUDE_DIRS +=$(STAGE2_DIR)/64bit $(wildcard $(STAGE2_DIR)/64bit/*/)
-endif
+# ifeq ($(ARCH_BITS),BITS64)
+#     STAGE2_INCLUDE_DIRS +=$(STAGE2_DIR)/64bit $(wildcard $(STAGE2_DIR)/64bit/*/)
+# endif
 
 # Since this sub project takes .S and .C files we'll need 2 include flags for the -i/-I difference
 # between NASM and GCC
@@ -31,11 +31,11 @@ STAGE2_INCLUDES_ASM :=$(foreach dir,$(STAGE2_INCLUDE_DIRS),-i $(dir))
 STAGE2_INCLUDES_C   :=$(foreach dir,$(STAGE2_INCLUDE_DIRS),-I $(dir))
 
 # Tools
-ifeq ($(ARCH_BITS),BITS64)
-    ASM_FORMAT =-f elf64
-    CC_FORMAT  =-m32
-    LD_FORMAT  =-m elf_x86_64
-endif
+# ifeq ($(ARCH_BITS),BITS64)
+#     ASM_FORMAT =-f elf64
+#     CC_FORMAT  =-m32
+#     LD_FORMAT  =-m elf_x86_64
+# endif
 
 # Helper
 LINKER_SCRIPT := $(STAGE2_DIR)/stage2.ld

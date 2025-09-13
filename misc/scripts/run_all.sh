@@ -13,12 +13,12 @@ fi
 for file in "${FILES[@]}"; do
     filename="$(basename "$file")"
 
-    # Determine architecture
-    if [[ "$filename" == *BITS64* ]]; then
-        QEMU_BIN="qemu-system-x86_64"
-    else
-        QEMU_BIN="qemu-system-i386"
-    fi
+    # # Determine architecture
+    # if [[ "$filename" == *BITS64* ]]; then
+    #     QEMU_BIN="qemu-system-x86_64"
+    # else
+    #     QEMU_BIN="qemu-system-i386"
+    # fi
 
     # Determine interface type
     if [[ "$filename" == *FAT12* ]]; then
