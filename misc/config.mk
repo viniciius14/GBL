@@ -56,6 +56,7 @@ export DEFINES   		    =-D$(FILE_SYSTEM) -DBITS32 -DKERNEL_NAME='"$(KERNEL_NAME)
 export DEFAULT_INCLUDE_DIRS :=$(SRC_DIR)/BIOS $(wildcard $(SRC_DIR)/BIOS/*/)
 export DEFAULT_INCLUDE_DIRS +=$(SRC_DIR)/common $(wildcard $(SRC_DIR)/common/*/)
 export DEFAULT_INCLUDE_DIRS +=$(SRC_DIR)/filesystems $(wildcard $(SRC_DIR)/filesystems/*/)
+export DEFAULT_INCLUDE_DIRS +=$(STAGE1_DIR)
 
 export ARCH_DIRS =$(STAGE2_DIR)/16bit $(STAGE2_DIR)/32bit
 

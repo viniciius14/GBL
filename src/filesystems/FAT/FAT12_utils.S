@@ -1,6 +1,10 @@
 %ifndef __FAT12_UTILS_S
 %define __FAT12_UTILS_S
 
+%ifndef STAGE_1
+[extern BIOS_read]
+%endif
+
 ; Find a file in a FAT filesystem
 ; Inputs:
 ;   DS:SI = pointer to 11-byte filename

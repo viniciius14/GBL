@@ -2,10 +2,9 @@
 
 [global stage2_32bit]
 
-[extern _load_kernel]
-[extern __KERNEL_ENTRY_ADDR]
 [extern vga_init]
 [extern draw_logo]
+[extern load_kernel]
 
 %ifdef BITS64
 [extern stage2_64bit]
@@ -27,7 +26,7 @@ stage2_32bit:
     call vga_init
     call draw_logo
 
-    call _load_kernel
+    ; call load_kernel
 
 %ifdef BITS64
     call stage2_64bit        ; switch to long mode

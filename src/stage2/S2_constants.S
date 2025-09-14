@@ -34,9 +34,9 @@ LONG_MODE               equ 1 << 5
 ; Memory region where the kernel will be written to
 KERNEL_BUFFER_START     equ 0x6F000
 KERNEL_BUFFER_END       equ 0x7F000
+KERNEL_BUFFER_SIZE      equ 0x10000
 
 ; Address where the kernel will be loaded into
-; KERNEL_START            equ __KERNEL_ENTRY_ADDR
-; KERNEL_STACK_START      equ __KERNEL_STACK_START_ADDR
-
+KERNEL_START            equ 0x100000; __KERNEL_ENTRY_ADDR
+KERNEL_STACK_START      equ 0x100000; __KERNEL_STACK_START_ADDR
 %endif

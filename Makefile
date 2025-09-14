@@ -5,7 +5,7 @@ include $(PROJECT)/misc/config.mk
 # User inputs
 FILE_SYSTEM ?=FAT12
 ARCH_BITS   ?=BITS32
-KERNEL_NAME ?=KERNEL  BIN
+KERNEL_NAME ?=GECKOS  BIN
 
 # User input options
 SUPPORTED_FILE_SYSTEMS :=FAT12 FAT16 FAT32
@@ -55,7 +55,10 @@ build_dir:
 
 # Inner workings of the Makefile
 
-$(TARGET_IMG): $(STAGE1_BIN) $(STAGE2_BIN)
+kernel_stub:
+	$(MAKE) -C $(SRC_DIR)/kernelStub
+
+$(TARGET_IMG): $(STAGE1_BIN) $(STAGE2_BIN) kernel_stub
 	@echo "\n--- Image Creation for GBL_$(FILE_SYSTEM)_$(ARCH_BITS).img ---\n"
 # Create the base filesystem image
 ifeq ($(FILE_SYSTEM), FAT12)
@@ -77,6 +80,8 @@ endif
 	dd if=$(STAGE1_BIN) of=$@ bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader to the image "normally"
 	mcopy -i $@ $(STAGE2_BIN) ::GBL_S2.bin
+# Add stub kernel to the image "normally"
+	mcopy -i $@ $(BIN_DIR)/GECKOS.bin ::GECKOS.bin
 
 
 # Build the stages of the bootloader

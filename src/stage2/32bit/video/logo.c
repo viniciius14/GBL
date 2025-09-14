@@ -65,8 +65,6 @@ void draw_logo(void) {
 
     // Draw the centered text
     draw_string(0, text_y, VC_WHITE, "GeckOs Bootloader");
-    volatile int i = 1;
-    while(i){}
 }
 
 void draw_char(unsigned short x, unsigned short y, unsigned char color, char c) {
