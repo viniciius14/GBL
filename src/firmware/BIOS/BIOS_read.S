@@ -3,13 +3,13 @@
 
 [bits 16]
 
-section .text
+; section .text
 
-[global BIOS_read]
+; ; [global read]
 
-%ifndef STAGE_1
-[extern failure]
-%endif
+; ; %ifndef STAGE_1
+; ; [extern failure]
+; ; %endif
 
 ; Use BIOS INT13h to read sectors from disk into RAM
 ; Inputs:
@@ -20,7 +20,7 @@ section .text
 ; Outputs:
 ;   - None
 ;
-BIOS_read:
+read:
     push ax                 ; save registers we will modify
     push bx
     push cx

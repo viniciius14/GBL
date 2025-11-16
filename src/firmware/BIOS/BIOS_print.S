@@ -5,7 +5,7 @@
 
 section .text
 
-[global BIOS_print]
+[global print]
 
 ; Prints a string to the screen
 ; Inputs:
@@ -13,7 +13,7 @@ section .text
 ; Outputs:
 ;   - None
 ;
-BIOS_print:
+print:
     pusha
 
 .loop:

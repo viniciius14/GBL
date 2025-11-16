@@ -16,10 +16,9 @@ ASM_OBJS :=$(patsubst %.S,$(OBJ_DIR)/%.o,$(notdir $(ASM_SRCS)))
 C_OBJS   :=$(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(C_SRCS)))
 
 # Includes
-# Get the default includes and add the main dirs and any possible subdirs inside of them
+# Get the default includes and add all dirs in stage2/
 STAGE2_INCLUDE_DIRS :=$(DEFAULT_INCLUDE_DIRS)
-STAGE2_INCLUDE_DIRS +=$(STAGE2_DIR)/16bit $(wildcard $(STAGE2_DIR)/16bit/*/)
-STAGE2_INCLUDE_DIRS +=$(STAGE2_DIR)/32bit $(wildcard $(STAGE2_DIR)/32bit/*/)
+STAGE2_INCLUDE_DIRS +=$(shell find $(STAGE2_DIR) -mindepth 1 -type d)
 
 # ifeq ($(ARCH_BITS),BITS64)
 #     STAGE2_INCLUDE_DIRS +=$(STAGE2_DIR)/64bit $(wildcard $(STAGE2_DIR)/64bit/*/)
@@ -39,18 +38,18 @@ STAGE2_INCLUDES_C   :=$(foreach dir,$(STAGE2_INCLUDE_DIRS),-I $(dir))
 
 # Helper
 LINKER_SCRIPT := $(STAGE2_DIR)/stage2.ld
-ALL_OBJS   	  := $(ASM_OBJS) $(C_OBJS)
+
 
 .PHONY: stage2 debug
 
 stage2: $(STAGE2_BIN)
 	wc -c < $(STAGE2_BIN) >> $(STATS_FILE)
 
-debug:
-	# TODO
+# debug:
+# 	# TODO
 
 
-# Convert the ELF executable to a raw binary
+# # Convert the ELF executable to a raw binary
 $(STAGE2_BIN): $(STAGE2_ELF)
 	$(OBJ_CPY) $(OBJ_CPY_FLAGS) $< $@
 
@@ -58,23 +57,26 @@ $(STAGE2_BIN): $(STAGE2_ELF)
 $(STAGE2_ELF): $(ALL_OBJS)
 	$(LD) $(LD_FLAGS) $(ALL_OBJS) -T $(LINKER_SCRIPT) -o $@
 
-# Due to us removing the path from the .o files make will get confused unless we
-# tell it to look in these directories for the files
-vpath %.c $(STAGE2_INCLUDE_DIRS)
-vpath %.S $(STAGE2_INCLUDE_DIRS)
+$(ALL_OBJS): $(ASM_OBJS) $(C_OBJS)
 
 
-$(C_OBJS) : $(OBJ_DIR)/%.o: %.c
-	$(CC) $(CC_FLAGS) \
-	$(DEFINES) \
-	$(STAGE2_INCLUDES_C) \
-	-c $< -o $@
-	@echo ""
+# # Due to us removing the path from the .o files make will get confused unless we
+# # tell it to look in these directories for the files
+# vpath %.c $(STAGE2_INCLUDE_DIRS)
+# vpath %.S $(STAGE2_INCLUDE_DIRS)
 
 
-$(ASM_OBJS): $(OBJ_DIR)/%.o: %.S
-	$(ASM) $(ASM_FLAGS) \
-	$(DEFINES) \
-	$(STAGE2_INCLUDES_ASM) \
-	$< -o $@
-	@echo ""
+# $(C_OBJS) : $(OBJ_DIR)/%.o: %.c
+# 	$(CC) $(CC_FLAGS) \
+# 	$(DEFINES) \
+# 	$(STAGE2_INCLUDES_C) \
+# 	-c $< -o $@
+# 	@echo ""
+
+
+# $(ASM_OBJS): $(OBJ_DIR)/%.o: %.S
+# 	$(ASM) $(ASM_FLAGS) \
+# 	$(DEFINES) \
+# 	$(STAGE2_INCLUDES_ASM) \
+# 	$< -o $@
+# 	@echo ""

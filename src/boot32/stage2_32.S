@@ -1,6 +1,6 @@
 [bits 32]
 
-[global stage2_32bit]
+[global boot32]
 
 [extern vga_init]
 [extern draw_logo]
@@ -10,11 +10,11 @@
 [extern stage2_64bit]
 %endif
 
-%include "macros.S"
+%include "boot32_constants.S"
 
-section stage2_32bit.text
+section boot32.text
 
-stage2_32bit:
+boot32:
  ; Set up segment registers
     mov ax, 16
     mov ds, ax
