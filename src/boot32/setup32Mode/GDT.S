@@ -8,15 +8,13 @@
 
 section .text
 
-; [global set_GDT]
-
 set_GDT:
     cli                     ; disable interrupts
     lgdt [GDT_Descriptor]   ; load GDT
 
     ret
 
-; section .data
+section .data
 
 GDT_Start:
     .null_descriptor:

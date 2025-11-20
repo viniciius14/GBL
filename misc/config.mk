@@ -28,9 +28,9 @@ export FS_DIR      :=$(DRIVERS_DIR)/filesystem
 
 
 # Targets
-export BOOT16 =$(BIN_DIR)/boot16_$(FILE_SYSTEM)_$(ARCH_BITS).bin
-export BOOT32 =$(BIN_DIR)/boot32_$(FILE_SYSTEM)_$(ARCH_BITS).bin
-export BOOT64 =$(BIN_DIR)/boot64_$(FILE_SYSTEM)_$(ARCH_BITS).bin
+export BOOT16 =$(BIN_DIR)/boot16.bin
+export BOOT32 =$(BIN_DIR)/boot32.bin
+export BOOT64 =$(BIN_DIR)/boot64.bin
 
 # This current file
 export CONFIG_FILE :=$(MISC_DIR)/config.mk

@@ -1,36 +1,22 @@
 [bits 16]
 
-; [global setup]
-; [global failure]
-; ; [global GBL_InfoStruct]
+[global setup32Mode]
+; [global GBL_InfoStruct]
 
-; [extern A20_line]
-; ; [extern set_GDT]
-; [extern failure]
+[extern boot32]
+[extern A20_line]
 
-section .text
+%include "GDT.S"
 
-%include "GDT/A20.S"
-%include "GDT/GDT.S"
+section setup32Mode.text
 
-setup32Bit:
-    ; cli
-
+setup32Mode:
     xor ax, ax                  ; null segments
     mov ds, ax
     mov es, ax
 
-    ; mov si, MSG_stage2_16
-    ; call BIOS_print
-
-    ; mov dx, 0x0100              ; set cursor to line 1
-    ; call BIOS_cursor_pos
-
 ; Enable A20 line
     call A20_line
-
-    ; mov dx, 0x0200              ; set cursor to line 2
-    ; call BIOS_cursor_pos
 
 ; Fill in the memory map section of the GBL InfoStruct
     ; mov di, GBL_InfoStruct.memMapEntries
@@ -52,9 +38,7 @@ setup32Bit:
     or  eax, 1
     mov cr0, eax
 
-    ret
-
-
+    jmp CODE_SEG:boot32
 
 ; TODO section .bss
 ; section .data
@@ -68,7 +52,6 @@ setup32Bit:
 ; .videoMode:         dw 0x0
 ; .end:
 ; AFTER:              dd "DEAD"
-
 
 ; section .rodata
 

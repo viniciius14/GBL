@@ -1,8 +1,10 @@
 include $(PROJECT)/misc/config.mk
 
-ASM_SRCS := stage2_32.S
+ASM_SRCS := boot32.S \
+	setup32Mode.S \
+	A20.S
 
-ASM_INCLUDE_DIRS :=
+ASM_INCLUDE_DIRS := $(BOOT32_DIR)/setup32Mode
 
 C_SRCS :=  vga.c \
 	logo.c
@@ -15,9 +17,8 @@ C_INCLUDE_DIRS := \
 ASM_INCLUDES :=$(foreach dir,$(ASM_INCLUDE_DIRS),-I $(dir))
 C_INCLUDES   :=$(foreach dir,$(C_INCLUDE_DIRS),-I $(dir))
 
-# Generate vpath directives automatically
 $(foreach dir,$(C_INCLUDE_DIRS),$(eval vpath %.c $(dir)))
-vpath %.S $(BOOT32_DIR)
+$(foreach dir,$(ASM_INCLUDE_DIRS),$(eval vpath %.S $(dir)))
 
 
 # ASM and C SRCS will now contain <dir>/filename.<S/c>, so remove the dir to not
@@ -25,7 +26,7 @@ vpath %.S $(BOOT32_DIR)
 ASM_OBJS :=$(patsubst %.S,$(OBJ_DIR)/%.o,$(notdir $(ASM_SRCS)))
 C_OBJS   :=$(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(C_SRCS)))
 
-TARGET_ELF := $(OBJ_DIR)/boot32_$(FILE_SYSTEM)_$(ARCH_BITS).elf
+TARGET_ELF := $(OBJ_DIR)/boot32.elf
 TARGET_BIN := $(BOOT32)
 
 .PHONY: boot32 clean
@@ -47,12 +48,18 @@ $(TARGET_BIN): $(TARGET_ELF)
 # Should be okay because we cull not called files
 $(TARGET_ELF): $(ASM_OBJS) $(C_OBJS)
 	$(LD) $(LD_FLAGS) $(OBJ_DIR)/*.o -T linker.ld $(LD_FORMAT) -o $@
+	$(OBJ_DMP) $(OBJ_DMP_FLAGS) $@ > $(DEBUG_DIR)/boot32.S
 
 $(ASM_OBJS): $(OBJ_DIR)/%.o: %.S
 	$(ASM) $(ASM_FLAGS) $(ASM_FORMAT) \
 	$(ASM_INCLUDES) \
 	$(INPUTS) \
-	$< -o $@
+	$< -o $@ -l $(DEBUG_DIR)/$(basename $(notdir $@)).S
+	@echo ""
+	$(ASM) $(ASM_FLAGS) $(ASM_FORMAT) \
+	$(ASM_INCLUDES) \
+	$(INPUTS) \
+	$< -E > $(DEBUG_DIR)/$(basename $(notdir $@)).S
 	@echo ""
 
 $(C_OBJS) : $(OBJ_DIR)/%.o: %.c

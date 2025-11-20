@@ -41,15 +41,7 @@ start:
     mov bx, STAGE2_OFFSET
     call load_file
 
-    jmp setup
-
-; TODO: Hacky attempt of instantiating the defines before they're used
-%include "GDT/setup32Bit.S"
-
-setup:
-    call setup32Bit
-
-    jmp CODE_SEG:0x7E00
+    jmp 0x0:STAGE2_OFFSET
 
 %include "drivers.S"
 

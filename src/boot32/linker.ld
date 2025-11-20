@@ -1,4 +1,4 @@
-ENTRY(boot32)
+ENTRY(setup32Mode)
 
 __STAGE2_START_ADDR = 0x7E00;
 
@@ -9,9 +9,9 @@ SECTIONS {
     . = __STAGE2_START_ADDR;
 
     .text : {
-        *(stage2_16bit.text)
+        *(setup32Mode.text)
         *(boot32.text)
-        *(stage2_64bit.text)
+        *(boot64.text)
 
         *(.text*)
     } : text

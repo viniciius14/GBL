@@ -13,7 +13,6 @@ $(foreach dir,$(LIB_INCLUDE_DIRS),$(eval vpath %.c $(dir)))
 .PHONY: libs
 
 libs: $(C_OBJS)
-	@echo ""
 	@echo "--- Libs Build Complete ---"
 	@echo ""
 
