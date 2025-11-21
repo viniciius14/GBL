@@ -22,11 +22,11 @@ $(foreach dir,$(ASM_INCLUDE_DIRS),$(eval vpath %.S $(dir)))
 
 
 # ASM and C SRCS will now contain <dir>/filename.<S/c>, so remove the dir to not
-# screw up the OBJS path (would be OBJ_DIR/<dir>/filename.o and we want OBJ_DIR/filename.o)
-ASM_OBJS :=$(patsubst %.S,$(OBJ_DIR)/%.o,$(notdir $(ASM_SRCS)))
-C_OBJS   :=$(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(C_SRCS)))
+# screw up the OBJS path (would be OBJ_DIR32/<dir>/filename.o and we want OBJ_DIR32/filename.o)
+ASM_OBJS :=$(patsubst %.S,$(OBJ_DIR32)/%.o,$(notdir $(ASM_SRCS)))
+C_OBJS   :=$(patsubst %.c,$(OBJ_DIR32)/%.o,$(notdir $(C_SRCS)))
 
-TARGET_ELF := $(OBJ_DIR)/boot32.elf
+TARGET_ELF := $(OBJ_DIR32)/boot32.elf
 TARGET_BIN := $(BOOT32)
 
 .PHONY: boot32 clean
@@ -47,24 +47,24 @@ $(TARGET_BIN): $(TARGET_ELF)
 # Not the greatest, we're adding all files in the obj dir to the output.
 # Should be okay because we cull not called files
 $(TARGET_ELF): $(ASM_OBJS) $(C_OBJS)
-	$(LD) $(LD_FLAGS) $(OBJ_DIR)/*.o -T linker.ld $(LD_FORMAT) -o $@
+	$(LD) $(LD_FLAGS) $(OBJ_DIR32)/*.o -T linker.ld $(LD_FORMAT) -o $@
 	$(OBJ_DMP) $(OBJ_DMP_FLAGS) $@ > $(DEBUG_DIR)/boot32.S
 
-$(ASM_OBJS): $(OBJ_DIR)/%.o: %.S
+$(ASM_OBJS): $(OBJ_DIR32)/%.o: %.S
 	$(ASM) $(ASM_FLAGS) $(ASM_FORMAT) \
 	$(ASM_INCLUDES) \
-	$(INPUTS) \
-	$< -o $@ -l $(DEBUG_DIR)/$(basename $(notdir $@)).S
+	$(USER_INPUTS) \
+	$< -o $@ -l $(DEBUG_DIR32)/$(basename $(notdir $@)).S
 	@echo ""
 	$(ASM) $(ASM_FLAGS) $(ASM_FORMAT) \
 	$(ASM_INCLUDES) \
-	$(INPUTS) \
-	$< -E > $(DEBUG_DIR)/$(basename $(notdir $@)).S
+	$(USER_INPUTS) \
+	$< -E > $(DEBUG_DIR32)/$(basename $(notdir $@)).S
 	@echo ""
 
-$(C_OBJS) : $(OBJ_DIR)/%.o: %.c
+$(C_OBJS) : $(OBJ_DIR32)/%.o: %.c
 	$(CC) $(CC_FLAGS) \
-	$(INPUTS) \
+	$(USER_INPUTS) \
 	$(C_INCLUDES) \
 	-c $< -o $@
 	@echo ""

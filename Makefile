@@ -37,8 +37,14 @@ clean:
 
 build_dir:
 	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR32)
+	mkdir -p $(OBJ_DIR64)
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(DEBUG_DIR)
+	mkdir -p $(DEBUG_DIR16)
+	mkdir -p $(DEBUG_DIR32)
+	mkdir -p $(DEBUG_DIR64)
+
 	touch $(STATS_FILE) && echo -n "" > $(STATS_FILE)
 	@echo "\n--- Build Directory Created ---\n"
 

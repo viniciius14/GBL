@@ -9,6 +9,13 @@ export OBJ_DIR     :=$(BUILD_DIR)/obj
 export DEBUG_DIR   :=$(BUILD_DIR)/debug
 export STATS_FILE  :=$(BUILD_DIR)/stats.log
 
+export OBJ_DIR32   :=$(OBJ_DIR)/32
+export OBJ_DIR64   :=$(OBJ_DIR)/64
+
+export DEBUG_DIR16 :=$(DEBUG_DIR)/16
+export DEBUG_DIR32 :=$(DEBUG_DIR)/32
+export DEBUG_DIR64 :=$(DEBUG_DIR)/64
+
 export SCRIPTS_DIR :=$(MISC_DIR)/scripts
 
 export BIOS_DIR    :=$(SRC_DIR)/firmware/BIOS
@@ -61,6 +68,6 @@ export FS_FAT16_ARGS =-a -F 16 -S 512 -s 8 -r 512 -R 4
 export FS_FAT32_ARGS =-a -F 32 -S 512 -s 4        -R 32
 
 # Extra stuff for the build process
-export INPUTS       =-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"'
+export USER_INPUTS       =-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"'
 
 export COMMON_LIBS  :=$(foreach dir,$(shell find $(LIBS_DIR) -mindepth 1 -type d),$(dir))
