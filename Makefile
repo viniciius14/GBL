@@ -72,7 +72,11 @@ endif
 # Write stage1 bootloader to sector 0
 	@dd if=$(BOOT16) of=$@ bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader to the image
+ifeq ($(ARCH_BITS), BITS32)
 	@mcopy -i $@ $(BOOT32) ::GBL_S2.bin
+else ifeq ($(ARCH_BITS), BITS64)
+	@mcopy -i $@ $(BOOT64) ::GBL_S2.bin
+endif
 # Add stub kernel to the image
 # 	@mcopy -i $@ $(BIN_DIR)/GECKOS.bin ::GECKOS.bin
 
@@ -82,9 +86,19 @@ $(BOOT16):
 $(BOOT32):
 	$(MAKE) -C $(SRC_DIR)/boot32
 
+ifeq ($(ARCH_BITS), BITS32)
+# Perform the linking of the 32/.o files into an elf and then to a binary
+	$(LD) $(LD_FLAGS) $(LD_FORMAT) $(OBJ_DIR32)/boot32_all.o -T $(BOOT32_DIR)/linker.ld -o $(OBJ_DIR32)/boot32.elf
+	$(OBJ_CPY) -O binary $(OBJ_DIR32)/boot32.elf $(BOOT32)
+endif
+
 $(BOOT64):
 ifeq ($(ARCH_BITS), BITS64)
 	$(MAKE) -C $(SRC_DIR)/boot64
+
+# Perform the linking of the 32/.o and the 64/.o files into an elf and then to a binary
+	$(LD) $(LD_FLAGS) $(LD_FORMAT64) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR64)/boot64_all.o -T $(BOOT64_DIR)/linker.ld -o $(OBJ_DIR64)/boot64.elf
+	$(OBJ_CPY) -O binary $(OBJ_DIR64)/boot64.elf $(BOOT64)
 endif
 
 

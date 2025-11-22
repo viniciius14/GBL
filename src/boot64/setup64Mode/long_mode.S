@@ -8,8 +8,7 @@
 [extern GDT]
 [extern __KERNEL_ENTRY_ADDR]
 
-%include "common.S"
-%include "S2_constants.S"
+%include "boot64_constants.S"
 
 section .text
 

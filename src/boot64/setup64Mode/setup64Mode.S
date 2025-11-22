@@ -1,19 +1,41 @@
-%ifndef __SUBMODE64_S
-%define __SUBMODE64_S
-
 [bits 32]
 
-[global submode64]
+[global setup64Mode]
 
-[extern long_mode]
+[extern checkCPUID]
+[extern extendedFunctionsSupport]
+[extern compatibility_mode]
+[extern setup_paging]
+[extern submode64]
 
 %include "boot64_constants.S"
 
 section .text
 
+setup64Mode:
+    call checkCPUID
+    cmp eax, 1
+    jne fatal_error
+
+    call extendedFunctionsSupport
+    cmp eax, 1
+    jne fatal_error
+
+    call compatibility_mode
+
+    call setup_paging
+
+    jmp submode64
+
+fatal_error:
+; Do stuff
+    unreachable
+
 submode64:
     lgdt [GDT.Pointer]
-    jmp GDT.Code:long_mode
+    jmp GDT.Code:boot64
+
+%include "boot64.S"
 
 
 section .rodata
@@ -38,5 +60,3 @@ GDT:
 .Pointer:
     dw $ - GDT - 1
     dq GDT
-
-%endif

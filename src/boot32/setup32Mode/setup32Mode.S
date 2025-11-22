@@ -10,6 +10,7 @@
 
 section setup32Mode.text
 
+; 0x7E00
 setup32Mode:
     xor ax, ax                  ; null segments
     mov ds, ax

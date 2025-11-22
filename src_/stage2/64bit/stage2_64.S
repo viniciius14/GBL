@@ -10,10 +10,12 @@
 
 section stage2_64bit.text
 
-%include "common.S"
-%include "S2_constants.S"
+%include "boot64_constants.S"
 
 %ifdef BITS64
+
+setup64Mode:
+
 
 stage2_64bit:
     call checkCPUID

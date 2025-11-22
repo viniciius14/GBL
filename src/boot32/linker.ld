@@ -11,8 +11,6 @@ SECTIONS {
     .text : {
         *(setup32Mode.text)
         *(boot32.text)
-        *(boot64.text)
-
         *(.text*)
     } : text
 

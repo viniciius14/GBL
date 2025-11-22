@@ -7,7 +7,7 @@
 [extern load_kernel]
 
 %ifdef BITS64
-[extern stage2_64bit]
+[extern boot64]
 %endif
 
 %include "boot32_constants.S"
@@ -29,7 +29,7 @@ boot32:
     ; call load_kernel
 
 %ifdef BITS64
-    call stage2_64bit        ; switch to long mode
+    call boot64        ; switch to long mode
 %endif
 
     ; jmp __KERNEL_ENTRY_ADDR

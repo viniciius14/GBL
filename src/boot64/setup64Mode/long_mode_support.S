@@ -5,7 +5,7 @@
 
 [global isLongModeSupported]
 
-%include "S2_constants.S"
+%include "boot64_constants.S"
 
 section .text
 
