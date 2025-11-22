@@ -11,6 +11,7 @@ export STATS_FILE  :=$(BUILD_DIR)/stats.log
 
 export OBJ_DIR32   :=$(OBJ_DIR)/32
 export OBJ_DIR64   :=$(OBJ_DIR)/64
+export OBJ_DIR_COMMON:=$(OBJ_DIR)/common
 
 export DEBUG_DIR16 :=$(DEBUG_DIR)/16
 export DEBUG_DIR32 :=$(DEBUG_DIR)/32

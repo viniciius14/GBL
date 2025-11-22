@@ -2,10 +2,7 @@
 
 [global boot32]
 
-[extern vga_init]
-[extern draw_logo]
-[extern load_kernel]
-
+[extern GBL]
 %ifdef BITS64
 [extern boot64]
 %endif
@@ -23,16 +20,13 @@ boot32:
     mov gs, ax
     mov ss, ax
 
-    call vga_init
-    call draw_logo
-
-    ; call load_kernel
-
 %ifdef BITS64
     call boot64        ; switch to long mode
 %endif
 
     ; jmp __KERNEL_ENTRY_ADDR
+
+    call GBL
 
     unreachable
 

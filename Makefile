@@ -44,6 +44,7 @@ build_dir:
 	mkdir -p $(DEBUG_DIR16)
 	mkdir -p $(DEBUG_DIR32)
 	mkdir -p $(DEBUG_DIR64)
+	mkdir -p $(OBJ_DIR_COMMON)
 
 	touch $(STATS_FILE) && echo -n "" > $(STATS_FILE)
 	@echo "\n--- Build Directory Created ---\n"
@@ -51,7 +52,7 @@ build_dir:
 kernel_stub:
 	$(MAKE) -C $(SRC_DIR)/kernelStub
 
-$(TARGET): $(BOOT16) $(BOOT32) $(BOOT64)
+$(TARGET): common $(BOOT16) $(BOOT32) $(BOOT64) 
 	@echo "\n--- Image Creation for GBL_$(FILE_SYSTEM)_$(ARCH_BITS).img ---"
 # Create the base filesystem image
 ifeq ($(FILE_SYSTEM), FAT12)
@@ -88,7 +89,7 @@ $(BOOT32):
 
 ifeq ($(ARCH_BITS), BITS32)
 # Perform the linking of the 32/.o files into an elf and then to a binary
-	$(LD) $(LD_FLAGS) $(LD_FORMAT) $(OBJ_DIR32)/boot32_all.o -T $(BOOT32_DIR)/linker.ld -o $(OBJ_DIR32)/boot32.elf
+	$(LD) $(LD_FLAGS) $(LD_FORMAT) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR_COMMON)/common.o -T $(BOOT32_DIR)/linker.ld -o $(OBJ_DIR32)/boot32.elf
 	$(OBJ_CPY) -O binary $(OBJ_DIR32)/boot32.elf $(BOOT32)
 endif
 
@@ -97,8 +98,19 @@ ifeq ($(ARCH_BITS), BITS64)
 	$(MAKE) -C $(SRC_DIR)/boot64
 
 # Perform the linking of the 32/.o and the 64/.o files into an elf and then to a binary
-	$(LD) $(LD_FLAGS) $(LD_FORMAT64) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR64)/boot64_all.o -T $(BOOT64_DIR)/linker.ld -o $(OBJ_DIR64)/boot64.elf
+	$(LD) $(LD_FLAGS) $(LD_FORMAT64) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR64)/boot64_all.o $(OBJ_DIR_COMMON)/common.o -T $(BOOT64_DIR)/linker.ld -o $(OBJ_DIR64)/boot64.elf
 	$(OBJ_CPY) -O binary $(OBJ_DIR64)/boot64.elf $(BOOT64)
 endif
 
-
+common:
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	@echo "HERE"
+	$(MAKE) -C $(SRC_DIR)/common

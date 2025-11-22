@@ -12,4 +12,4 @@ boot64:
     ; Continue with boot64 operations...
     ; (This is a placeholder for the actual boot64 code)
 
-    hlt  ; Halt the CPU (placeholder instruction)
+    ret  ; Halt the CPU (placeholder instruction)
