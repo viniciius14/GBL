@@ -11,7 +11,7 @@
 
 #define FONT_WIDTH          8
 #define FONT_HEIGHT         8
-#define FONT_CHAR_COUNT     14
+#define FONT_CHAR_COUNT     15
 
 #define LOGO_RESOLUTION_W   182
 #define LOGO_RESOLUTION_H   132

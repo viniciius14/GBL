@@ -12,24 +12,21 @@ C_INCLUDES   :=$(foreach dir,$(C_INCLUDE_DIRS),-I $(dir))
 
 $(foreach dir,$(C_INCLUDE_DIRS),$(eval vpath %.c $(dir)))
 
-ifeq ($(ARCH_BITS), BITS32)
-CURR_CC := $(CC)
-CURR_LD_FORMAT := $(LD_FORMAT)
-else
-CURR_CC := $(CC64)
-CURR_LD_FORMAT := $(LD_FORMAT64)
-endif
-
 C_OBJS   :=$(patsubst %.c,$(OBJ_DIR_COMMON)/%.o,$(notdir $(C_SRCS)))
 
-.PHONY: all
+.PHONY: common libs
 
-all: $(C_OBJS)
-	$(LD) -r $(CURR_LD_FORMAT) $(OBJ_DIR_COMMON)/*.o -o $(OBJ_DIR_COMMON)/common.o
+common: libs $(C_OBJS)
 
+libs:
+ifeq ($(ARCH_BITS), BITS32)
+	$(MAKE) -C $(COMMON_DIR)/libs libs32
+else
+	$(MAKE) -C $(COMMON_DIR)/libs libs64
+endif
 
-$(C_OBJS): $(OBJ_DIR_COMMON)/%.o: %.c
-	$(CURR_CC) $(CC_FLAGS) \
+$(OBJ_DIR_COMMON)/%.o: %.c
+	$(CC) $(CC_FLAGS) $(CC_FORMAT) \
 	$(USER_INPUTS) \
 	$(C_INCLUDES) \
 	-c $< -o $@

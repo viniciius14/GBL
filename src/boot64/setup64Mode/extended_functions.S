@@ -21,8 +21,9 @@ extendedFunctionsSupport:
     cpuid
     cmp eax, CPUID_EXT_FEATURES
     jb .noExtendedFunctions
-
+; TODO: cleaner way to ret here
     mov eax, 1
+    ret
 
 .noExtendedFunctions:
     mov eax, 0

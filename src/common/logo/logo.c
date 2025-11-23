@@ -74,6 +74,7 @@ const unsigned char font_data[FONT_CHAR_COUNT][FONT_HEIGHT] = {
     {0x00, 0x00, 0x78, 0x6C, 0x60, 0x60, 0x60, 0x00}, // 'r'
     {0x00, 0x00, 0x3E, 0x60, 0x3C, 0x06, 0x7E, 0x00}, // 's'
     {0x00, 0x18, 0x18, 0x7E, 0x18, 0x18, 0x38, 0x00}, // 't'
+    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} // ' '
 };
 
 
@@ -161,8 +162,8 @@ void draw_char(unsigned short x, unsigned short y, unsigned char color, char c) 
         case 't':
             char_index = 13;
             break;
-        // default:
-            // MISSING CHAR NEED TO FIX
+        default:
+            char_index = 14;
     }
 
     const unsigned char *char_data = font_data[char_index];

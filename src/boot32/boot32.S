@@ -3,9 +3,7 @@
 [global boot32]
 
 [extern GBL]
-%ifdef BITS64
-[extern boot64]
-%endif
+[extern setup64Mode]
 
 %include "boot32_constants.S"
 
@@ -21,12 +19,10 @@ boot32:
     mov ss, ax
 
 %ifdef BITS64
-    call boot64        ; switch to long mode
+    jmp setup64Mode        ; switch to long mode
+%else
+    jmp GBL
 %endif
-
-    ; jmp __KERNEL_ENTRY_ADDR
-
-    call GBL
 
     unreachable
 

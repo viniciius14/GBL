@@ -1,11 +1,11 @@
-PROJECT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+export PROJECT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 include $(PROJECT)/misc/config.mk
 
 # User inputs
-FILE_SYSTEM ?=FAT12
-ARCH_BITS   ?=BITS32
-KERNEL_NAME ?=GECKOS  BIN
+export FILE_SYSTEM ?=FAT12
+export ARCH_BITS   ?=BITS32
+export KERNEL_NAME ?=GECKOS  BIN
 
 # User input options
 SUPPORTED_FILE_SYSTEMS :=FAT12 FAT16 FAT32
@@ -13,24 +13,34 @@ SUPPORTED_TARGET_BITS  :=BITS32 BITS64
 
 TARGET :=$(BUILD_DIR)/GBL_$(FILE_SYSTEM)_$(ARCH_BITS).img
 
-export PROJECT FILE_SYSTEM ARCH_BITS KERNEL_NAME
-
-EMULATOR=$(EMULATOR32)
-ifeq (($ARCH_BITS), BITS64)
-	EMULATOR=$(EMULATOR64)
+ifeq ($(ARCH_BITS), BITS32)
+export ASM_FORMAT :=$(ASM_FORMAT32)
+export CC         :=$(CC32)
+export EMULATOR   :=$(EMULATOR32)
+export LD_FORMAT  :=$(LD_FORMAT32)
+export CC_FORMAT  :=$(CC_FORMAT32)
+else
+export ASM_FORMAT :=$(ASM_FORMAT64)
+export CC         :=$(CC64)
+export EMULATOR   :=$(EMULATOR64)
+export LD_FORMAT  :=$(LD_FORMAT64)
+export CC_FORMAT  :=$(CC_FORMAT64)
 endif
 
-INTERFACE=ide
 ifeq ($(FILE_SYSTEM), FAT12)
 	INTERFACE=floppy
+else
+	INTERFACE=ide
 endif
 
-.PHONY: GBL all run debug clean
+
+.PHONY: GBL run clean build_dir sources link common kernel_stub
 
 GBL: build_dir $(TARGET) $(KERNEL_STUB)
 
 run: GBL
-	$(EMULATOR) -drive file=$(TARGET),format=raw,index=0,if=$(INTERFACE) $(EMUL_FLAGS)
+	$(EMULATOR) -d int,unimp,cpu_reset,in_asm -D log.txt -no-reboot -drive file=$(TARGET),format=raw,index=0,if=$(INTERFACE) $(EMUL_FLAGS)
+# 	$(EMULATOR) -d int,unimp,cpu_reset,in_asm,cpu -D log.txt -no-reboot -drive file=$(TARGET),format=raw,index=0,if=$(INTERFACE) $(EMUL_FLAGS)
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -49,10 +59,19 @@ build_dir:
 	touch $(STATS_FILE) && echo -n "" > $(STATS_FILE)
 	@echo "\n--- Build Directory Created ---\n"
 
-kernel_stub:
-	$(MAKE) -C $(SRC_DIR)/kernelStub
+sources: $(BOOT16) $(BOOT32) $(BOOT64) common
 
-$(TARGET): common $(BOOT16) $(BOOT32) $(BOOT64) 
+link: sources
+# Since there will be no files in OBJ/64 if the target isn't BITS64
+	$(LD) $(LD_FLAGS) $(LD_FORMAT) \
+	$(shell find $(OBJ_DIR) -type f -name '*.o') \
+	-T $(SRC_DIR)/linker.ld -o $(OBJ_DIR)/boot_S2.elf
+# Generate disassembly for debugging
+	$(OBJ_DMP) $(OBJ_DMP_FLAGS) $(OBJ_DIR)/boot_S2.elf > $(DEBUG_DIR)/boot_S2_dbg.S
+# Create binary from the linked elf
+	$(OBJ_CPY) -O binary $(OBJ_DIR)/boot_S2.elf $(BIN_DIR)/boot_S2.bin
+
+$(TARGET): link
 	@echo "\n--- Image Creation for GBL_$(FILE_SYSTEM)_$(ARCH_BITS).img ---"
 # Create the base filesystem image
 ifeq ($(FILE_SYSTEM), FAT12)
@@ -73,13 +92,17 @@ endif
 # Write stage1 bootloader to sector 0
 	@dd if=$(BOOT16) of=$@ bs=512 seek=0 conv=notrunc
 # Add stage2 bootloader to the image
-ifeq ($(ARCH_BITS), BITS32)
-	@mcopy -i $@ $(BOOT32) ::GBL_S2.bin
-else ifeq ($(ARCH_BITS), BITS64)
-	@mcopy -i $@ $(BOOT64) ::GBL_S2.bin
-endif
+	@mcopy -i $@ $(BIN_DIR)/boot_S2.bin ::GBL_S2.bin
+# ifeq ($(ARCH_BITS), BITS32)
+# 	@mcopy -i $@ $(BOOT32) ::GBL_S2.bin
+# else ifeq ($(ARCH_BITS), BITS64)
+# 	@mcopy -i $@ $(BOOT64) ::GBL_S2.bin
+# endif
 # Add stub kernel to the image
 # 	@mcopy -i $@ $(BIN_DIR)/GECKOS.bin ::GECKOS.bin
+
+common:
+	$(MAKE) -C $(SRC_DIR)/common
 
 $(BOOT16):
 	$(MAKE) -C $(SRC_DIR)/boot16
@@ -87,30 +110,21 @@ $(BOOT16):
 $(BOOT32):
 	$(MAKE) -C $(SRC_DIR)/boot32
 
-ifeq ($(ARCH_BITS), BITS32)
-# Perform the linking of the 32/.o files into an elf and then to a binary
-	$(LD) $(LD_FLAGS) $(LD_FORMAT) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR_COMMON)/common.o -T $(BOOT32_DIR)/linker.ld -o $(OBJ_DIR32)/boot32.elf
-	$(OBJ_CPY) -O binary $(OBJ_DIR32)/boot32.elf $(BOOT32)
-endif
+# ifeq ($(ARCH_BITS), BITS32)
+# # Perform the linking of the 32/.o files into an elf and then to a binary
+# 	$(LD) $(LD_FLAGS) $(LD_FORMAT) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR_COMMON)/common.o -T $(BOOT32_DIR)/linker.ld -o $(OBJ_DIR32)/boot32.elf
+# 	$(OBJ_CPY) -O binary $(OBJ_DIR32)/boot32.elf $(BOOT32)
+# endif
 
 $(BOOT64):
 ifeq ($(ARCH_BITS), BITS64)
 	$(MAKE) -C $(SRC_DIR)/boot64
 
-# Perform the linking of the 32/.o and the 64/.o files into an elf and then to a binary
-	$(LD) $(LD_FLAGS) $(LD_FORMAT64) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR64)/boot64_all.o $(OBJ_DIR_COMMON)/common.o -T $(BOOT64_DIR)/linker.ld -o $(OBJ_DIR64)/boot64.elf
-	$(OBJ_CPY) -O binary $(OBJ_DIR64)/boot64.elf $(BOOT64)
+# # Perform the linking of the 32/.o and the 64/.o files into an elf and then to a binary
+# 	$(LD) $(LD_FLAGS) $(LD_FORMAT64) $(OBJ_DIR32)/boot32_all.o $(OBJ_DIR64)/boot64_all.o $(OBJ_DIR_COMMON)/common.o -T $(BOOT64_DIR)/linker.ld -o $(OBJ_DIR64)/boot64.elf
+# 	$(OBJ_CPY) -O binary $(OBJ_DIR64)/boot64.elf $(BOOT64)
+# 	$(OBJ_DMP) $(OBJ_DMP_FLAGS) $(OBJ_DIR64)/boot64.elf > $(DEBUG_DIR)/boot64_elf.S
 endif
 
-common:
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	@echo "HERE"
-	$(MAKE) -C $(SRC_DIR)/common
+kernel_stub:
+	$(MAKE) -C $(SRC_DIR)/kernelStub

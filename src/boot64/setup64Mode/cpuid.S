@@ -28,5 +28,4 @@ checkCPUID:
     and eax, EFLAGS_ID          ; eax = zero if ID bit can't be changed, else non-zero
     ret
 
-
 %endif

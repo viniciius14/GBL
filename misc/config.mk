@@ -45,23 +45,24 @@ export CONFIG_FILE :=$(MISC_DIR)/config.mk
 
 # Tools
 export ASM        =nasm
-export CC         =i386-elf-gcc
+export CC32       =i386-elf-gcc
 export CC64       =x86_64-elf-gcc
 export LD         =ld
 export OBJ_CPY    =objcopy
 export OBJ_DMP    =objdump
 export DISASM     =ndisasm
 export EMULATOR32:=qemu-system-i386
-export EMULATOR64:=qemu-system-i386 # TODO: CHANGE ME!
+export EMULATOR64:=qemu-system-x86_64
 
 # Flags
 export ASM_FLAGS     =-W+all -W+error -W+orphan-labels -W+macro-params
 export ASM_FORMAT32  =-f elf32
 export ASM_FORMAT64  =-f elf64
-export CC_FLAGS      =-Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -pedantic -std=c11
-export CC_FORMAT     =-m32
+export CC_FLAGS      =-Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -pedantic -mno-red-zone -fno-pic -fno-pie -static  -std=c11 # TODO -mcmodel=small  only supported for 64-bit
+export CC_FORMAT32     =-m32
+export CC_FORMAT64     =-m64
 export LD_FLAGS      =--gc-sections
-export LD_FORMAT     =-m elf_i386
+export LD_FORMAT32   =-m elf_i386
 export LD_FORMAT64   =-m elf_x86_64
 export OBJ_CPY_FLAGS =-O binary
 export OBJ_DMP_FLAGS =-D --visualize-jumps --start-address=0x7E00
@@ -71,6 +72,11 @@ export FS_FAT16_ARGS =-a -F 16 -S 512 -s 8 -r 512 -R 4
 export FS_FAT32_ARGS =-a -F 32 -S 512 -s 4        -R 32
 
 # Extra stuff for the build process
-export USER_INPUTS       =-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"'
+export USER_INPUTS   =-D$(FILE_SYSTEM) -D$(ARCH_BITS) -DKERNEL_NAME='"$(KERNEL_NAME)"'
 
 export COMMON_LIBS  :=$(foreach dir,$(shell find $(LIBS_DIR) -mindepth 1 -type d),$(dir))
+
+
+
+
+
