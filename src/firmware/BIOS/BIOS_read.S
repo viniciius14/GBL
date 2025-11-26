@@ -3,13 +3,7 @@
 
 [bits 16]
 
-; section .text
-
-; ; [global read]
-
-; ; %ifndef STAGE_1
-; ; [extern failure]
-; ; %endif
+section .text
 
 ; Use BIOS INT13h to read sectors from disk into RAM
 ; Inputs:

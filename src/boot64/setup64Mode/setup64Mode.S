@@ -1,8 +1,8 @@
 [bits 32]
 
 [global setup64Mode]
-[global GDT.Data]
-[global GDT]
+[global GDT64.Data]
+[global GDT64]
 
 [extern checkCPUID]
 [extern extendedFunctionsSupport]
@@ -12,8 +12,8 @@
 [extern boot64]
 
 %include "boot64_constants.S"
-%define CODE_SEG GDT.Code - GDT
-%define DATA_SEG GDT.Data - GDT
+%define CODE_SEG GDT64.Code - GDT64
+%define DATA_SEG GDT64.Data - GDT64
 
 section setup64Mode.text
 
@@ -47,14 +47,14 @@ fatal_error:
     unreachable
 
 submode64:
-    lgdt [GDT.Pointer]
+    lgdt [GDT64.Pointer]
     ; Load the new 64-bit compatible data segment into DS, ES, SS, FS, GS
     ; Final jump into 64-bit mode. This jump reloads CS and switches the CPU mode.
     jmp CODE_SEG:boot64
 
 section .data
 align 16
-GDT:
+GDT64:
     .Null:
         dq 0
     .Code:
@@ -72,5 +72,5 @@ GDT:
         .Data.Flags: db GRAN_4K | SZ_32 | 0xF       ; Flags & Limit (high, bits 16-19)
         .Data.base_hi: db 0
     .Pointer:
-        dw $ - GDT - 1
-        dq GDT
+        dw $ - GDT64 - 1
+        dq GDT64

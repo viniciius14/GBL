@@ -14,7 +14,7 @@ section  .text
 boot64:
     cli
     mov rsp, 0x90000
-    mov ax, DATA_SEG    ; 0x10, not GDT.Data address!
+    mov ax, DATA_SEG
     mov ds, ax
     mov es, ax
     mov fs, ax

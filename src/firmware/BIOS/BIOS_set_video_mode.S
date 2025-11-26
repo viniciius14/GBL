@@ -5,8 +5,6 @@
 
 section .text
 
-[global BIOS_set_video_mode]
-
 ; Sets the video mode
 ; Inputs:
 ;   - al = Video mode

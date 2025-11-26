@@ -1,6 +1,20 @@
 %ifndef __BOOT16_CONSTANTS_S
 %define __BOOT16_CONSTANTS_S
 
+%macro unreachable 0
+    cli             ; disable interrupts
+    hlt             ; halt the CPU
+    jmp $
+%endmacro
+
+%macro print_letter 1
+    pusha
+    mov ah, 0x0e
+    mov al, %1
+    int 0x10
+    popa
+%endmacro
+
 STACK_START            equ 0x07C00
 
 ; FAT related constants
@@ -38,19 +52,5 @@ MAX_SECTORS_READ        equ 127
 
 STAGE2_OFFSET           equ 0x07E00
 STAGE2_SEGMENT          equ 0x00000
-
-%macro unreachable 0
-    cli             ; disable interrupts
-    hlt             ; halt the CPU
-    jmp $
-%endmacro
-
-%macro print_letter 1
-    pusha
-    mov ah, 0x0e
-    mov al, %1
-    int 0x10
-    popa
-%endmacro
 
 %endif

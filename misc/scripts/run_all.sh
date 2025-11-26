@@ -1,36 +1,30 @@
-#!/bin/bash
-set -e
-# Find all files starting with GBL*
-shopt -s nullglob
-FILES=(build/GBL*)
+#!/bin/sh
 
-if [[ ${#FILES[@]} -eq 0 ]]; then
-    echo "No files starting with 'GBL' found in build."
-    return
-fi
+# Define available options
+FILE_SYSTEMS="FAT12 FAT16 FAT32"
+ARCH_BITS_LIST="BITS32 BITS64"
 
-# Loop over the files
-for file in "${FILES[@]}"; do
-    filename="$(basename "$file")"
+echo ""
+echo "=== Building all combinations of FILE_SYSTEM and ARCH_BITS ==="
+echo ""
 
-    # # Determine architecture
-    # if [[ "$filename" == *BITS64* ]]; then
-    #     QEMU_BIN="qemu-system-x86_64"
-    # else
-    #     QEMU_BIN="qemu-system-i386"
-    # fi
+for FS in $FILE_SYSTEMS; do
+    for AB in $ARCH_BITS_LIST; do
+        echo "--------------------------------------------------------"
+        echo " Cleaning build directory..."
+        make clean
 
-    # Determine interface type
-    if [[ "$filename" == *FAT12* ]]; then
-        INTERFACE="if=floppy"
-    else
-        INTERFACE="if=ide"
-    fi
+        echo " Building for FILE_SYSTEM=$FS  ARCH_BITS=$AB"
+        make FILE_SYSTEM=$FS ARCH_BITS=$AB run || {
+            echo "Build failed for $FS / $AB"
+            exit 1
+        }
 
-    echo "Launching: $QEMU_BIN with $INTERFACE for $filename"
-    $QEMU_BIN \
-        -drive file="$file",format=raw,index=0,"$INTERFACE" \
-        -m 128M \
-        -serial stdio \
-        -machine pc
+        echo "Done: $FS / $AB"
+        echo "--------------------------------------------------------"
+        echo ""
+    done
 done
+
+echo ""
+echo "=== All builds completed successfully ==="

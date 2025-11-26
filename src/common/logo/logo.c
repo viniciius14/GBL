@@ -101,7 +101,7 @@ void draw_logo(void) {
             y = y_offset + pixel_index / LOGO_RESOLUTION_W;
 
             // Check to prevent drawing outside the logo's boundaries
-                vga_draw_pixel(x, y, color);
+            vga_draw_pixel(x, y, color);
 
             pixel_index++; // Increment the pixel counter
         }

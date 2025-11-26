@@ -13,18 +13,15 @@ section .text
 ; Inputs:
 ;   - NONE
 ; Outputs:
-;   - eax = 1 on success
-;   - eax = 0 on failure
+;   - eax = 1 if long mode supported
+;   - eax = 0 if long mode not supported
 ;
 isLongModeSupported:
     mov eax, CPUID_EXT_FEATURES
     cpuid
-    test edx, CPUID_EDX_EXT_FEAT_LM     ; if this is set, the CPU supports long mode
-    jz .noLongMode
-    mov eax, 1
-
-.noLongMode:
-    mov eax, 0
+    test edx, CPUID_EDX_EXT_FEAT_LM
+    setnz al                    ; Set al = 1 if zero flag is NOT set (bit was set)
+    movzx eax, al               ; Zero-extend to eax
     ret
 
 %endif

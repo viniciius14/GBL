@@ -3,14 +3,11 @@
 
 section .text
 
-%define CURRENT_ARCH_BITS   16
 ; TODO temporary solution
 %define BIOS
 
 %include "defines.S"
-
 %include "boot16_constants.S"
-
 %include "header.S"
 
 start:
@@ -46,8 +43,6 @@ start:
 %include "drivers.S"
 
 failure:
-    ; mov si, errorMsg
-    ; call BIOS_print
     hlt
     jmp $
 

@@ -5,12 +5,6 @@
 
 section .text
 
-[global BIOS_read]
-
-%ifndef STAGE_1
-[extern failure]
-%endif
-
 ; Use BIOS INT13h Extensions to read sectors from disk into RAM
 ; Inputs:
 ;   - AX = LBA address

@@ -1,8 +1,8 @@
 %ifndef __GDT_S
 %define __GDT_S
 
-%define CODE_SEG GDT_Start.code_descriptor - GDT_Start
-%define DATA_SEG GDT_Start.data_descriptor - GDT_Start
+%define CODE_SEG GDT32.code - GDT32
+%define DATA_SEG GDT32.data - GDT32
 
 [bits 16]
 
@@ -16,29 +16,30 @@ set_GDT:
 
 section .data
 
-GDT_Start:
-    .null_descriptor:
+GDT32:
+    .null:
         dd  0
         dd  0
-    .code_descriptor:
+    .code:
         dw 0xFFFF
         dw 0
         db 0
         db 0b10011010
         db 0b11001111
         db 0
-    .data_descriptor:
+    .data:
         dw 0xFFFF
         dw 0
         db 0
         db 0b10010010
         db 0b11001111
         db 0
-GDT_End:
+GDT32_End:
 
 ; TODO: Can this be: section .rodata ?
+section .rodata
 GDT_Descriptor:
-    dw GDT_End - GDT_Start - 1  ; size
-    dd GDT_Start                ; start
+    dw GDT32_End - GDT32 - 1  ; size
+    dd GDT32                ; start
 
 %endif

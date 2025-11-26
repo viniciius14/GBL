@@ -1,3 +1,6 @@
+%ifndef __A20_S
+%define __A20_S
+
 [bits 16]
 
 [global A20_line]
@@ -81,3 +84,5 @@ A20_status:
 
 .check_A20_exit:
     ret
+
+%endif

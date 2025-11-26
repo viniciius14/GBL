@@ -1,3 +1,6 @@
+%ifndef __SETUP32MODE_S
+%define __SETUP32MODE_S
+
 [bits 16]
 
 [global setup32Mode]
@@ -61,3 +64,4 @@ setup32Mode:
 ; MSG_welcome:        db "Welcome to GBL, the GeckOS Bootloader!", 0
 
 ; %include "FAT_header.S"
+%endif

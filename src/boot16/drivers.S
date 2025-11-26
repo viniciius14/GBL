@@ -3,6 +3,18 @@
 
 ; Define the API that will decide what code to call
 
+; Dependencies
+%ifdef FAT12
+    %include "read.S"
+    %include "disk_reset.S"
+%elifdef FAT16
+    %include "read.S"
+    %include "disk_reset.S"
+%elifdef FAT32
+    %include "read.S"
+    %include "disk_reset.S"
+%endif
+
 ; Find a file in the current filesystem
 ; Inputs:
 ;   DS:SI = pointer to filename
@@ -10,10 +22,6 @@
 ; Outputs:
 ;   AX = starting cluster in the data section
 %ifdef FAT12
-; File Requirements
-    %include "read.S"
-    %include "disk_reset.S"
-
     %include "drivers/FAT/FAT12_utils.S"
 %elifdef FAT16
     %include "drivers/FAT/FAT16_utils.S"
@@ -25,7 +33,6 @@
 ;   AX = starting cluster number
 ;   ES:BX = memory address to load file to
 ; Outputs:
-;
 ;
 %ifdef FAT12
     %include "drivers/FAT/FAT12_utils.S"

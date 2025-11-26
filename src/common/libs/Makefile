@@ -17,7 +17,7 @@ libs32: $(C_OBJS32)
 	@echo "--- Libs 32 Build Complete ---"
 	@echo ""
 
-$(C_OBJS32) : $(OBJ_DIR32)/%.o: %.c
+$(OBJ_DIR32)/%.o: %.c
 	$(CC) $(CC_FLAGS) \
 	$(USER_INPUTS) \
 	$(LIB_INCLUDES) \
@@ -28,7 +28,7 @@ libs64: $(C_OBJS64)
 	@echo "--- Libs 64 Build Complete ---"
 	@echo ""
 
-$(C_OBJS64) : $(OBJ_DIR64)/%.o: %.c
+$(OBJ_DIR64)/%.o: %.c
 	$(CC64) $(CC_FLAGS) \
 	$(USER_INPUTS) \
 	$(LIB_INCLUDES) \

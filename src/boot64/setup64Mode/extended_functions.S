@@ -20,13 +20,9 @@ extendedFunctionsSupport:
     mov eax, CPUID_EXTENSIONS
     cpuid
     cmp eax, CPUID_EXT_FEATURES
-    jb .noExtendedFunctions
-; TODO: cleaner way to ret here
-    mov eax, 1
-    ret
-
-.noExtendedFunctions:
-    mov eax, 0
+    setb al              ; Set al = 1 if below (no extended functions), 0 otherwise
+    movzx eax, al        ; Zero-extend al into eax
+    xor eax, 1           ; Flip the bit (1 becomes 0, 0 becomes 1)
     ret
 
 %endif

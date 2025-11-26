@@ -5,8 +5,6 @@
 
 section .text
 
-[global print]
-
 ; Prints a string to the screen
 ; Inputs:
 ;   - DS:SI = pointer to string

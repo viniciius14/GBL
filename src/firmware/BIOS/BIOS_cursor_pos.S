@@ -5,8 +5,6 @@
 
 section .text
 
-[global BIOS_cursor_pos]
-
 ; Sets the cursor at the specified position
 ; Inputs:
 ;   - DH = row

@@ -1,3 +1,6 @@
+%ifndef __FAT_HEADER_S
+%define __FAT_HEADER_S
+
 ; BIOS Parameter Block
 
 jmp strict short start
@@ -76,4 +79,6 @@ BS_OEMName:                 db "GECKOS  "               ; OEM Name Identifier. 8
     BS_VolID:               db 0x12, 0x34, 0x56, 0x78   ; Volume serial number.
     BS_VolLab:              db "GECKOS     "            ; Volume label. This field matches the 11-byte volume label recorded in the root directory.
     BS_FilSysType:          db "FAT32   "               ; This string is informational only and does not determine the FAT type.
+%endif
+
 %endif

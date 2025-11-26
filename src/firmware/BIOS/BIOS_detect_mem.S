@@ -5,12 +5,6 @@
 
 section .text
 
-[global BIOS_detect_mem]
-
-%ifndef STAGE_1
-[extern BIOS_print]
-%endif
-
 ; Writes to the given pointer the memory map of the installed RAM by consecutively calling int 0x15
 ; Inputs:
 ;   - ECX = Buffer size (will fill in at most ECX bytes)

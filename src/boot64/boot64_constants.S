@@ -14,7 +14,7 @@ CPUID_EXTENSIONS        equ 1 << 31
 CPUID_EXT_FEATURES      equ CPUID_EXTENSIONS | 1
 CPUID_EDX_EXT_FEAT_LM   equ 1 << 29
 
-; Compatability mode related constants
+; Compatibility mode related constants
 EFER_MSR                equ 0xC0000080
 EFER_LM_ENABLE          equ 1 << 8
 
