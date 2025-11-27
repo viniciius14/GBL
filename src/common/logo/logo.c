@@ -110,7 +110,7 @@ void draw_logo(void) {
         color = color == VC_BLACK ? VC_WHITE : VC_BLACK;
     }
 
-        unsigned int text_y = LOGO_RESOLUTION_H + 20;
+    unsigned int text_y = LOGO_RESOLUTION_H + 20;
 
     // Draw the centered text
     draw_string(0, text_y, VC_WHITE, "GeckOs Bootloader");

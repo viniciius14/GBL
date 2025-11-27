@@ -4,9 +4,10 @@ C_SRCS = main.c \
 	logo.c \
 	vga.c
 
-C_INCLUDE_DIRS = $(COMMON_DIR)/libs/io \
+C_INCLUDE_DIRS = $(LIBS_DIR)/io \
 	$(DRIVERS_DIR)/video \
-	$(COMMON_DIR)/logo
+	$(COMMON_DIR)/logo \
+	$(LIBS_DIR)/utils
 
 C_INCLUDES   :=$(foreach dir,$(C_INCLUDE_DIRS),-I $(dir))
 

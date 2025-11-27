@@ -12,27 +12,27 @@
 
 /* -------- Function Implementations ------- */
 
-void outByte(unsigned short port, unsigned char data) {
-    __asm__("outb %0, %1" : : "a"(data), "Nd"(port));
+void outByte(uint16_t port, uint8_t data) {
+    ASM("outb %0, %1" : : "a"(data), "Nd"(port));
     return;
 }
 
-unsigned char inByte(unsigned short port) {
-    unsigned char res;
-    __asm__("inb %1, %0" : "=a"(res) : "Nd"(port));
+uint8_t inByte(uint16_t port) {
+    uint8_t res;
+    ASM("inb %1, %0" : "=a"(res) : "Nd"(port));
     return res;
 }
 
-void outWord(unsigned short port, unsigned short data) {
-    __asm__("outw %w0, %1" : : "a" (data), "id" (port) );
+void outWord(uint16_t port, uint16_t data) {
+    ASM("outw %w0, %1" : : "a" (data), "id" (port) );
 }
 
-unsigned short inWord(unsigned short port){
-   unsigned short ret;
-   __asm__("inw %1, %0" : "=a" (ret) : "dN" (port));
+uint16_t inWord(uint16_t port){
+   uint16_t ret;
+   ASM("inw %1, %0" : "=a" (ret) : "dN" (port));
    return ret;
 }
 
 void ioWait(void) {
-    __asm__("outb %%al, $0x80" : : "a"(0));
+    ASM("outb %%al, $0x80" : : "a"(0));
 }
