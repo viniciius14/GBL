@@ -7,7 +7,7 @@
 /* ----------- Global Variables ------------ */
 
 /* "Compressed" version of the image data */
-const unsigned char image_data[IMAGE_SIZE] = {
+const unsigned char geckoLogo[GECKO_LOGO_SIZE] = {
     32, 8, 171, 16, 166, 19, 160, 22, 157, 27, 153, 15, 9, 7, 91, 8, 50, 15, 12,
     6, 90, 10, 49, 13, 16, 5, 87, 12, 47, 12, 22, 4, 84, 15, 44, 12, 23, 5, 81,
     36, 23, 12, 28, 2, 80, 40, 20, 11, 110, 11, 7, 24, 18, 11, 110, 10, 3, 5, 3,
@@ -59,140 +59,40 @@ const unsigned char image_data[IMAGE_SIZE] = {
     177, 4, 71
 };
 
-const unsigned char font_data[FONT_CHAR_COUNT][FONT_HEIGHT] = {
-    {0x00, 0x7C, 0x36, 0x36, 0x36, 0x36, 0x7C, 0x00}, // 'B'
-    {0x00, 0x3C, 0x60, 0x62, 0x6A, 0x6A, 0x3A, 0x00}, // 'G'
-    {0x00, 0x3C, 0x66, 0x66, 0x66, 0x66, 0x3C, 0x00}, // 'O'
-    {0x00, 0x3C, 0x66, 0x02, 0x3A, 0x62, 0x3C, 0x00}, // 'a'
-    {0x00, 0x60, 0x60, 0x7C, 0x66, 0x66, 0x7C, 0x00}, // 'b'
-    {0x00, 0x00, 0x3C, 0x60, 0x60, 0x60, 0x3C, 0x00}, // 'c'
-    {0x00, 0x06, 0x06, 0x3E, 0x66, 0x66, 0x3E, 0x00}, // 'd'
-    {0x00, 0x00, 0x3C, 0x66, 0x7E, 0x60, 0x3C, 0x00}, // 'e'
-    {0x00, 0x60, 0x60, 0x6C, 0x78, 0x6C, 0x66, 0x00}, // 'k'
-    {0x00, 0x38, 0x18, 0x18, 0x18, 0x18, 0x3C, 0x00}, // 'l'
-    {0x00, 0x00, 0x3C, 0x66, 0x66, 0x66, 0x3C, 0x00}, // 'o'
-    {0x00, 0x00, 0x78, 0x6C, 0x60, 0x60, 0x60, 0x00}, // 'r'
-    {0x00, 0x00, 0x3E, 0x60, 0x3C, 0x06, 0x7E, 0x00}, // 's'
-    {0x00, 0x18, 0x18, 0x7E, 0x18, 0x18, 0x38, 0x00}, // 't'
-    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} // ' '
-};
-
-
 /* -------- Function Implementations ------- */
 
-
-void draw_logo(void) {
-    unsigned int color = VC_BLACK;
-    unsigned int pixel_index = 0; // A continuous counter for the current pixel
-    unsigned int x, y;
+void GBL_logo(void) {
+    uint32_t colour = VGA_BLACK;
+    uint32_t pixel_index = 0; // A continuous counter for the current pixel
+    uint32_t x, y;
 
     // Calculate the horizontal offset to center the logo
-    unsigned int x_offset = (SCREEN_WIDTH - LOGO_RESOLUTION_W) / 2;
-    const unsigned int y_offset = 10;
+    uint32_t x_offset = (VGA_SCREEN_WIDTH - LOGO_RESOLUTION_W) / 2;
+    const uint32_t y_offset = 10;
 
-    for (int i = 0 ; i < IMAGE_SIZE ; i++) {
-        // The value at image_data[i] is the number of pixels to draw
-        unsigned int run_length = image_data[i];
+    for (int i = 0 ; i < GECKO_LOGO_SIZE ; i++) {
+        // The value at geckoLogo[i] is the number of pixels to draw
+        uint32_t run_length = geckoLogo[i];
 
         // Draw the current run of pixels
-        for (unsigned int j = 0 ; j < run_length ; j++) {
+        for (uint32_t j = 0 ; j < run_length ; j++) {
             // Calculate x and y coordinates relative to the logo's resolution
             x = x_offset + (pixel_index % LOGO_RESOLUTION_W);
             y = y_offset + pixel_index / LOGO_RESOLUTION_W;
 
             // Check to prevent drawing outside the logo's boundaries
-            vga_draw_pixel(x, y, color);
+            vga_draw_pixel(x, y, colour);
 
             pixel_index++; // Increment the pixel counter
         }
 
-        // After the run is finished, switch the color for the next run
-        color = color == VC_BLACK ? VC_WHITE : VC_BLACK;
+        // After the run is finished, switch the colour for the next run
+        colour = colour == VGA_BLACK ? VGA_WHITE : VGA_BLACK;
     }
-
-    unsigned int text_y = LOGO_RESOLUTION_H + 20;
-
-    // Draw the centered text
-    draw_string(0, text_y, VC_WHITE, "GeckOs Bootloader");
-}
-
-void draw_char(unsigned short x, unsigned short y, unsigned char color, char c) {
-    unsigned int char_index = -1;
-
-    switch (c) {
-        case 'B':
-            char_index = 0;
-            break;
-        case 'G':
-            char_index = 1;
-            break;
-        case 'O':
-            char_index = 2;
-            break;
-        case 'a':
-            char_index = 3;
-            break;
-        case 'b':
-            char_index = 4;
-            break;
-        case 'c':
-            char_index = 5;
-            break;
-        case 'd':
-            char_index = 6;
-            break;
-        case 'e':
-            char_index = 7;
-            break;
-        case 'k':
-            char_index = 8;
-            break;
-        case 'l':
-            char_index = 9;
-            break;
-        case 'o':
-            char_index = 10;
-            break;
-        case 'r':
-            char_index = 11;
-            break;
-        case 's':
-            char_index = 12;
-            break;
-        case 't':
-            char_index = 13;
-            break;
-        default:
-            char_index = 14;
-    }
-
-    const unsigned char *char_data = font_data[char_index];
-
-    // Iterate through each row of the character
-    for (int row = 0 ; row < FONT_HEIGHT ; row++) {
-        unsigned char row_data = char_data[row];
-        // Iterate through each bit (pixel) in the row
-        for (int col = 0 ; col < FONT_WIDTH ; col++) {
-            // Check if the bit is set (i.e., the pixel should be drawn)
-            if ((row_data >> (7 - col)) & 1) {
-                vga_draw_pixel(x + col, y + row, color);
-            }
-        }
-    }
-}
-
-void draw_string(unsigned short x, unsigned short y, unsigned char color, const char* str) {
-    unsigned int string_width = LOGO_STR_SIZE * FONT_WIDTH;
-    unsigned short current_x = x;
 
     // Calculate the horizontal offset to center the string
-    unsigned int x_offset = (SCREEN_WIDTH - string_width) / 2;
+    x_offset = (VGA_SCREEN_WIDTH - (LOGO_STR_SIZE * FONT_WIDTH)) / 2;
+    uint32_t text_y = LOGO_RESOLUTION_H + 20;
 
-    // Adjust the starting x coordinate
-    current_x = x_offset;
-
-    for (unsigned int i = 0 ; i < LOGO_STR_SIZE ; i++) {
-        draw_char(current_x, y, color, str[i]);
-        current_x += FONT_WIDTH; // Move to the next character position
-    }
+    print_string(x_offset, text_y, VGA_WHITE, "GeckOs Bootloader", LOGO_STR_SIZE);
 }

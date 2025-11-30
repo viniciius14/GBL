@@ -26,6 +26,9 @@
 #define MIN_FLOAT32             (1.175494351e-38f)
 #define MIN_FLOAT64             (2.2250738585072014e-308f)
 
+#define TRUE                    (1)
+#define FALSE                   (0)
+
 /* ----------------- Types ----------------- */
 
 typedef unsigned char           uint8_t;
@@ -40,6 +43,8 @@ typedef long long               int64_t;
 
 typedef float                   float32_t;
 typedef double                  float64_t;
+
+typedef uint8_t                 bool;
 
 /* ---------- Function prototypes ---------- */
 

@@ -1,6 +1,6 @@
-#define SCREEN_WIDTH    320
-#define SCREEN_HEIGHT   200
-#define SCREEN_SIZE     (SCREEN_WIDTH * SCREEN_HEIGHT)
+#define VGA_SCREEN_WIDTH    320
+#define VGA_SCREEN_HEIGHT   200
+#define SCREEN_SIZE     (VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT)
 #define VC_PINK         0xE3
 
 void main (void)

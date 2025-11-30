@@ -2,12 +2,15 @@ include $(PROJECT)/misc/config.mk
 
 C_SRCS = main.c \
 	logo.c \
-	vga.c
+	vga.c \
+	fdc.c
 
 C_INCLUDE_DIRS = $(LIBS_DIR)/io \
 	$(DRIVERS_DIR)/video \
 	$(COMMON_DIR)/logo \
-	$(LIBS_DIR)/utils
+	$(LIBS_DIR)/utils \
+	$(LIBS_DIR)/console \
+	$(DRIVERS_DIR)/disk/FDC
 
 C_INCLUDES   :=$(foreach dir,$(C_INCLUDE_DIRS),-I $(dir))
 
