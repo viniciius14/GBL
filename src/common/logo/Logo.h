@@ -3,19 +3,19 @@
 
 /* --------------- Includes ---------------- */
 
-#include "vga.h"
-#include "console.h"
+#include "VideoGraphicsArray.h"
+#include "Console.h"
 
 /* ---------------- Defines ---------------- */
 
-#define LOGO_STR_SIZE       (17)
-#define LOGO_RESOLUTION_W   (182)
-#define LOGO_RESOLUTION_H   (132)
-#define GECKO_LOGO_SIZE     (1015)
+#define LOGO_STR_SIZE           (17)
+#define GECKO_LOGO_WIDTH        (182)
+#define GECKO_LOGO_HEIGHT       (132)
+#define GECKO_LOGO_CMPR_SIZE    (1015)
 
 /* ----------------- Types ----------------- */
 
-
+/* None */
 
 /* ---------- Function prototypes ---------- */
 

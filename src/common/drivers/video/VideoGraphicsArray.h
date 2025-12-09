@@ -1,7 +1,8 @@
-#ifndef __VGA_H
-#define __VGA_H
+#ifndef __VIDEOGRAPHICSARRAY_H
+#define __VIDEOGRAPHICSARRAY_H
 
-#include "io.h"
+#include "Io.h"
+#include "Memory.h"
 
 /* ---------------- Defines ---------------- */
 
@@ -11,7 +12,7 @@ typedef enum {
     VGA_PALETTE_READ    = 0x3C7,
     VGA_PALETTE_WRITE   = 0x3C8,
     VGA_PALETTE_DATA    = 0x3C9,
-} VgaRegAddress;
+} VideoGraphicsArray_regAddres;
 
 /* VGA colours */
 typedef enum {
@@ -23,7 +24,7 @@ typedef enum {
     VGA_CYAN         = 0x1F,
     VGA_L_GREY       = 0x6D,
     VGA_WHITE        = 0xFF,
-} VgaColours;
+} VideoGraphicsArray_colour;
 
 #define VGA_SCREEN_WIDTH    (320)
 #define VGA_SCREEN_HEIGHT   (200)
@@ -32,11 +33,13 @@ typedef enum {
 
 /* ----------------- Types ----------------- */
 
-
+/* None */
 
 /* ---------- Function prototypes ---------- */
 
-void vga_init();
-void vga_draw_pixel(uint16_t x, uint16_t y, VgaColours colour);
+void VideoGraphicsArray_init();
+void VideoGraphicsArray_drawPixel(uint16_t x, uint16_t y, VideoGraphicsArray_colour colour);
+void VideoGraphicsArray_clearScreen(VideoGraphicsArray_colour colour);
+void VideoGraphicsArray_drawHorizontalLine(const uint16_t x, const uint16_t y, const uint16_t size, const VideoGraphicsArray_colour colour);
 
-#endif /* __VGA_H */
+#endif /* __VIDEOGRAPHICSARRAY_H */

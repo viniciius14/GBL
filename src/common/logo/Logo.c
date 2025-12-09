@@ -1,4 +1,4 @@
-#include "logo.h"
+#include "Logo.h"
 
 /* ---------- Function Prototypes ---------- */
 
@@ -7,7 +7,7 @@
 /* ----------- Global Variables ------------ */
 
 /* "Compressed" version of the image data */
-const unsigned char geckoLogo[GECKO_LOGO_SIZE] = {
+const uint8_t Logo_geckoLogo[GECKO_LOGO_CMPR_SIZE] = {
     32, 8, 171, 16, 166, 19, 160, 22, 157, 27, 153, 15, 9, 7, 91, 8, 50, 15, 12,
     6, 90, 10, 49, 13, 16, 5, 87, 12, 47, 12, 22, 4, 84, 15, 44, 12, 23, 5, 81,
     36, 23, 12, 28, 2, 80, 40, 20, 11, 110, 11, 7, 24, 18, 11, 110, 10, 3, 5, 3,
@@ -62,37 +62,31 @@ const unsigned char geckoLogo[GECKO_LOGO_SIZE] = {
 /* -------- Function Implementations ------- */
 
 void GBL_logo(void) {
-    uint32_t colour = VGA_BLACK;
-    uint32_t pixel_index = 0; // A continuous counter for the current pixel
-    uint32_t x, y;
+    VideoGraphicsArray_colour currColour = VGA_BLACK;
+    uint32_t pixelIndex = 0; // A continuous counter for the current pixel
 
     // Calculate the horizontal offset to center the logo
-    uint32_t x_offset = (VGA_SCREEN_WIDTH - LOGO_RESOLUTION_W) / 2;
-    const uint32_t y_offset = 10;
+    const uint32_t xOffset = (VGA_SCREEN_WIDTH - GECKO_LOGO_WIDTH) / 2;
+    const uint32_t yOffset = 10;
 
-    for (int i = 0 ; i < GECKO_LOGO_SIZE ; i++) {
+    for (int i = 0 ; i < GECKO_LOGO_CMPR_SIZE ; i++) {
         // The value at geckoLogo[i] is the number of pixels to draw
-        uint32_t run_length = geckoLogo[i];
+        uint32_t pixelsToDraw = Logo_geckoLogo[i];
 
-        // Draw the current run of pixels
-        for (uint32_t j = 0 ; j < run_length ; j++) {
-            // Calculate x and y coordinates relative to the logo's resolution
-            x = x_offset + (pixel_index % LOGO_RESOLUTION_W);
-            y = y_offset + pixel_index / LOGO_RESOLUTION_W;
-
-            // Check to prevent drawing outside the logo's boundaries
-            vga_draw_pixel(x, y, colour);
-
-            pixel_index++; // Increment the pixel counter
+        // Leave the background color as is
+        if (currColour == VGA_WHITE) {
+            VideoGraphicsArray_drawHorizontalLine (
+                xOffset + (pixelIndex % GECKO_LOGO_WIDTH),
+                yOffset + (pixelIndex / GECKO_LOGO_WIDTH),
+                pixelsToDraw,
+                VGA_WHITE
+            );
         }
-
-        // After the run is finished, switch the colour for the next run
-        colour = colour == VGA_BLACK ? VGA_WHITE : VGA_BLACK;
+        pixelIndex += pixelsToDraw;
+        currColour = currColour == VGA_BLACK ? VGA_WHITE : VGA_BLACK;
     }
 
-    // Calculate the horizontal offset to center the string
-    x_offset = (VGA_SCREEN_WIDTH - (LOGO_STR_SIZE * FONT_WIDTH)) / 2;
-    uint32_t text_y = LOGO_RESOLUTION_H + 20;
-
-    print_string(x_offset, text_y, VGA_WHITE, "GeckOs Bootloader", LOGO_STR_SIZE);
+    // Console_printStringCentered(VGA_WHITE, "GeckOs Bootloader", GECKO_LOGO_HEIGHT + 20);
+    // Console_printString(VGA_WHITE, "GeckOs Bootloader");
+    // Console_printStringAtLocation (VGA_WHITE, "GeckOs Bootloader", 0, 5);
 }

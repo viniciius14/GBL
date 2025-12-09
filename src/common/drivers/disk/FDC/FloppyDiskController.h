@@ -1,10 +1,10 @@
-#ifndef __FDC_H
-#define __FDC_H
+#ifndef __FLOPPYDISKCONTROLLER_H
+#define __FLOPPYDISKCONTROLLER_H
 
-#include "utils.h"
-#include "memory.h"
-#include "io.h"
-#include "console.h"
+#include "Utils.h"
+#include "Memory.h"
+#include "Io.h"
+#include "Console.h"
 
 /* ---------------- Defines ---------------- */
 
@@ -34,7 +34,7 @@ typedef const enum {
     FDC_ADDR_DATA_FIFO          = 0x03F5, /* FIFO - R/W */
     FDC_ADDR_DIGITAL_IN         = 0x03F7, /* DIR  - R   */
     FDC_ADDR_CONFIG_CTRL        = 0x03F7  /* CCR  - W   */
-} FdcRegAddr;
+} FloppyDiskController_regAddr;
 
 typedef const enum {
     FDC_CMD_READ_TRACK          = 2,
@@ -58,7 +58,7 @@ typedef const enum {
     FDC_CMD_VERIFY              = 22,
     FDC_CMD_SCAN_LOW_OR_EQUAL   = 25,
     FDC_CMD_SCAN_HIGH_OR_EQUAL  = 29
-} FdcCommands;
+} FloppyDiskController_commands;
 
 
 typedef const volatile struct  {
@@ -70,8 +70,8 @@ typedef const volatile struct  {
     uint8_t step                : 1;
     uint8_t drv2                : 1;
     uint8_t int_pending         : 1; /* State of the 82077AA INTERRUPT pin */
-} PACKED FdcRegStatusA;
-STATIC_ASSERT(sizeof(FdcRegStatusA) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regStatusA;
+STATIC_ASSERT(sizeof(FloppyDiskController_regStatusA) == sizeof(uint8_t));
 
 typedef const volatile struct {
     uint8_t mot_en0             : 1; /* Motor bit */
@@ -81,8 +81,8 @@ typedef const volatile struct {
     uint8_t wrdata_toggle       : 1; /* Write data toggle */
     uint8_t driver_sel          : 1; /* Driver select */
     uint8_t reserved            : 2;
-} PACKED FdcRegStatusB;
-STATIC_ASSERT(sizeof(FdcRegStatusB) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regStatusB;
+STATIC_ASSERT(sizeof(FloppyDiskController_regStatusB) == sizeof(uint8_t));
 
 /* Standard programming practice is to set both MOT ENx and DRIVE SELx bits at the same time. */
 typedef volatile struct {
@@ -94,15 +94,15 @@ typedef volatile struct {
     uint8_t mot_en1             : 1;
     uint8_t mot_en2             : 1;
     uint8_t mot_en3             : 1;
-} PACKED FdcRegDigOut;
-STATIC_ASSERT(sizeof(FdcRegDigOut) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regDigOut;
+STATIC_ASSERT(sizeof(FloppyDiskController_regDigOut) == sizeof(uint8_t));
 
 typedef volatile struct {
     uint8_t tape_sel0           : 1;
     uint8_t tape_sel1           : 1;
     uint8_t reserved            : 6;
-} PACKED FdcRegTapeDrv;
-STATIC_ASSERT(sizeof(FdcRegTapeDrv) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regTapeDrv;
+STATIC_ASSERT(sizeof(FloppyDiskController_regTapeDrv) == sizeof(uint8_t));
 
 typedef const volatile struct {
     uint8_t drv0_busy           : 1;
@@ -113,8 +113,8 @@ typedef const volatile struct {
     uint8_t non_dma             : 1;
     uint8_t dio                 : 1;
     uint8_t rqm                 : 1;
-} PACKED FdcRegMainStatus;
-STATIC_ASSERT(sizeof(FdcRegMainStatus) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regMainStatus;
+STATIC_ASSERT(sizeof(FloppyDiskController_regMainStatus) == sizeof(uint8_t));
 
 typedef volatile struct {
     uint8_t drate_sel0          : 1;
@@ -125,21 +125,21 @@ typedef volatile struct {
     uint8_t reserved            : 1;
     uint8_t power_down          : 1;
     uint8_t sw_reset            : 1;
-} PACKED FdcRegDataRateSel;
-STATIC_ASSERT(sizeof(FdcRegDataRateSel) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regDataRateSel;
+STATIC_ASSERT(sizeof(FloppyDiskController_regDataRateSel) == sizeof(uint8_t));
 
 typedef const volatile struct {
     uint8_t reserved            : 7;
     uint8_t dsk_chg             : 1;
-} PACKED FdcRegDigInp;
-STATIC_ASSERT(sizeof(FdcRegDigInp) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regDigInp;
+STATIC_ASSERT(sizeof(FloppyDiskController_regDigInp) == sizeof(uint8_t));
 
 typedef volatile struct {
     uint8_t drate_sel0          : 1;
     uint8_t drate_sel1          : 1;
     uint8_t reserved            : 6;
-} PACKED FdcRegConfigCtrl;
-STATIC_ASSERT(sizeof(FdcRegConfigCtrl) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regConfigCtrl;
+STATIC_ASSERT(sizeof(FloppyDiskController_regConfigCtrl) == sizeof(uint8_t));
 
 typedef const volatile struct {
     uint8_t ds                  : 2; /* The current selected drive */
@@ -148,8 +148,8 @@ typedef const volatile struct {
     uint8_t ec                  : 1; /* Equipment check */
     uint8_t se                  : 1; /* Seek end */
     uint8_t ic                  : 2; /* Interrupt code */
-} PACKED FdcRegStatus0;
-STATIC_ASSERT(sizeof(FdcRegStatus0) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regStatus0;
+STATIC_ASSERT(sizeof(FloppyDiskController_regStatus0) == sizeof(uint8_t));
 
 typedef const volatile struct {
     uint8_t ma                  : 1; /* Missing Address mark */
@@ -160,8 +160,8 @@ typedef const volatile struct {
     uint8_t de                  : 1; /* Data Error */
     uint8_t reserved1           : 1;
     uint8_t en                  : 1; /* End of Cylinder */
-} PACKED FdcRegStatus1;
-STATIC_ASSERT(sizeof(FdcRegStatus1) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regStatus1;
+STATIC_ASSERT(sizeof(FloppyDiskController_regStatus1) == sizeof(uint8_t));
 
 typedef const volatile struct {
     uint8_t md                  : 1; /* Missing Data Address Mark */
@@ -171,8 +171,8 @@ typedef const volatile struct {
     uint8_t dd                  : 1; /* Data Error in Data Field */
     uint8_t cm                  : 1; /* Control Mark */
     uint8_t reserved1           : 1;
-} PACKED FdcRegStatus2;
-STATIC_ASSERT(sizeof(FdcRegStatus2) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regStatus2;
+STATIC_ASSERT(sizeof(FloppyDiskController_regStatus2) == sizeof(uint8_t));
 
 typedef const volatile struct {
     uint8_t ds                  : 2; /* Drive Select */
@@ -182,20 +182,18 @@ typedef const volatile struct {
     uint8_t reserved1           : 1;
     uint8_t wp                  : 1; /* Write Protected */
     uint8_t reserved2           : 1;
-} PACKED FdcRegStatus3;
-STATIC_ASSERT(sizeof(FdcRegStatus3) == sizeof(uint8_t));
+} PACKED FloppyDiskController_regStatus3;
+STATIC_ASSERT(sizeof(FloppyDiskController_regStatus3) == sizeof(uint8_t));
 
 /* ---------- Function prototypes ---------- */
 
 /* Initialize floppy disk controller */
-bool fdc_init(void);
+bool FloppyDiskController_init (void);
 /* Read data from the LBA address into the buffer */
-bool fdc_read(const uint16_t lba, uint8_t *buffer);
-/* Write data from the buffer into the LBA address */
-bool fdc_read(const uint16_t lba, uint8_t *buffer);
+bool FloppyDiskController_read (const uint16_t lba, uint8_t *buffer, uint16_t sectorCount);
+/* Read data from the LBA address into the buffer */
+bool FloppyDiskController_write (const uint16_t lba, uint8_t *src);
 /* Reset floppy disk controller */
-void fdc_reset(void);
-/* Sends a READ DATA command to the FDC */
-bool fdc_sendCmdReadData(uint8_t lba);
+void FloppyDiskController_reset (void);
 
-#endif /* __FDC_H */
+#endif /* __FLOPPYDISKCONTROLLER_H */

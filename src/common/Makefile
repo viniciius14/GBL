@@ -1,9 +1,9 @@
 include $(PROJECT)/misc/config.mk
 
-C_SRCS = main.c \
-	logo.c \
-	vga.c \
-	fdc.c
+C_SRCS = GBL.c \
+	Logo.c \
+	VideoGraphicsArray.c \
+	FloppyDiskController.c
 
 C_INCLUDE_DIRS = $(LIBS_DIR)/io \
 	$(DRIVERS_DIR)/video \

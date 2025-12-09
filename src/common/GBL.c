@@ -1,8 +1,8 @@
 /* --------------- Includes ---------------- */
 
-#include "vga.h"
-#include "logo.h"
-#include "fdc.h"
+#include "VideoGraphicsArray.h"
+#include "Logo.h"
+#include "FloppyDiskController.h"
 
 /* ---------- Function Prototypes ---------- */
 
@@ -15,16 +15,16 @@ void GBL_init();
 /* -------- Function Implementations ------- */
 
 NORETURN void GBL() {
-    GBL_logo();
-
     GBL_init();
 
     while(1){;}
-
     UNREACHABLE();
 }
 
 void GBL_init() {
-    vga_init();
-    fdc_init();
+    Console_init();
+    VideoGraphicsArray_init();
+    FloppyDiskController_init();
+
+    GBL_logo();
 }

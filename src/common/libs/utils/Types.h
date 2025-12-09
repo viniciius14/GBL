@@ -48,6 +48,6 @@ typedef uint8_t                 bool;
 
 /* ---------- Function prototypes ---------- */
 
-
+/* None */
 
 #endif /* __TYPES_H */
