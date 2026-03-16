@@ -34,4 +34,5 @@ void Console_printHex(uint32_t n);
 void Console_printString(VideoGraphicsArray_colour colour, const char * str);
 void Console_printStringCentered(VideoGraphicsArray_colour colour, const char * str, uint16_t y);
 void Console_printStringAtLocation (VideoGraphicsArray_colour colour, const char * str, uint16_t x, uint16_t y);
+
 #endif /* __CONSOLE_H */

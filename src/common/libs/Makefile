@@ -1,12 +1,12 @@
 include $(PROJECT)/misc/config.mk
 
-C_SRCS := $(shell find $(LIBS_DIR) -name "*.c" -type f)
+C_SRCS:=$(shell find $(LIBS_DIR) -name "*.c" -type f)
 
 C_OBJS32   :=$(patsubst %.c,$(OBJ_DIR32)/%.o,$(notdir $(C_SRCS)))
 C_OBJS64   :=$(patsubst %.c,$(OBJ_DIR64)/%.o,$(notdir $(C_SRCS)))
 
-LIB_INCLUDE_DIRS := $(shell find $(COMMON_DIR) -mindepth 1 -type d)
-LIB_INCLUDES := $(foreach dir,$(LIB_INCLUDE_DIRS),-I $(dir))
+LIB_INCLUDE_DIRS:=$(shell find $(COMMON_DIR) -mindepth 1 -type d)
+LIB_INCLUDES:=$(foreach dir,$(LIB_INCLUDE_DIRS),-I $(dir))
 
 # Generate vpath for all lib subdirectories
 $(foreach dir,$(LIB_INCLUDE_DIRS),$(eval vpath %.c $(dir)))

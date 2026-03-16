@@ -9,6 +9,7 @@ export OBJ_DIR     :=$(BUILD_DIR)/obj
 export DEBUG_DIR   :=$(BUILD_DIR)/debug
 export STATS_FILE  :=$(BUILD_DIR)/stats.log
 
+export OBJ_DIR16   :=$(OBJ_DIR)/16
 export OBJ_DIR32   :=$(OBJ_DIR)/32
 export OBJ_DIR64   :=$(OBJ_DIR)/64
 export OBJ_DIR_COMMON:=$(OBJ_DIR)/common
@@ -58,7 +59,9 @@ export EMULATOR64:=qemu-system-x86_64
 export ASM_FLAGS     =-W+all -W+error -W+orphan-labels -W+macro-params
 export ASM_FORMAT32  =-f elf32
 export ASM_FORMAT64  =-f elf64
-export CC_FLAGS      =-Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -pedantic -mno-red-zone -fno-pic -fno-pie -static  -std=c11 # TODO -mcmodel=small  only supported for 64-bit
+export CC_FLAGS      =-Wall -Wextra -Werror -nostdlib -fno-builtin -ffreestanding -mgeneral-regs-only -fdata-sections -ffunction-sections -pedantic -mno-red-zone -fno-pic -fno-pie -static  -std=c11
+# TODO -mcmodel=small  only supported for 64-bit
+
 export CC_FORMAT32   =-m32
 export CC_FORMAT64   =-m64
 export LD_FLAGS      =--gc-sections

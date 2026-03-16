@@ -1,13 +1,13 @@
 include $(PROJECT)/misc/config.mk
 
-ASM_SRCS := setup64Mode.S \
+ASM_SRCS:=setup64Mode.S \
 	boot64.S \
 	cpuid.S \
 	extended_functions.S \
 	compatibility_mode.S \
 	paging.S
 
-ASM_INCLUDE_DIRS := $(BOOT64_DIR)/setup64Mode
+ASM_INCLUDE_DIRS:=$(BOOT64_DIR)/setup64Mode
 
 ASM_INCLUDES :=$(foreach dir,$(ASM_INCLUDE_DIRS),-I $(dir))
 
@@ -17,7 +17,7 @@ $(foreach dir,$(ASM_INCLUDE_DIRS),$(eval vpath %.S $(dir)))
 # screw up the OBJS path (would be OBJ_DIR64/<dir>/filename.o and we want OBJ_DIR64/filename.o)
 ASM_OBJS :=$(patsubst %.S,$(OBJ_DIR64)/%.o,$(notdir $(ASM_SRCS)))
 
-TARGET_OBJ := $(OBJ_DIR64)/boot64_all.o
+TARGET_OBJ:=$(OBJ_DIR64)/boot64_all.o
 
 .PHONY: boot64
 

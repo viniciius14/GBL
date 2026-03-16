@@ -29,7 +29,7 @@ void VideoGraphicsArray_init (void) {
     Io_outByte(VGA_PALETTE_DATA, 0x3F);
 }
 
-INLINE void VideoGraphicsArray_drawPixel (uint16_t x, uint16_t y, VideoGraphicsArray_colour colour) {
+INLINE void VideoGraphicsArray_drawPixel (uint32_t x, uint32_t y, VideoGraphicsArray_colour colour) {
     VideoGraphicsArray_memory[x + (y * VGA_SCREEN_WIDTH)] = colour;
 }
 
@@ -37,6 +37,6 @@ INLINE void VideoGraphicsArray_clearScreen (VideoGraphicsArray_colour colour) {
     Memory_set(VideoGraphicsArray_memory, (uint8_t) colour, SCREEN_SIZE);
 }
 
-INLINE void VideoGraphicsArray_drawHorizontalLine(const uint16_t x, const uint16_t y, const uint16_t size, const VideoGraphicsArray_colour colour) {
+INLINE void VideoGraphicsArray_drawHorizontalLine(const uint32_t x, const uint32_t y, const uint32_t size, const VideoGraphicsArray_colour colour) {
     Memory_set(&VideoGraphicsArray_memory[x + (y * VGA_SCREEN_WIDTH)], (uint8_t) colour, size);
 }

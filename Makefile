@@ -1,4 +1,4 @@
-export PROJECT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+export PROJECT:=$(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 include $(PROJECT)/misc/config.mk
 
@@ -46,6 +46,7 @@ clean:
 
 build_dir:
 	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR16)
 	mkdir -p $(OBJ_DIR32)
 	mkdir -p $(OBJ_DIR64)
 	mkdir -p $(BIN_DIR)
@@ -63,7 +64,9 @@ sources: $(BOOT16) $(BOOT32) $(BOOT64) common
 link: sources
 # Since there will be no files in OBJ/64 if the target isn't BITS64
 	$(LD) $(LD_FLAGS) $(LD_FORMAT) \
-	$(shell find $(OBJ_DIR) -type f -name '*.o') \
+	$(shell find $(OBJ_DIR32) -type f -name '*.o') \
+	$(shell find $(OBJ_DIR64) -type f -name '*.o') \
+	$(shell find $(OBJ_DIR_COMMON) -type f -name '*.o') \
 	-T $(SRC_DIR)/linker.ld -o $(OBJ_DIR)/boot_S2.elf
 # Generate disassembly for debugging
 	$(OBJ_DMP) $(OBJ_DMP_FLAGS) $(OBJ_DIR)/boot_S2.elf > $(DEBUG_DIR)/boot_S2_dbg.S

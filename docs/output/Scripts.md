@@ -1,7 +1,7 @@
 # Scripts
 
 ## [docker](../misc/scripts/docker.sh)
-This script is responsible for checking if the user has docker installed and if so, it builds the image and runs it.
+This script is responsible for checking if the user has docker installed and if so, it builds the image and runs it. Also, it runs make automatically, building and running the project.
 
 ## [qemu_gdb](../misc/scripts/qemu_gbd.sh)
 This script runs the selected image with QEMU and starts an instance of GBD to debug it, automatically stopping execution on the first instruction.

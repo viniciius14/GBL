@@ -1,10 +1,10 @@
 include $(PROJECT)/misc/config.mk
 
-ASM_SRCS := boot32.S \
+ASM_SRCS:=boot32.S \
 	setup32Mode.S \
 	A20.S
 
-ASM_INCLUDE_DIRS := $(BOOT32_DIR)/setup32Mode
+ASM_INCLUDE_DIRS:=$(BOOT32_DIR)/setup32Mode
 
 ASM_INCLUDES :=$(foreach dir,$(ASM_INCLUDE_DIRS),-I $(dir))
 
@@ -14,7 +14,7 @@ $(foreach dir,$(ASM_INCLUDE_DIRS),$(eval vpath %.S $(dir)))
 # screw up the OBJS path (would be OBJ_DIR32/<dir>/filename.o and we want OBJ_DIR32/filename.o)
 ASM_OBJS :=$(patsubst %.S,$(OBJ_DIR32)/%.o,$(notdir $(ASM_SRCS)))
 
-TARGET_OBJ := $(OBJ_DIR32)/boot32_all.o
+TARGET_OBJ:=$(OBJ_DIR32)/boot32_all.o
 
 .PHONY: boot32
 

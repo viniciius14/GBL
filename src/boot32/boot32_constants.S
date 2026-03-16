@@ -1,5 +1,5 @@
-%ifndef __BOOT32_DEFINITIONS_S
-%define __BOOT32_DEFINITIONS_S
+%ifndef __BOOT32_CONSTANTS_S
+%define __BOOT32_CONSTANTS_S
 
 %macro unreachable 0
     cli             ; disable interrupts

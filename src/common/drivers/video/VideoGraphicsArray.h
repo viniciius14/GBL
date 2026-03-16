@@ -38,8 +38,8 @@ typedef enum {
 /* ---------- Function prototypes ---------- */
 
 void VideoGraphicsArray_init();
-void VideoGraphicsArray_drawPixel(uint16_t x, uint16_t y, VideoGraphicsArray_colour colour);
+void VideoGraphicsArray_drawPixel(uint32_t x, uint32_t y, VideoGraphicsArray_colour colour);
 void VideoGraphicsArray_clearScreen(VideoGraphicsArray_colour colour);
-void VideoGraphicsArray_drawHorizontalLine(const uint16_t x, const uint16_t y, const uint16_t size, const VideoGraphicsArray_colour colour);
+void VideoGraphicsArray_drawHorizontalLine(const uint32_t x, const uint32_t y, const uint32_t size, const VideoGraphicsArray_colour colour);
 
 #endif /* __VIDEOGRAPHICSARRAY_H */

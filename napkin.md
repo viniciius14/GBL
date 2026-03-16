@@ -1,7 +1,3 @@
-### Technical debt
-- Assuming 50 sector section will be enough/won't cause issues (stage2 fat implementations for FAT16 nd FAT32)
-- Failure label jumping to BIOS_print instead of calling it (to call it we'd need to level the stack, so: mov sp, 0x7c00 and then we should be able to call stuff?)
-- In the makefile for stage2 the loop to call the sub makefiles uses ";" making it so the compilation continues even in case of an error, && cannot be used as that leaves a trailing && (make && make &&)
 
 
 ### Features to add:
@@ -21,16 +17,16 @@
 - Replace the FAT header with a %define offset version
     - keep the current fat headers around for testing consistency purposes, add another makefile flag?
 
-### Code standards:
-- Align comments between all fats
-- Align the style for the .S file
-- Find the original reason we were using .S files and not .asm/.s files (old GeckOs project)
+### Coding standards:
+- Align comments between all FATs
+- Align the style for the .S files
+- Find the original reason we were using .S files and not .asm/.s files (old GeckOs project) and write it down in a docs/ file
 
 ### Compilation:
 - Review compiler flags
     - Try to get more performance or smaller code or both out of the GBL
 
-### In accordance with the OS DEV wiki, Objectives:
+### In accordance with the OS DEV wiki, objectives:
  - [ ] Setup 16-bit segment registers and stack
  - [X] Print startup message
  - [ ] Check presence of PCI, CPUID, MSRs
@@ -67,10 +63,8 @@
  - [ ] Add support for other architectures
  - [ ] Add a submodule with a custom BIOS
 
-
 ### TODO:
  - [ ] Edit scripts/qemu_gdb to work with both GDB versions dynamically
     - [ ] Check docker for this program (and personal pc aswell)
- - [ ] Refactor to 64 bit code as it's complete spaghetti rn
  - [ ] Update docker script to sync with edits in env outside of docker (mount ?)
  - [ ] Update docker script to not exit the terminal on container exit

@@ -1,11 +1,11 @@
 include $(PROJECT)/misc/config.mk
 
-C_SRCS = GBL.c \
+C_SRCS=GBL.c \
 	Logo.c \
 	VideoGraphicsArray.c \
 	FloppyDiskController.c
 
-C_INCLUDE_DIRS = $(LIBS_DIR)/io \
+C_INCLUDE_DIRS=$(LIBS_DIR)/io \
 	$(DRIVERS_DIR)/video \
 	$(COMMON_DIR)/logo \
 	$(LIBS_DIR)/utils \

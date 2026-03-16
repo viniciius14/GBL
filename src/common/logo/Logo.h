@@ -8,10 +8,12 @@
 
 /* ---------------- Defines ---------------- */
 
-#define LOGO_STR_SIZE           (17)
-#define GECKO_LOGO_WIDTH        (182)
-#define GECKO_LOGO_HEIGHT       (132)
-#define GECKO_LOGO_CMPR_SIZE    (1015)
+#define LOGO_STR_SIZE            (17)
+#define GECKOS_LOGO_WIDTH        (182)
+#define GECKOS_LOGO_HEIGHT       (132)
+#define GECKOS_LOGO_CMPR_SIZE    (1015)
+
+#define GECKOS_BOOT_MSG          "GeckOs Bootloader"
 
 /* ----------------- Types ----------------- */
 

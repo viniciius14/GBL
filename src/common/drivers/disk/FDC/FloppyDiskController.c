@@ -170,7 +170,7 @@ bool FloppyDiskController_recalibrate (void) {
     return TRUE;
 }
 
-/* TODO: Add further status checks */
+/* @TODO: Add further status checks */
 bool FloppyDiskController_read (const uint16_t lba, uint8_t *buffer, uint16_t sectorCount) {
     (void)buffer;
     (void)sectorCount;
@@ -279,7 +279,7 @@ bool FloppyDiskController_sendByte (uint8_t byte) {
     /* Check for DIO and RQM bits - 10 XXX XXX */
     while ((Io_inByte(FDC_ADDR_MAIN_STATUS) & (FDC_DIO_RQM_MASK)) != FDC_SEND_BYTE_VALUE) {
         timeout++;
-        if (timeout >= 1000000) { /* TODO: Figure out a more reasonable number */
+        if (timeout >= 1000000) { /* @TODO: Figure out a more reasonable number */
             // Console_printString("Timeout error in FloppyDiskController_sendByte.\n");
             return FALSE;
         }
@@ -294,7 +294,7 @@ bool FloppyDiskController_getByte (uint8_t *const byte) {
     /* Check for DIO and RQM bits - 11 XXX XXX*/
     while ((Io_inByte(FDC_ADDR_MAIN_STATUS) & (FDC_DIO_RQM_MASK)) != FDC_GET_BYTE_VALUE) {
         timeout++;
-        if (timeout >= 1000000) { /* TODO: Figure out a more reasonable number */
+        if (timeout >= 1000000) { /* @TODO: Figure out a more reasonable number */
             // Console_printString("Timeout error in FloppyDiskController_getByte.\n");
             return FALSE;
         }

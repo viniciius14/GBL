@@ -7,7 +7,7 @@
 /* ----------- Global Variables ------------ */
 
 /* "Compressed" version of the image data */
-const uint8_t Logo_geckoLogo[GECKO_LOGO_CMPR_SIZE] = {
+const uint8_t Logo_geckoLogo[GECKOS_LOGO_CMPR_SIZE] = {
     32, 8, 171, 16, 166, 19, 160, 22, 157, 27, 153, 15, 9, 7, 91, 8, 50, 15, 12,
     6, 90, 10, 49, 13, 16, 5, 87, 12, 47, 12, 22, 4, 84, 15, 44, 12, 23, 5, 81,
     36, 23, 12, 28, 2, 80, 40, 20, 11, 110, 11, 7, 24, 18, 11, 110, 10, 3, 5, 3,
@@ -66,27 +66,26 @@ void GBL_logo(void) {
     uint32_t pixelIndex = 0; // A continuous counter for the current pixel
 
     // Calculate the horizontal offset to center the logo
-    const uint32_t xOffset = (VGA_SCREEN_WIDTH - GECKO_LOGO_WIDTH) / 2;
-    const uint32_t yOffset = 10;
+    const uint32_t xOffset = (VGA_SCREEN_WIDTH - GECKOS_LOGO_WIDTH) / 2;
+    const uint32_t yOffset = (VGA_SCREEN_HEIGHT - GECKOS_LOGO_HEIGHT) / 2;
 
-    for (int i = 0 ; i < GECKO_LOGO_CMPR_SIZE ; i++) {
+    for (int i = 0 ; i < GECKOS_LOGO_CMPR_SIZE ; i++) {
         // The value at geckoLogo[i] is the number of pixels to draw
         uint32_t pixelsToDraw = Logo_geckoLogo[i];
 
         // Leave the background color as is
         if (currColour == VGA_WHITE) {
             VideoGraphicsArray_drawHorizontalLine (
-                xOffset + (pixelIndex % GECKO_LOGO_WIDTH),
-                yOffset + (pixelIndex / GECKO_LOGO_WIDTH),
+                xOffset + (pixelIndex % GECKOS_LOGO_WIDTH),
+                yOffset + (pixelIndex / GECKOS_LOGO_WIDTH),
                 pixelsToDraw,
                 VGA_WHITE
             );
         }
+
         pixelIndex += pixelsToDraw;
         currColour = currColour == VGA_BLACK ? VGA_WHITE : VGA_BLACK;
     }
 
-    // Console_printStringCentered(VGA_WHITE, "GeckOs Bootloader", GECKO_LOGO_HEIGHT + 20);
-    // Console_printString(VGA_WHITE, "GeckOs Bootloader");
-    // Console_printStringAtLocation (VGA_WHITE, "GeckOs Bootloader", 0, 5);
+    Console_printStringCentered(VGA_WHITE, GECKOS_BOOT_MSG, (VGA_SCREEN_HEIGHT - (yOffset + GECKOS_LOGO_HEIGHT)) / 2);
 }

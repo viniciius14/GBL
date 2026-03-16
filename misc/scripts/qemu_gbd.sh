@@ -1,5 +1,3 @@
-# TODO: replace this script
-
 #!/bin/bash
 set -e
 
@@ -9,7 +7,6 @@ then
     echo "Usage \"bash /qemu_gdb.sh <FILESYSTEM> <BITS>\""
     echo "Options are: FAT12 FAT16 FAT32 for FILESYSTEM"
     echo "Options are: BITS32 BITS64 for ARCHITECTURE BITS"
-    echo "Options are: BITS32 for ARCHITECTURE BITS"
     return
 fi
 
@@ -30,11 +27,11 @@ else
 fi
 
 # Determine architecture
-# if [[ "$2" == "BITS64" ]]; then
-#     QEMU_BIN="qemu-system-x86_64"
-# else
-#     QEMU_BIN="qemu-system-i386"
-# fi
+if [[ "$2" == "BITS64" ]]; then
+    QEMU_BIN="qemu-system-x86_64"
+else
+    QEMU_BIN="qemu-system-i386"
+fi
 
 echo "Launching: $QEMU_BIN with $INTERFACE for $filename"
 
@@ -46,6 +43,6 @@ $QEMU_BIN \
     -s -S &
 
 # Start GDB and connect to the same port as QEMU
-i386-elf-gdb --nh --nx --command=misc/gdb/.gdbinit
+gdb --nh --nx --command=misc/gdb/.gdbinit
 
 kill %1

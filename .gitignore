@@ -1,5 +1,5 @@
 build/
-/.vscode
+*.json
 
 *.log
 *.bin
