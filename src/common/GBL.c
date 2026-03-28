@@ -16,6 +16,7 @@ void GBL_init();
 
 NORETURN void GBL() {
     GBL_init();
+    // Locate Kernel
 
     while(1){;}
     UNREACHABLE();
